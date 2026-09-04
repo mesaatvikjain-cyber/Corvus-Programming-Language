@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "corvus-lang"
+version = "0.1.0"
+description = "A modern, clean, and general-purpose programming language built in Python"
+readme = "README.md"
+authors = [
+  { name = "Saatvik Jain" }
+]
+license = "MIT"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+keywords = ["programming-language", "interpreter", "corvus", "compiler", "parser"]
+dependencies = []
+
+[project.scripts]
+corvus = "Corvus:main"
+
+[tool.setuptools]
+py-modules = ["Corvus", "astnodes", "errors", "evaluatorcorvus", "lexercorvus", "parsercorvus"]
+
+[project.urls]
+"Homepage" = "https://github.com/mesaatvikjain-cyber/Corvus"
+"Bug Tracker" = "https://github.com/mesaatvikjain-cyber/Corvus/issues"

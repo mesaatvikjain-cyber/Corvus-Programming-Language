@@ -1,0 +1,236 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Corvus",
+  "scopeName": "source.corvus",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#constants"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#types"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#function-declarations"
+    },
+    {
+      "include": "#function-calls"
+    },
+    {
+      "include": "#class-declarations"
+    },
+    {
+      "include": "#variables"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.corvus",
+          "begin": "\\?\\{",
+          "end": "\\}",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.begin.corvus"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.end.corvus"
+            }
+          }
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.corvus",
+          "begin": "\"",
+          "end": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.corvus"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.corvus"
+            }
+          },
+          "patterns": [
+            {
+              "name": "constant.character.escape.corvus",
+              "match": "\\\\(?:[nrtbfv\\\\\"']|x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4})"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.corvus",
+          "begin": "'",
+          "end": "'",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.corvus"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.corvus"
+            }
+          },
+          "patterns": [
+            {
+              "name": "constant.character.escape.corvus",
+              "match": "\\\\(?:[nrtbfv\\\\\"']|x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4})"
+            }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.corvus",
+          "match": "\\b(?:\\d+\\.\\d*|\\.\\d+)(?:[eE][+-]?\\d+)?\\b"
+        },
+        {
+          "name": "constant.numeric.integer.corvus",
+          "match": "\\b\\d+\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.corvus",
+          "match": "\\b(?:true|fal)\\b"
+        },
+        {
+          "name": "constant.language.null.corvus",
+          "match": "\\bnull\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.corvus",
+          "match": "\\b(?:if|elsif|else|for|in|while|brk|con|try|error|final|givout|pass)\\b"
+        },
+        {
+          "name": "keyword.declaration.corvus",
+          "match": "\\b(?:set|const|mk|func|lmb|cls|global|get)\\b"
+        },
+        {
+          "name": "keyword.operator.logical.corvus",
+          "match": "\\b(?:and|or|not|xor)\\b"
+        },
+        {
+          "name": "keyword.control.async.corvus",
+          "match": "\\b(?:async|awt)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.corvus",
+          "match": "\\b(?:int|flo|str|bool|lis|tup|dic|func|lmb)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.corvus",
+          "match": "\\*\\*|==|!=|<=|>=|=>|\\+|-|\\*|/|%|<|>|="
+        },
+        {
+          "name": "punctuation.separator.statement.corvus",
+          "match": ";"
+        },
+        {
+          "name": "punctuation.separator.comma.corvus",
+          "match": ","
+        },
+        {
+          "name": "punctuation.accessor.corvus",
+          "match": "\\."
+        },
+        {
+          "name": "punctuation.section.brackets.corvus",
+          "match": "[\\[\\]\\(\\)\\{\\}]"
+        }
+      ]
+    },
+    "function-declarations": {
+      "patterns": [
+        {
+          "match": "\\b(mk)\\s+(func)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.declaration.corvus"
+            },
+            "2": {
+              "name": "storage.type.function.corvus"
+            },
+            "3": {
+              "name": "entity.name.function.corvus"
+            }
+          }
+        }
+      ]
+    },
+    "function-calls": {
+      "patterns": [
+        {
+          "name": "entity.name.function.call.corvus",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.builtin.corvus",
+          "match": "\\b(?:log|str|tup|int|flo|bool|lis|dic)\\b(?=\\s*\\()"
+        }
+      ]
+    },
+    "class-declarations": {
+      "patterns": [
+        {
+          "match": "\\b(cls)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.declaration.corvus"
+            },
+            "2": {
+              "name": "entity.name.type.class.corvus"
+            }
+          }
+        }
+      ]
+    },
+    "variables": {
+      "patterns": [
+        {
+          "name": "variable.other.corvus",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b"
+        }
+      ]
+    }
+  }
+}

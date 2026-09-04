@@ -1,0 +1,636 @@
+import math
+import sys
+import os
+from errors import CorvusError
+from astnodes import (
+    ProgramNode, LiteralNode, IdentifierNode, ListNode, TupleNode, DictNode,
+    BinOpNode, UnaryOpNode, SafeNavNode, IndexAccessNode, MethodCallNode,
+    VarDeclNode, ConstDeclNode, AssignmentNode, BlockNode, IfNode, WhileNode,
+    ForNode, BreakNode, ContinueNode, PassNode, GivoutNode, FuncDeclNode,
+    LambdaNode, FuncCallNode, ClassDeclNode, GlobalNode, GetNode, AwaitNode,
+    TryErrorNode
+)
+
+
+class Environment:
+    def __init__(self, parent=None):
+        self.values = {}       # Stores variable values: {"score": 100}
+        self.types = {}        # Stores declared types: {"score": "int"}
+        self.constants = set() # Tracks immutable variables defined with `const`
+        self.parent = parent   # Link to outer scope
+
+    def define(self, name: str, value, var_type: str, is_const: bool = False):
+        if name in self.values:
+            raise CorvusError(
+                error_type="Corvus NameError",
+                message=f"Variable '{name}' is already declared in this scope.",
+                suggestion="Use a different variable name or assign to the existing variable without re-declaring."
+            )
+
+        self.values[name] = value
+        self.types[name] = var_type
+        if is_const:
+            self.constants.add(name)
+
+    def assign(self, name: str, value):
+        # 1. Check current scope
+        if name in self.values:
+            if name in self.constants:
+                raise CorvusError(
+                    error_type="Corvus TypeError",
+                    message=f"Cannot reassign constant '{name}'.",
+                    suggestion="Declare the identifier with 'set <type>;' if you need it to be mutable."
+                )
+            self.values[name] = value
+            return
+
+        # 2. Bubble up to parent scope if not in local
+        if self.parent:
+            self.parent.assign(name, value)
+            return
+
+        raise CorvusError(
+            error_type="Corvus NameError",
+            message=f"Cannot assign to undefined variable '{name}'.",
+            suggestion=f"Declare '{name}' using 'set <type>; {name} = ...' before assigning to it."
+        )
+
+    def get(self, name: str):
+        if name in self.values:
+            return self.values[name]
+        if self.parent:
+            return self.parent.get(name)
+        raise CorvusError(
+            error_type="Corvus NameError",
+            message=f"Undefined variable '{name}'.",
+            suggestion=f"Verify that '{name}' is declared and spelled correctly in this scope."
+        )
+
+    def get_type(self, name: str):
+        if name in self.types:
+            return self.types[name]
+        if self.parent:
+            return self.parent.get_type(name)
+        return None
+
+
+class ReturnException(Exception):
+    """Used internally to bubble up values from 'givout' statements."""
+    def __init__(self, value):
+        self.value = value
+
+
+class BreakException(Exception):
+    """Used internally to break loops."""
+    pass
+
+
+class ContinueException(Exception):
+    """Used internally to skip to the next loop iteration."""
+    pass
+
+
+class CorvusClass:
+    """Represents a Corvus class template."""
+    def __init__(self, name: str, body: BlockNode, closure_env: Environment):
+        self.name = name
+        self.body = body
+        self.closure_env = closure_env
+
+    def instantiate(self, evaluator, args):
+        instance = CorvusInstance(self)
+        class_env = Environment(parent=self.closure_env)
+        class_env.define("self", instance, "any")
+
+        prev_env = evaluator.env
+        evaluator.env = class_env
+        try:
+            for stmt in self.body.statements:
+                evaluator.visit(stmt)
+            instance.fields = class_env.values
+        finally:
+            evaluator.env = prev_env
+
+        if "init" in instance.fields and callable(instance.fields["init"]):
+            instance.call_method(evaluator, "init", args)
+
+        return instance
+
+
+class CorvusInstance:
+    """Represents an instantiated object of a Corvus class."""
+    def __init__(self, corvus_class: CorvusClass):
+        self.corvus_class = corvus_class
+        self.fields = {}
+
+    def call_method(self, evaluator, method_name: str, args):
+        if method_name in self.fields:
+            fn = self.fields[method_name]
+            if callable(fn):
+                prev_env = evaluator.env
+                method_env = Environment(parent=prev_env)
+                method_env.define("self", self, "any")
+                evaluator.env = method_env
+                try:
+                    return fn(*args)
+                finally:
+                    evaluator.env = prev_env
+            return fn
+        raise CorvusError(
+            error_type="Corvus AttributeError",
+            message=f"Object of class '{self.corvus_class.name}' has no attribute or method '{method_name}'.",
+            suggestion=f"Ensure method '{method_name}' is declared inside class '{self.corvus_class.name}'."
+        )
+
+
+
+class ModuleNamespace:
+    """Namespace container for imported Corvus modules."""
+    def __init__(self, name: str, symbols: dict):
+        self.name = name
+        self.symbols = symbols
+        for k, v in symbols.items():
+            setattr(self, k, v)
+
+
+class Evaluator:
+    def __init__(self, global_env: Environment):
+        self.global_env = global_env
+        self.env = global_env
+        self._setup_builtins()
+
+    def _setup_builtins(self):
+        # Register core built-in functions
+        self.global_env.define("log", lambda *args: print(*args), "func")
+        self.global_env.define("str", lambda val: str(val), "func")
+        self.global_env.define("int", lambda val: int(val), "func")
+        self.global_env.define("flo", lambda val: float(val), "func")
+        self.global_env.define("len", lambda val: len(val), "func")
+
+    def evaluate(self, node):
+        return self.visit(node)
+
+    def visit(self, node):
+        method_name = f"visit_{type(node).__name__}"
+        visitor = getattr(self, method_name, self.generic_visit)
+        return visitor(node)
+
+    def generic_visit(self, node):
+        raise CorvusError(
+            error_type="Corvus RuntimeError",
+            message=f"No execution rule defined for AST node '{type(node).__name__}'",
+            suggestion="Verify this language feature is supported by the runtime engine."
+        )
+
+    # --- Type Validation Helper ---
+
+    def _validate_type(self, expected_type: str, val, var_name: str):
+        if val is None or expected_type in ("any", "const"):
+            return
+
+        type_matches = True
+        if expected_type == "int":
+            type_matches = isinstance(val, int) and not isinstance(val, bool)
+        elif expected_type == "flo":
+            type_matches = isinstance(val, (float, int)) and not isinstance(val, bool)
+        elif expected_type == "str":
+            type_matches = isinstance(val, str)
+        elif expected_type == "bool":
+            type_matches = isinstance(val, bool)
+        elif expected_type == "lis":
+            type_matches = isinstance(val, list)
+        elif expected_type == "tup":
+            type_matches = isinstance(val, tuple)
+        elif expected_type == "dic":
+            type_matches = isinstance(val, dict)
+        elif expected_type in ("func", "lmb"):
+            type_matches = callable(val)
+
+        if not type_matches:
+            actual_type = type(val).__name__
+            if isinstance(val, bool): actual_type = "bool"
+            elif isinstance(val, int): actual_type = "int"
+            elif isinstance(val, float): actual_type = "flo"
+            elif isinstance(val, str): actual_type = "str"
+            elif isinstance(val, list): actual_type = "lis"
+            elif isinstance(val, tuple): actual_type = "tup"
+            elif isinstance(val, dict): actual_type = "dic"
+
+            raise CorvusError(
+                error_type="Corvus TypeError",
+                message=f"Type mismatch for variable '{var_name}': expected type '{expected_type}', but got '{actual_type}' ({repr(val)}).",
+                suggestion=f"Ensure the assigned value matches the declared type '{expected_type}'."
+            )
+
+    # --- Literals & Data Structures ---
+
+    def visit_LiteralNode(self, node: LiteralNode):
+        return node.value
+
+    def visit_IdentifierNode(self, node: IdentifierNode):
+        return self.env.get(node.name)
+
+    def visit_ListNode(self, node: ListNode):
+        return [self.visit(elem) for elem in node.elements]
+
+    def visit_TupleNode(self, node: TupleNode):
+        return tuple(self.visit(elem) for elem in node.elements)
+
+    def visit_DictNode(self, node: DictNode):
+        d = {}
+        for k_node, v_node in zip(node.keys, node.values):
+            k = self.visit(k_node)
+            v = self.visit(v_node)
+            d[k] = v
+        return d
+
+    # --- Operators ---
+
+    def visit_UnaryOpNode(self, node: UnaryOpNode):
+        val = self.visit(node.operand)
+        if node.op == '-':
+            return -val
+        elif node.op == 'not':
+            return not bool(val)
+        return val
+
+    def visit_BinOpNode(self, node: BinOpNode):
+        left = self.visit(node.left)
+        right = self.visit(node.right)
+        op = node.op
+
+        if op == '+':   return left + right
+        if op == '-':   return left - right
+        if op == '*':   return left * right
+        if op == '/':
+            if right == 0:
+                raise CorvusError(
+                    error_type="Corvus MathError",
+                    message="Division by zero.",
+                    suggestion="Ensure your denominator expression evaluates to a non-zero number."
+                )
+            return left / right
+        if op == '%':   return left % right
+        if op == '**':  return left ** right
+        if op == '==':  return left == right
+        if op == '!=':  return left != right
+        if op == '<':   return left < right
+        if op == '>':   return left > right
+        if op == '<=':  return left <= right
+        if op == '>=':  return left >= right
+        if op == 'and': return left and right
+        if op == 'or':  return left or right
+        if op == 'xor': return bool(left) ^ bool(right)
+        if op == '??':  return left if left is not None else right
+
+        raise CorvusError(
+            error_type="Corvus RuntimeError",
+            message=f"Unsupported operator '{op}'.",
+            suggestion="Check if this operator is supported in Corvus."
+        )
+
+    # --- Index Access & Method Calls ---
+
+    def visit_IndexAccessNode(self, node: IndexAccessNode):
+        target = self.visit(node.target)
+        index = self.visit(node.index)
+        try:
+            return target[index]
+        except IndexError:
+            raise CorvusError(
+                error_type="Corvus IndexError",
+                message=f"Index {index} is out of bounds for collection of length {len(target)}.",
+                suggestion="Verify the index bounds before accessing collection elements."
+            )
+        except KeyError:
+            raise CorvusError(
+                error_type="Corvus KeyError",
+                message=f"Key '{index}' not found in dictionary.",
+                suggestion="Check that the key exists in the dictionary before accessing."
+            )
+        except TypeError:
+            raise CorvusError(
+                error_type="Corvus TypeError",
+                message=f"Type '{type(target).__name__}' does not support indexing.",
+                suggestion="Index access is only valid on lists, tuples, dictionaries, and strings."
+            )
+
+    def visit_MethodCallNode(self, node: MethodCallNode):
+        target = self.visit(node.target)
+        method_name = node.method_name
+        args = [self.visit(a) for a in node.args]
+
+        # 1. Native list methods
+        if isinstance(target, list):
+            if method_name == 'add':
+                target.append(args[0])
+                return target
+            elif method_name == 'remove':
+                target.remove(args[0])
+                return target
+            elif method_name == 'pop':
+                idx = args[0] if args else -1
+                return target.pop(idx)
+            elif method_name == 'len':
+                return len(target)
+            elif method_name == 'clear':
+                target.clear()
+                return target
+            elif method_name == 'map' and args and callable(args[0]):
+                return [args[0](item) for item in target]
+            elif method_name == 'filter' and args and callable(args[0]):
+                return [item for item in target if args[0](item)]
+
+        # 2. Native string methods
+        if isinstance(target, str):
+            if method_name == 'len':
+                return len(target)
+            elif method_name == 'upper':
+                return target.upper()
+            elif method_name == 'lower':
+                return target.lower()
+            elif method_name == 'trim':
+                return target.strip()
+            elif method_name == 'split':
+                delim = args[0] if args else None
+                return target.split(delim)
+
+        # 3. Native tuple / dictionary methods
+        if isinstance(target, (tuple, dict)):
+            if method_name == 'len':
+                return len(target)
+            if isinstance(target, dict):
+                if method_name == 'keys':
+                    return list(target.keys())
+                elif method_name == 'values':
+                    return list(target.values())
+
+        # 4. Class instance method dispatch
+        if isinstance(target, CorvusInstance):
+            return target.call_method(self, method_name, args)
+
+        # 5. Namespace / Module dispatch
+        if isinstance(target, ModuleNamespace):
+            if hasattr(target, method_name):
+                fn = getattr(target, method_name)
+                if callable(fn):
+                    return fn(*args)
+                return fn
+
+        raise CorvusError(
+            error_type="Corvus AttributeError",
+            message=f"Type '{type(target).__name__}' has no method or attribute '{method_name}'.",
+            suggestion=f"Check that method '{method_name}' is supported on this data structure."
+        )
+
+    def visit_SafeNavNode(self, node: SafeNavNode):
+        target = self.visit(node.target)
+        if target is None:
+            return None
+        if isinstance(target, CorvusInstance):
+            return target.fields.get(node.property_name, None)
+        if isinstance(target, dict):
+            return target.get(node.property_name, None)
+        if isinstance(target, ModuleNamespace):
+            return getattr(target, node.property_name, None)
+        return getattr(target, node.property_name, None)
+
+    # --- Declarations & Assignments ---
+
+    def visit_ProgramNode(self, node: ProgramNode):
+        result = None
+        for stmt in node.statements:
+            result = self.visit(stmt)
+        return result
+
+    def visit_BlockNode(self, node: BlockNode):
+        prev_env = self.env
+        self.env = Environment(parent=prev_env)
+        try:
+            result = None
+            for stmt in node.statements:
+                result = self.visit(stmt)
+            return result
+        finally:
+            self.env = prev_env
+
+    def visit_VarDeclNode(self, node: VarDeclNode):
+        val = self.visit(node.value) if node.value else None
+        if val is not None:
+            self._validate_type(node.var_type, val, node.name)
+        self.env.define(node.name, val, node.var_type, is_const=False)
+        return val
+
+    def visit_ConstDeclNode(self, node: ConstDeclNode):
+        val = self.visit(node.value)
+        self.env.define(node.name, val, "const", is_const=True)
+        return val
+
+    def visit_AssignmentNode(self, node: AssignmentNode):
+        val = self.visit(node.value)
+        target = node.target
+
+        if isinstance(target, str):
+            expected_type = self.env.get_type(target)
+            if expected_type and expected_type != "any":
+                self._validate_type(expected_type, val, target)
+            self.env.assign(target, val)
+        elif isinstance(target, IdentifierNode):
+            expected_type = self.env.get_type(target.name)
+            if expected_type and expected_type != "any":
+                self._validate_type(expected_type, val, target.name)
+            self.env.assign(target.name, val)
+        elif isinstance(target, MethodCallNode):
+            obj = self.visit(target.target)
+            prop = target.method_name
+            if isinstance(obj, CorvusInstance):
+                obj.fields[prop] = val
+            elif isinstance(obj, dict):
+                obj[prop] = val
+            else:
+                setattr(obj, prop, val)
+        elif isinstance(target, IndexAccessNode):
+            obj = self.visit(target.target)
+            idx = self.visit(target.index)
+            obj[idx] = val
+        else:
+            raise CorvusError(
+                error_type="Corvus AssignmentError",
+                message=f"Invalid target for assignment: {type(target).__name__}",
+                suggestion="Assignment target must be a variable, object property, or index position."
+            )
+        return val
+
+
+    # --- Control Flow ---
+
+    def visit_IfNode(self, node: IfNode):
+        if self.visit(node.condition):
+            return self.visit(node.then_block)
+
+        for cond, branch in node.elsif_branches:
+            if self.visit(cond):
+                return self.visit(branch)
+
+        if node.else_block:
+            return self.visit(node.else_block)
+
+        return None
+
+    def visit_WhileNode(self, node: WhileNode):
+        while self.visit(node.condition):
+            try:
+                self.visit(node.body)
+            except BreakException:
+                break
+            except ContinueException:
+                continue
+
+    def visit_ForNode(self, node: ForNode):
+        iterable = self.visit(node.collection)
+        for item in iterable:
+            prev_env = self.env
+            self.env = Environment(parent=prev_env)
+            self.env.define(node.iterator, item, "any")
+            try:
+                self.visit(node.body)
+            except BreakException:
+                self.env = prev_env
+                break
+            except ContinueException:
+                self.env = prev_env
+                continue
+            finally:
+                self.env = prev_env
+
+    def visit_BreakNode(self, node: BreakNode):
+        raise BreakException()
+
+    def visit_ContinueNode(self, node: ContinueNode):
+        raise ContinueException()
+
+    def visit_PassNode(self, node: PassNode):
+        return None
+
+    def visit_GivoutNode(self, node: GivoutNode):
+        val = self.visit(node.value) if node.value else None
+        raise ReturnException(val)
+
+    # --- Functions, Lambdas & OOP ---
+
+    def visit_FuncDeclNode(self, node: FuncDeclNode):
+        def user_func(*args):
+            func_env = Environment(parent=self.env)
+            for param, arg in zip(node.params, args):
+                func_env.define(param, arg, "any")
+
+            prev_env = self.env
+            self.env = func_env
+            try:
+                self.visit(node.body)
+            except ReturnException as ret:
+                return ret.value
+            finally:
+                self.env = prev_env
+            return None
+
+        self.env.define(node.name, user_func, "func")
+
+    def visit_LambdaNode(self, node: LambdaNode):
+        closure_env = self.env
+        def lambda_func(*args):
+            lmb_env = Environment(parent=closure_env)
+            for param, arg in zip(node.params, args):
+                lmb_env.define(param, arg, "any")
+            prev_env = self.env
+            self.env = lmb_env
+            try:
+                if isinstance(node.body, BlockNode):
+                    return self.visit(node.body)
+                else:
+                    return self.visit(node.body)
+            except ReturnException as ret:
+                return ret.value
+            finally:
+                self.env = prev_env
+
+        return lambda_func
+
+    def visit_ClassDeclNode(self, node: ClassDeclNode):
+        corvus_class = CorvusClass(node.name, node.body, self.env)
+        def constructor(*args):
+            return corvus_class.instantiate(self, args)
+        self.env.define(node.name, constructor, "cls")
+
+    def visit_FuncCallNode(self, node: FuncCallNode):
+        callee = self.visit(node.callee) if not isinstance(node.callee, IdentifierNode) else self.env.get(node.callee.name)
+        args = [self.visit(a) for a in node.args]
+
+        if not callable(callee):
+            raise CorvusError(
+                error_type="Corvus TypeError",
+                message=f"'{getattr(node.callee, 'name', 'expression')}' is not callable.",
+                suggestion="Make sure the identifier is declared as a function before calling it with '()'."
+            )
+        return callee(*args)
+
+    # --- Modules, Errors, Async & Globals ---
+
+    def visit_GetNode(self, node: GetNode):
+        mod_name = node.module_name
+        if mod_name == "math":
+            math_symbols = {
+                "sqrt": math.sqrt,
+                "pow": math.pow,
+                "sin": math.sin,
+                "cos": math.cos,
+                "tan": math.tan,
+                "pi": math.pi,
+                "floor": math.floor,
+                "ceil": math.ceil
+            }
+            mod_obj = ModuleNamespace("math", math_symbols)
+            self.env.define("math", mod_obj, "module")
+
+        elif mod_name == "system":
+            sys_symbols = {
+                "os": os.name,
+                "args": sys.argv,
+                "exit": sys.exit
+            }
+            mod_obj = ModuleNamespace("system", sys_symbols)
+            self.env.define("system", mod_obj, "module")
+        else:
+            raise CorvusError(
+                error_type="Corvus ModuleError",
+                message=f"Module '{mod_name}' not found.",
+                suggestion="Built-in modules supported in v0.1: 'math', 'system'."
+            )
+
+    def visit_TryErrorNode(self, node: TryErrorNode):
+        res = None
+        try:
+            res = self.visit(node.try_block)
+        except Exception as err:
+            if node.error_block:
+                prev_env = self.env
+                self.env = Environment(parent=prev_env)
+                err_msg = getattr(err, 'message', str(err))
+                err_type = getattr(err, 'error_type', 'Error')
+                err_obj = {"message": err_msg, "type": err_type}
+                if node.error_var:
+                    self.env.define(node.error_var, err_obj, "dic")
+                try:
+                    res = self.visit(node.error_block)
+                finally:
+                    self.env = prev_env
+        finally:
+            if node.final_block:
+                self.visit(node.final_block)
+        return res
+
+    def visit_GlobalNode(self, node: GlobalNode):
+        return self.global_env.get(node.name)
+
+    def visit_AwaitNode(self, node: AwaitNode):
+        return self.visit(node.target)

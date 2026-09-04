@@ -1,0 +1,65 @@
+{
+  "Function": {
+    "prefix": "func",
+    "body": [
+      "mk func ${1:name}(${2:parameters}) [",
+      "\t${0}",
+      "]"
+    ],
+    "description": "Create a Corvus function"
+  },
+  "If": {
+    "prefix": "if",
+    "body": [
+      "if (${1:condition}) [",
+      "\t${0}",
+      "]"
+    ],
+    "description": "Create a Corvus if block"
+  },
+  "For": {
+    "prefix": "for",
+    "body": [
+      "for (${1:item} in ${2:collection}) [",
+      "\t${0}",
+      "]"
+    ],
+    "description": "Create a Corvus for loop"
+  },
+  "While": {
+    "prefix": "while",
+    "body": [
+      "while (${1:condition}) [",
+      "\t${0}",
+      "]"
+    ],
+    "description": "Create a Corvus while loop"
+  },
+  "Variable": {
+    "prefix": "set",
+    "body": [
+      "set ${1:int}; ${2:name} = ${0:value}"
+    ],
+    "description": "Declare a Corvus variable"
+  },
+  "Try": {
+    "prefix": "try",
+    "body": [
+      "try [",
+      "\t${1}",
+      "] error(${2:e}) [",
+      "\t${0}",
+      "] final [",
+      "\t",
+      "]"
+    ],
+    "description": "Create a Corvus try/error/final block"
+  },
+  "Lambda": {
+    "prefix": "lmb",
+    "body": [
+      "set lmb; ${1:name} = lmb[${2:x}] => ${0:x * 2}"
+    ],
+    "description": "Create a Corvus lambda"
+  }
+}

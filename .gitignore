@@ -1,0 +1,14 @@
+# Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution & Build folders
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE files
+.vscode/
+.idea/
