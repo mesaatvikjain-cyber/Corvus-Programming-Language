@@ -8,8 +8,9 @@ from astnodes import (
     VarDeclNode, ConstDeclNode, AssignmentNode, BlockNode, IfNode, WhileNode,
     ForNode, BreakNode, ContinueNode, PassNode, GivoutNode, FuncDeclNode,
     LambdaNode, FuncCallNode, ClassDeclNode, GlobalNode, GetNode, AwaitNode,
-    TryErrorNode
+    TryErrorNode, InputNode
 )
+
 
 
 class Environment:
@@ -634,3 +635,9 @@ class Evaluator:
 
     def visit_AwaitNode(self, node: AwaitNode):
         return self.visit(node.target)
+
+    def visit_InputNode(self, node: InputNode):
+        prompt_text = ""
+        if node.prompt is not None:
+            prompt_text = str(self.visit(node.prompt))
+        return input(prompt_text)

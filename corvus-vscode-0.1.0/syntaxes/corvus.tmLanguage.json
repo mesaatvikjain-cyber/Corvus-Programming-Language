@@ -131,8 +131,9 @@
       "patterns": [
         {
           "name": "keyword.control.corvus",
-          "match": "\\b(?:if|elsif|else|for|in|while|brk|con|try|error|final|givout|pass)\\b"
+          "match": "\\b(?:if|elsif|else|for|in|while|brk|con|try|error|final|givout|pass|input)\\b"
         },
+
         {
           "name": "keyword.declaration.corvus",
           "match": "\\b(?:set|const|mk|func|lmb|cls|global|get)\\b"

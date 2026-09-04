@@ -6,8 +6,9 @@ from astnodes import (
     VarDeclNode, ConstDeclNode, AssignmentNode, BlockNode, IfNode, WhileNode,
     ForNode, BreakNode, ContinueNode, PassNode, GivoutNode, FuncDeclNode,
     LambdaNode, FuncCallNode, ClassDeclNode, GlobalNode, GetNode, AwaitNode,
-    TryErrorNode
+    TryErrorNode, InputNode
 )
+
 
 class Parser:
     def __init__(self, tokens: list[Token]):
@@ -446,6 +447,20 @@ class Parser:
             if tok.value == 'null':
                 self.advance()
                 return LiteralNode(value=None)
+            if tok.value == 'input':
+                self.advance()
+                self.expect('LPAREN')
+                prompt = None
+                if not self.match('RPAREN'):
+                    prompt = self.parse_expression()
+                    self.expect('RPAREN')
+                return InputNode(prompt=prompt)
+            if tok.type == 'TYPE':
+                self.advance()
+                return IdentifierNode(name=tok.value)
+
+
+
 
 
         if tok.type == 'ID':

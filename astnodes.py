@@ -140,6 +140,11 @@ class FuncCallNode(ASTNode):
     callee: ASTNode          # log(...), add(5, 10), square_fn(val)
     args: List[ASTNode]
 
+@dataclass
+class InputNode(ASTNode):
+    prompt: Optional[ASTNode] = None # input(prompt_expr)
+
+
 # --- 7. Classes, Scope & Modules (Corvus 0.1 Targets) ---
 
 @dataclass

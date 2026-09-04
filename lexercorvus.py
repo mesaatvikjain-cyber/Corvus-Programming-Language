@@ -26,7 +26,8 @@ RULES = [
     ('STRING',     r'"[^"\n]*"'),
 
     # Keywords (control flow, declarations, boolean literals)
-    ('KEYWORD',    r'\b(set|const|mk|givout|if|elsif|else|for|in|while|brk|con|try|error|final|true|fal|null|and|or|not|xor|async|awt|cls|global|pass|get)\b'),
+    ('KEYWORD',    r'\b(set|const|mk|givout|if|elsif|else|for|in|while|brk|con|try|error|final|true|fal|null|and|or|not|xor|async|awt|cls|global|pass|get|input)\b'),
+
 
     # Data Types (used in `set type; name = ...`)
     ('TYPE',       r'\b(int|flo|str|bool|lis|tup|dic|func|lmb)\b'),
