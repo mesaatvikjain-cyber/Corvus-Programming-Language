@@ -1,0 +1,214 @@
+?{ ============================================================================
+   CORVUS PROGRAMMING LANGUAGE (v0.1.1) — COMPLETE LANGUAGE REFERENCE SHOWCASE
+   Author: Saatvik Jain
+   This file demonstrates EVERY single feature, data structure, built-in method,
+   keyword, and control flow construct in Corvus.
+   ============================================================================ }
+
+log("=========================================================")
+log("  CORVUS PROGRAMMING LANGUAGE v0.1.1 FULL FEATURE REFERENCE  ")
+log("=========================================================")
+
+?{ ----------------------------------------------------------------------------
+   1. PRIMITIVE VARIABLE DECLARATIONS & CONSTANTS
+   ---------------------------------------------------------------------------- }
+log("\n--- 1. Variable & Constant Declarations ---")
+
+set int; integer_val = 42
+set flo; float_val = 3.14159
+set str; string_val = "Hello, Corvus Language!"
+set bool; flag_true = true
+set bool; flag_false = fal
+set const; MAX_LIMIT = 100
+
+log("Integer:", integer_val)
+log("Float:", float_val)
+log("String:", string_val)
+log("Boolean True:", flag_true, "| Boolean False:", flag_false)
+log("Constant MAX_LIMIT:", MAX_LIMIT)
+
+
+?{ ----------------------------------------------------------------------------
+   2. DATA STRUCTURE LITERALS: LISTS, TUPLES & DICTIONARIES
+   ---------------------------------------------------------------------------- }
+log("\n--- 2. Data Structures (Lists, Tuples, Dictionaries) ---")
+
+?{ Native List declared with braces }
+
+set lis; sample_list = {10, 20, 30, 40}
+log("Initial List:", sample_list, "| Length:", sample_list.len())
+
+?{ List operations: add, pop }
+sample_list.add(50)
+log("List after add(50):", sample_list)
+
+?{ Native Tuple declared with ([ ... ]) }
+set tup; coordinates = ([100, 200, 300])
+log("Tuple coordinates:", coordinates)
+
+?{ Native Dictionary declared with ("key": value) }
+set dic; student_profile = ("name": "Saatvik Jain", "age": 11, "role": "Creator")
+log("Dictionary profile:", student_profile)
+log("Student Name:", student_profile["name"])
+
+
+?{ ----------------------------------------------------------------------------
+   3. INTERACTIVE TERMINAL INPUT
+   ---------------------------------------------------------------------------- }
+log("\n--- 3. Interactive Input () ---")
+set str; user_name = input("Enter your name to verify input(): ")
+log("Hello,", user_name, "! Interactive input works successfully.")
+
+
+?{ ----------------------------------------------------------------------------
+   4. MATHEMATICAL OPERATORS & MODULES (get math)
+   ---------------------------------------------------------------------------- }
+log("\n--- 4. Mathematics & Module Imports ---")
+get math
+
+set int; a = 15
+set int; b = 4
+
+log("Addition (a + b):", a + b)
+log("Subtraction (a - b):", a - b)
+log("Multiplication (a * b):", a * b)
+log("Division (a / b):", a / b)
+log("Modulo (a % b):", a % b)
+log("Power (a ** b):", a ** 2)
+
+log("Math PI Constant:", math.pi)
+log("Square Root of 64:", math.sqrt(64))
+log("2 to the power 8:", math.pow(2, 8))
+log("Floor of 7.9:", math.floor(7.9))
+log("Ceil of 3.1:", math.ceil(3.1))
+
+
+?{ ----------------------------------------------------------------------------
+   5. SYSTEM MODULE (get system)
+   ---------------------------------------------------------------------------- }
+log("\n--- 5. System Module ---")
+get system
+log("Operating System Platform:", system.os)
+log("Command-Line Arguments:", system.args)
+
+
+?{ ----------------------------------------------------------------------------
+   6. CONTROL FLOW: CONDITIONALS (if / elsif / else)
+   ---------------------------------------------------------------------------- }
+log("\n--- 6. Conditionals & Branching ---")
+
+set int; test_score = 85
+
+if (test_score >= 90) [
+    log("Grade: A (Outstanding)")
+] elsif (test_score >= 80) [
+    log("Grade: B (Excellence)")
+] else [
+    log("Grade: C (Good Effort)")
+]
+
+
+?{ ----------------------------------------------------------------------------
+   7. LOOPS: WHILE & FOR ITERATION (with brk & con)
+   ---------------------------------------------------------------------------- }
+log("\n--- 7. Loops & Iteration ---")
+
+log("While Loop Counting to 3:")
+set int; counter = 1
+while (counter <= 3) [
+    log("  Count:", counter)
+    counter = counter + 1
+]
+
+log("For Loop Iterating Over List:")
+set lis; fruits = {"apple", "banana", "cherry"}
+for (fruit in fruits) [
+    log("  Fruit item:", fruit)
+]
+
+
+?{ ----------------------------------------------------------------------------
+   8. FUNCTIONS & RECURSION (mk func & givout)
+   ---------------------------------------------------------------------------- }
+log("\n--- 8. Custom Functions & Recursion ---")
+
+mk func calculate_area(width, height) [
+    givout width * height
+]
+
+mk func recursive_factorial(n) [
+    if (n <= 1) [
+        givout 1
+    ]
+    givout n * recursive_factorial(n - 1)
+]
+
+log("Calculated Rectangle Area (5x8):", calculate_area(5, 8))
+log("Recursive Factorial of 5:", recursive_factorial(5))
+
+
+?{ ----------------------------------------------------------------------------
+   9. FIRST-CLASS LAMBDAS & HIGHER-ORDER LIST TRANSFORMATIONS
+   ---------------------------------------------------------------------------- }
+log("\n--- 9. First-Class Lambdas & Method Call Chaining ---")
+
+set lmb; multiply_by_three = lmb[x] => x * 3
+log("Lambda multiply_by_three(7):", multiply_by_three(7))
+
+set lis; raw_numbers = {1, 2, 3, 4}
+set lis; mapped_numbers = raw_numbers.map(lmb[val] => val * 10)
+log("Mapped List:", mapped_numbers)
+
+
+?{ ----------------------------------------------------------------------------
+   10. STRING UTILITY METHODS
+   ---------------------------------------------------------------------------- }
+log("\n--- 10. String Methods ---")
+
+set str; raw_str = "   corvus language is awesome   "
+log("Raw String:", raw_str)
+log("Trimmed & Uppercased:", raw_str.trim().upper())
+
+
+?{ ----------------------------------------------------------------------------
+   11. OBJECT-ORIENTED PROGRAMMING (CLASSES & INSTANTIATION)
+   ---------------------------------------------------------------------------- }
+log("\n--- 11. Object-Oriented Programming (Classes) ---")
+
+cls ProgrammingLanguage() [
+    set str; name
+    set str; creator
+    set int; age
+
+    mk func init(name_val, creator_val, age_val) [
+        self.name = name_val
+        self.creator = creator_val
+        self.age = age_val
+    ]
+
+    mk func display_info() [
+        log("Language Info -> Name:", self.name, "| Creator:", self.creator, "| Creator Age:", self.age)
+    ]
+]
+
+set ProgrammingLanguage; corvus_lang = ProgrammingLanguage("Corvus", "Saatvik Jain", 11)
+corvus_lang.display_info()
+
+
+?{ ----------------------------------------------------------------------------
+   12. STRUCTURED EXCEPTION RECOVERY (try / error / final)
+   ---------------------------------------------------------------------------- }
+log("\n--- 12. Exception Handling (try / error / final) ---")
+
+try [
+    log("Attempting division by zero to test error recovery...")
+    set int; error_trigger = 100 / 0
+] error(err) [
+    log("Successfully caught error ->", err["message"])
+] final [
+    log("Executed final cleanup block safely.")
+]
+
+log("\n=========================================================")
+log("  ALL CORVUS v0.1.1 FEATURES EXECUTED SUCCESSFULLY!      ")
+log("=========================================================")
