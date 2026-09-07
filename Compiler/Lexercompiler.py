@@ -1,3 +1,6 @@
+#========================================
+# TOKENIZE THE CODE
+#========================================
 import re
 # This the lexer it breaks the code up into "Tokens" or small keywords which are recognized by next steps of the interpreter
 # Tokens have three parts
@@ -102,4 +105,6 @@ def tokenize(code: str):
 
         tokens.append(Token(type=kind, value=value, line=line_num, column=column))
 
+
     return tokens
+

@@ -3,7 +3,6 @@
    Math, Scope Isolation, Recursion, and Iteration
    ================================================= }
 
-?{ 1. Pure recursive function: Factorial }
 mk func factorial(n) [
     if (n <= 1) [
         givout 1
@@ -11,7 +10,6 @@ mk func factorial(n) [
     givout n * factorial(n - 1)
 ]
 
-?{ 2. Function using conditionals and mathematical operators }
 mk func is_even(num) [
     if (num % 2 == 0) [
         givout true
@@ -19,14 +17,11 @@ mk func is_even(num) [
     givout fal
 ]
 
-?{ 3. Main execution pipeline }
 log("--- Starting Corvus Test Suite ---")
 
-?{ Test constant declarations and expressions }
 set const; MAX_LIMIT = 5
 log("Calculating factorials up to:", MAX_LIMIT)
 
-?{ Test while loop, function invocation, and branching }
 set int; current = 1
 while (current <= MAX_LIMIT) [
     set int; fact = factorial(current)
@@ -40,7 +35,6 @@ while (current <= MAX_LIMIT) [
     current = current + 1
 ]
 
-?{ 4. Composite collections & iteration }
 log("--- Testing Native Collections ---")
 
 set lis; items = {10, 20, 30}
@@ -49,7 +43,6 @@ set tup; pair = ([100, 200])
 log("List contents:", items)
 log("Tuple pair:", pair)
 
-?{ Iteration with scope shadowing test }
 for (elem in items) [
     set int; amplified = elem * 2
     log("Original:", elem, "-> Amplified:", amplified)

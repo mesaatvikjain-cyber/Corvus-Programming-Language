@@ -33,20 +33,15 @@ log("Constant MAX_LIMIT:", MAX_LIMIT)
    ---------------------------------------------------------------------------- }
 log("\n--- 2. Data Structures (Lists, Tuples, Dictionaries) ---")
 
-?{ Native List declared with braces }
-
 set lis; sample_list = {10, 20, 30, 40}
 log("Initial List:", sample_list, "| Length:", sample_list.len())
 
-?{ List operations: add, pop }
 sample_list.add(50)
 log("List after add(50):", sample_list)
 
-?{ Native Tuple declared with ([ ... ]) }
 set tup; coordinates = ([100, 200, 300])
 log("Tuple coordinates:", coordinates)
 
-?{ Native Dictionary declared with ("key": value) }
 set dic; student_profile = ("name": "Saatvik Jain", "age": 11, "role": "Creator")
 log("Dictionary profile:", student_profile)
 log("Student Name:", student_profile["name"])

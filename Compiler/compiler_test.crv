@@ -1,0 +1,8 @@
+?{ =================================================
+   Corvus Compiler Test Suite (Milestone 1)
+   ================================================= }
+
+log("=== Hello from Corvus Assembly Compiler! ===")
+set int; age = 11
+log("Age variable declared successfully:")
+log(age)

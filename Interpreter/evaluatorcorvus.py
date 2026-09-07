@@ -1,6 +1,7 @@
 import math
 import sys
 import os
+from concurrent.futures import ThreadPoolExecutor, Future
 from errors import CorvusError
 from astnodes import (
     ProgramNode, LiteralNode, IdentifierNode, ListNode, TupleNode, DictNode,
@@ -12,11 +13,10 @@ from astnodes import (
 )
 
 
-
 class Environment:
     def __init__(self, parent=None):
-        self.values = {}       # Stores variable values: {"score": 100}
-        self.types = {}        # Stores declared types: {"score": "int"}
+        self.values = {}       # Stores variable values
+        self.types = {}        # Stores declared types
         self.constants = set() # Tracks immutable variables defined with `const`
         self.parent = parent   # Link to outer scope
 
@@ -34,7 +34,6 @@ class Environment:
             self.constants.add(name)
 
     def assign(self, name: str, value):
-        # 1. Check current scope
         if name in self.values:
             if name in self.constants:
                 raise CorvusError(
@@ -45,7 +44,6 @@ class Environment:
             self.values[name] = value
             return
 
-        # 2. Bubble up to parent scope if not in local
         if self.parent:
             self.parent.assign(name, value)
             return
@@ -76,23 +74,19 @@ class Environment:
 
 
 class ReturnException(Exception):
-    """Used internally to bubble up values from 'givout' statements."""
     def __init__(self, value):
         self.value = value
 
 
 class BreakException(Exception):
-    """Used internally to break loops."""
     pass
 
 
 class ContinueException(Exception):
-    """Used internally to skip to the next loop iteration."""
     pass
 
 
 class CorvusClass:
-    """Represents a Corvus class template."""
     def __init__(self, name: str, body: BlockNode, closure_env: Environment):
         self.name = name
         self.body = body
@@ -119,7 +113,6 @@ class CorvusClass:
 
 
 class CorvusInstance:
-    """Represents an instantiated object of a Corvus class."""
     def __init__(self, corvus_class: CorvusClass):
         self.corvus_class = corvus_class
         self.fields = {}
@@ -144,9 +137,7 @@ class CorvusInstance:
         )
 
 
-
 class ModuleNamespace:
-    """Namespace container for imported Corvus modules."""
     def __init__(self, name: str, symbols: dict):
         self.name = name
         self.symbols = symbols
@@ -158,10 +149,10 @@ class Evaluator:
     def __init__(self, global_env: Environment):
         self.global_env = global_env
         self.env = global_env
+        self.executor = ThreadPoolExecutor(max_workers=8)
         self._setup_builtins()
 
     def _setup_builtins(self):
-        # Register core built-in functions
         self.global_env.define("log", lambda *args: print(*args), "func")
         self.global_env.define("str", lambda val: str(val), "func")
         self.global_env.define("int", lambda val: int(val), "func")
@@ -183,8 +174,6 @@ class Evaluator:
             suggestion="Verify this language feature is supported by the runtime engine."
         )
 
-    # --- Type Validation Helper ---
-
     def _validate_type(self, expected_type: str, val, var_name: str):
         if val is None or expected_type in ("any", "const"):
             return
@@ -205,7 +194,7 @@ class Evaluator:
         elif expected_type == "dic":
             type_matches = isinstance(val, dict)
         elif expected_type in ("func", "lmb"):
-            type_matches = callable(val)
+            type_matches = callable(val) or isinstance(val, Future)
 
         if not type_matches:
             actual_type = type(val).__name__
@@ -222,8 +211,6 @@ class Evaluator:
                 message=f"Type mismatch for variable '{var_name}': expected type '{expected_type}', but got '{actual_type}' ({repr(val)}).",
                 suggestion=f"Ensure the assigned value matches the declared type '{expected_type}'."
             )
-
-    # --- Literals & Data Structures ---
 
     def visit_LiteralNode(self, node: LiteralNode):
         return node.value
@@ -244,8 +231,6 @@ class Evaluator:
             v = self.visit(v_node)
             d[k] = v
         return d
-
-    # --- Operators ---
 
     def visit_UnaryOpNode(self, node: UnaryOpNode):
         val = self.visit(node.operand)
@@ -290,8 +275,6 @@ class Evaluator:
             suggestion="Check if this operator is supported in Corvus."
         )
 
-    # --- Index Access & Method Calls ---
-
     def visit_IndexAccessNode(self, node: IndexAccessNode):
         target = self.visit(node.target)
         index = self.visit(node.index)
@@ -321,7 +304,6 @@ class Evaluator:
         method_name = node.method_name
         args = [self.visit(a) for a in node.args]
 
-        # 1. Native list methods
         if isinstance(target, list):
             if method_name == 'add':
                 target.append(args[0])
@@ -342,7 +324,6 @@ class Evaluator:
             elif method_name == 'filter' and args and callable(args[0]):
                 return [item for item in target if args[0](item)]
 
-        # 2. Native string methods
         if isinstance(target, str):
             if method_name == 'len':
                 return len(target)
@@ -356,7 +337,6 @@ class Evaluator:
                 delim = args[0] if args else None
                 return target.split(delim)
 
-        # 3. Native tuple / dictionary methods
         if isinstance(target, (tuple, dict)):
             if method_name == 'len':
                 return len(target)
@@ -366,11 +346,9 @@ class Evaluator:
                 elif method_name == 'values':
                     return list(target.values())
 
-        # 4. Class instance method dispatch
         if isinstance(target, CorvusInstance):
             return target.call_method(self, method_name, args)
 
-        # 5. Namespace / Module dispatch
         if isinstance(target, ModuleNamespace):
             if hasattr(target, method_name):
                 fn = getattr(target, method_name)
@@ -395,8 +373,6 @@ class Evaluator:
         if isinstance(target, ModuleNamespace):
             return getattr(target, node.property_name, None)
         return getattr(target, node.property_name, None)
-
-    # --- Declarations & Assignments ---
 
     def visit_ProgramNode(self, node: ProgramNode):
         result = None
@@ -462,9 +438,6 @@ class Evaluator:
             )
         return val
 
-
-    # --- Control Flow ---
-
     def visit_IfNode(self, node: IfNode):
         if self.visit(node.condition):
             return self.visit(node.then_block)
@@ -517,8 +490,6 @@ class Evaluator:
         val = self.visit(node.value) if node.value else None
         raise ReturnException(val)
 
-    # --- Functions, Lambdas & OOP ---
-
     def visit_FuncDeclNode(self, node: FuncDeclNode):
         def user_func(*args):
             func_env = Environment(parent=self.env)
@@ -535,7 +506,12 @@ class Evaluator:
                 self.env = prev_env
             return None
 
-        self.env.define(node.name, user_func, "func")
+        if getattr(node, 'is_async', False):
+            def async_wrapper(*args):
+                return self.executor.submit(user_func, *args)
+            self.env.define(node.name, async_wrapper, "func")
+        else:
+            self.env.define(node.name, user_func, "func")
 
     def visit_LambdaNode(self, node: LambdaNode):
         closure_env = self.env
@@ -574,8 +550,6 @@ class Evaluator:
                 suggestion="Make sure the identifier is declared as a function before calling it with '()'."
             )
         return callee(*args)
-
-    # --- Modules, Errors, Async & Globals ---
 
     def visit_GetNode(self, node: GetNode):
         mod_name = node.module_name
@@ -634,7 +608,10 @@ class Evaluator:
         return self.global_env.get(node.name)
 
     def visit_AwaitNode(self, node: AwaitNode):
-        return self.visit(node.target)
+        target_val = self.visit(node.target)
+        if hasattr(target_val, 'result') and callable(target_val.result):
+            return target_val.result()
+        return target_val
 
     def visit_InputNode(self, node: InputNode):
         prompt_text = ""

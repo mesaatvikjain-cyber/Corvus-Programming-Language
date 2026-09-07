@@ -1,0 +1,157 @@
+from dataclasses import dataclass
+from typing import Any, List, Optional
+
+class ASTNode:
+    pass
+
+@dataclass
+class ProgramNode(ASTNode):
+    statements: List[ASTNode]
+
+@dataclass
+class LiteralNode(ASTNode):
+    value: Any
+
+@dataclass
+class IdentifierNode(ASTNode):
+    name: str
+
+@dataclass
+class ListNode(ASTNode):
+    elements: List[ASTNode]
+
+@dataclass
+class TupleNode(ASTNode):
+    elements: List[ASTNode]
+
+@dataclass
+class DictNode(ASTNode):
+    keys: List[ASTNode]
+    values: List[ASTNode]
+
+@dataclass
+class BinOpNode(ASTNode):
+    left: ASTNode
+    op: str
+    right: ASTNode
+
+@dataclass
+class UnaryOpNode(ASTNode):
+    op: str
+    operand: ASTNode
+
+@dataclass
+class SafeNavNode(ASTNode):
+    target: ASTNode
+    property_name: str
+
+@dataclass
+class IndexAccessNode(ASTNode):
+    target: ASTNode
+    index: ASTNode
+
+@dataclass
+class MethodCallNode(ASTNode):
+    target: ASTNode
+    method_name: str
+    args: List[ASTNode]
+
+@dataclass
+class VarDeclNode(ASTNode):
+    var_type: str
+    name: str
+    value: Optional[ASTNode]
+
+@dataclass
+class ConstDeclNode(ASTNode):
+    name: str
+    value: ASTNode
+
+@dataclass
+class AssignmentNode(ASTNode):
+    target: str
+    value: ASTNode
+
+@dataclass
+class BlockNode(ASTNode):
+    statements: List[ASTNode]
+
+@dataclass
+class IfNode(ASTNode):
+    condition: ASTNode
+    then_block: BlockNode
+    elsif_branches: List[tuple]
+    else_block: Optional[BlockNode]
+
+@dataclass
+class WhileNode(ASTNode):
+    condition: ASTNode
+    body: BlockNode
+
+@dataclass
+class ForNode(ASTNode):
+    iterator: str
+    collection: ASTNode
+    body: BlockNode
+
+@dataclass
+class BreakNode(ASTNode):
+    pass
+
+@dataclass
+class ContinueNode(ASTNode):
+    pass
+
+@dataclass
+class PassNode(ASTNode):
+    pass
+
+@dataclass
+class GivoutNode(ASTNode):
+    value: Optional[ASTNode]
+
+@dataclass
+class FuncDeclNode(ASTNode):
+    name: str
+    params: List[str]
+    body: BlockNode
+    is_async: bool = False
+
+@dataclass
+class LambdaNode(ASTNode):
+    params: List[str]
+    body: ASTNode
+
+@dataclass
+class FuncCallNode(ASTNode):
+    callee: ASTNode
+    args: List[ASTNode]
+
+@dataclass
+class InputNode(ASTNode):
+    prompt: Optional[ASTNode] = None
+
+@dataclass
+class ClassDeclNode(ASTNode):
+    name: str
+    body: BlockNode
+
+@dataclass
+class GlobalNode(ASTNode):
+    name: str
+
+@dataclass
+class GetNode(ASTNode):
+    module_name: str
+    imported_symbols: Optional[List[str]] = None
+
+@dataclass
+class AwaitNode(ASTNode):
+    target: ASTNode
+
+@dataclass
+class TryErrorNode(ASTNode):
+    try_block: BlockNode
+    error_var: Optional[str]
+    error_block: Optional[BlockNode]
+    final_block: Optional[BlockNode]

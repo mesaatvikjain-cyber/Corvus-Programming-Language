@@ -1,6 +1,6 @@
-from lexercorvus import Token, tokenize
-from errors import CorvusError
-from astnodes import (
+from Lexercompiler import Token, tokenize
+from Interpreter.errors import CorvusError
+from Interpreter.astnodes import (
     ProgramNode, LiteralNode, IdentifierNode, ListNode, TupleNode, DictNode,
     BinOpNode, UnaryOpNode, SafeNavNode, IndexAccessNode, MethodCallNode,
     VarDeclNode, ConstDeclNode, AssignmentNode, BlockNode, IfNode, WhileNode,
