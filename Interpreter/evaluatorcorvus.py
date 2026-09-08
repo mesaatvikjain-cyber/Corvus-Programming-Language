@@ -887,3 +887,30 @@ class Evaluator:
         if node.prompt is not None:
             prompt_text = str(self.visit(node.prompt))
         return input(prompt_text)
+
+    def visit_PipelineNode(self, node: PipelineNode):
+        left_val = self.visit(node.left)
+        if isinstance(node.right, FuncCallNode):
+            callee = self.visit(node.right.callee) if not isinstance(node.right.callee, IdentifierNode) else self.env.get(node.right.callee.name)
+            args = [left_val] + [self.visit(a) for a in node.right.args]
+            return callee(*args)
+        elif isinstance(node.right, MethodCallNode):
+            method_name = node.right.method_name
+            args = [self.visit(a) for a in node.right.args]
+            mock_call = MethodCallNode(target=LiteralNode(value=left_val), method_name=method_name, args=[LiteralNode(value=a) for a in args])
+            return self.visit_MethodCallNode(mock_call)
+        else:
+            right_val = self.visit(node.right)
+            if callable(right_val):
+                return right_val(left_val)
+            return right_val
+
+    def visit_MatchNode(self, node: MatchNode):
+        target_val = self.visit(node.target)
+        for case in node.cases:
+            pattern_val = self.visit(case.pattern)
+            if target_val == pattern_val:
+                return self.visit(case.body)
+        if node.default_branch:
+            return self.visit(node.default_branch)
+        return None

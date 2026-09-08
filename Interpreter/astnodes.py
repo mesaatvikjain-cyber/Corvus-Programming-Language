@@ -155,3 +155,19 @@ class TryErrorNode(ASTNode):
     error_var: Optional[str]
     error_block: Optional[BlockNode]
     final_block: Optional[BlockNode]
+
+@dataclass
+class PipelineNode(ASTNode):
+    left: ASTNode
+    right: ASTNode
+
+@dataclass
+class CaseNode(ASTNode):
+    pattern: ASTNode
+    body: ASTNode
+
+@dataclass
+class MatchNode(ASTNode):
+    target: ASTNode
+    cases: List[CaseNode]
+    default_branch: Optional[ASTNode] = None

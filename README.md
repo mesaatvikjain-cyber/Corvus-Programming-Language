@@ -32,6 +32,8 @@ It has grown from an interpreted language into a full-fledged compiled language 
 
 ## 🌟 Key Features
 
+* **🔀 Functional Pipeline Operator (`|>`)**: Expression chaining left-to-right (`val |> double_fn |> add_ten`).
+* **🎯 Structural Pattern Matching (`match / case / else`)**: Pattern matching control flow (`match code [ case 200 => ... case 404 => ... else => ... ]`).
 * **📦 Explicit Scope Delimiters**: Code blocks use brackets `[ ... ]` for clean, unambiguous scope boundaries.
 * **🏷️ Explicit Type Declarations**: `set <type>; name = value` for typed variables and `set const; NAME = value` for immutable constants.
 * **⌨️ Native User Input**: `input("Prompt: ")` supported natively in both Interpreter and Compiled modes.
@@ -165,6 +167,26 @@ cls Person() [
 
 set Person; user = Person("Saatvik Jain", 11)
 user.describe()
+```
+
+### 5. Pipeline Operator & Structural Pattern Matching
+```corvus
+// Left-to-Right Function Chaining
+set int; val = 10
+set lmb; double_fn = lmb[x] => x * 2
+set lmb; add_ten = lmb[x] => x + 10
+
+set int; result = val |> double_fn |> add_ten
+log("Pipeline result:", result)
+
+// Pattern Matching
+set int; status_code = 404
+match status_code [
+    case 200 => log("Status 200: OK Success")
+    case 404 => log("Status 404: Resource Not Found")
+    case 500 => log("Status 500: Server Error")
+    else => log("Status Unknown")
+]
 ```
 
 ---

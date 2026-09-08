@@ -11,8 +11,9 @@ from Interpreter.astnodes import (
     VarDeclNode, ConstDeclNode, AssignmentNode, BlockNode, IfNode, WhileNode,
     ForNode, BreakNode, ContinueNode, PassNode, GivoutNode, FuncDeclNode,
     LambdaNode, FuncCallNode, ClassDeclNode, GlobalNode, GetNode, AwaitNode,
-    TryErrorNode, InputNode
+    TryErrorNode, InputNode, PipelineNode, MatchNode, CaseNode
 )
+
 
 
 class AsmGenerator:
@@ -557,6 +558,50 @@ class AsmGenerator:
             self.text_lines.append("    add rsp, 32")
             self.text_lines.append("    mov rax, [input_buffer]")
 
+        # 18. Pipeline Operator (|>)
+        elif node_type == "PipelineNode":
+            if isinstance(node.right, FuncCallNode):
+                node.right.args.insert(0, node.left)
+                self.generate(node.right)
+            elif isinstance(node.right, MethodCallNode):
+                node.right.target = node.left
+                self.generate(node.right)
+            else:
+                self.generate(node.left)
+                self.text_lines.append("    push rax")
+                self.generate(node.right)
+                self.text_lines.append("    call rax")
+                self.text_lines.append("    add rsp, 8")
+
+        # 19. Structural Pattern Matching (match / case / else)
+        elif node_type == "MatchNode":
+            lbl_id = self.string_count
+            self.string_count += 1
+            match_end = f"match_end_{lbl_id}"
+
+            self.generate(node.target)
+            self.text_lines.append("    push rax")
+
+            for idx, case in enumerate(node.cases):
+                case_next = f"case_next_{lbl_id}_{idx}"
+                self.text_lines.append("    mov rax, [rsp]")
+                self.text_lines.append("    push rax")
+                self.generate(case.pattern)
+                self.text_lines.append("    mov rbx, rax")
+                self.text_lines.append("    pop rax")
+                self.text_lines.append("    cmp rax, rbx")
+                self.text_lines.append(f"    jne {case_next}")
+                self.generate(case.body)
+                self.text_lines.append(f"    jmp {match_end}")
+                self.text_lines.append(f"{case_next}:")
+
+            if node.default_branch:
+                self.generate(node.default_branch)
+
+            self.text_lines.append(f"{match_end}:")
+            self.text_lines.append("    add rsp, 8")
+
+
     def build_full_asm(self):
         asm = []
         asm.append("; ========================================")
@@ -600,15 +645,19 @@ class AsmGenerator:
         asm.append("global main\n")
         asm.append("main:")
         asm.append("    push rbp")
-        asm.append("    mov rbp, rsp\n")
+        asm.append("    mov rbp, rsp")
+        asm.append("    push rbx")
+        asm.append("    push rsi\n")
 
         asm.extend(self.text_lines)
 
         asm.append("\n    ; Exit Program")
-        asm.append("    mov rsp, rbp")
+        asm.append("    lea rsp, [rbp - 16]")
+        asm.append("    pop rsi")
+        asm.append("    pop rbx")
         asm.append("    pop rbp")
-        asm.append("    mov rcx, 0")
-        asm.append("    call ExitProcess\n")
+        asm.append("    mov rax, 0")
+        asm.append("    ret\n")
 
         if self.func_lines:
             asm.append("; -- User Functions & Lambdas --")

@@ -6,8 +6,9 @@ from astnodes import (
     VarDeclNode, ConstDeclNode, AssignmentNode, BlockNode, IfNode, WhileNode,
     ForNode, BreakNode, ContinueNode, PassNode, GivoutNode, FuncDeclNode,
     LambdaNode, FuncCallNode, ClassDeclNode, GlobalNode, GetNode, AwaitNode,
-    TryErrorNode, InputNode
+    TryErrorNode, InputNode, PipelineNode, MatchNode, CaseNode
 )
+
 
 
 class Parser:
@@ -160,11 +161,53 @@ class Parser:
             body = self.parse_block()
             return ClassDeclNode(name=name, body=body)
 
+        if tok.type == 'KEYWORD' and tok.value == 'match':
+            return self.parse_match()
+
         expr = self.parse_expression()
         if self.match('ASSIGN'):
             val = self.parse_expression()
             return AssignmentNode(target=expr, value=val)
         return expr
+
+    def parse_match(self):
+        self.expect('KEYWORD', 'match')
+        target = self.parse_null_coalesce()
+        self.expect('LBRACKET')
+
+
+        cases = []
+        default_branch = None
+
+        while True:
+            while self.match('NEWLINE'):
+                pass
+            if self.match('RBRACKET'):
+                break
+
+            tok = self.peek()
+            if tok and tok.type == 'KEYWORD' and tok.value == 'case':
+                self.advance()
+                pattern = self.parse_expression()
+                self.expect('FAT_ARROW')
+                if self.peek() and self.peek().type == 'LBRACKET':
+                    body = self.parse_block()
+                else:
+                    body = self.parse_statement()
+                cases.append(CaseNode(pattern=pattern, body=body))
+            elif tok and tok.type == 'KEYWORD' and tok.value == 'else':
+                self.advance()
+                self.expect('FAT_ARROW')
+                if self.peek() and self.peek().type == 'LBRACKET':
+                    default_branch = self.parse_block()
+                else:
+                    default_branch = self.parse_statement()
+            else:
+                break
+
+        return MatchNode(target=target, cases=cases, default_branch=default_branch)
+
+
 
 
     # --- Declarations & Control Structures ---
@@ -303,7 +346,14 @@ class Parser:
     # --- Precedence Ladder for Expressions ---
 
     def parse_expression(self):
-        return self.parse_null_coalesce()
+        return self.parse_pipeline()
+
+    def parse_pipeline(self):
+        node = self.parse_null_coalesce()
+        while self.match('PIPELINE'):
+            right = self.parse_null_coalesce()
+            node = PipelineNode(left=node, right=right)
+        return node
 
     def parse_null_coalesce(self):
         node = self.parse_logic_or()
@@ -311,6 +361,7 @@ class Parser:
             right = self.parse_logic_or()
             node = BinOpNode(left=node, op='??', right=right)
         return node
+
 
     def parse_logic_or(self):
         node = self.parse_logic_and()
@@ -330,7 +381,7 @@ class Parser:
 
     def parse_comparison(self):
         node = self.parse_additive()
-        comp_types = ('EQ', 'NEQ', 'LT', 'GT', 'LTE', 'GTE', 'FAT_ARROW')
+        comp_types = ('EQ', 'NEQ', 'LT', 'GT', 'LTE', 'GTE')
         while self.peek() and self.peek().type in comp_types:
             op = self.advance().value
             right = self.parse_additive()
@@ -395,10 +446,24 @@ class Parser:
                     name = self.expect('ID').value
                 node = SafeNavNode(target=node, property_name=name)
 
-            elif self.match('LBRACKET'):
+            elif self.peek() and self.peek().type == 'LBRACKET':
+                lookahead_idx = self.pos + 1
+                is_match_block = False
+                while lookahead_idx < len(self.tokens):
+                    t = self.tokens[lookahead_idx]
+                    if t.type == 'NEWLINE':
+                        lookahead_idx += 1
+                        continue
+                    if t.type == 'KEYWORD' and t.value in ('case', 'else'):
+                        is_match_block = True
+                    break
+                if is_match_block:
+                    break
+                self.advance()
                 idx = self.parse_expression()
                 self.expect('RBRACKET')
                 node = IndexAccessNode(target=node, index=idx)
+
             elif self.match('LPAREN'):
                 args = self.parse_arguments()
                 self.expect('RPAREN')

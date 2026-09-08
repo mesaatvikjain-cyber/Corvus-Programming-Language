@@ -29,7 +29,7 @@ RULES = [
     ('STRING',     r'"[^"\n]*"'),
 
     # Keywords (control flow, declarations, boolean literals)
-    ('KEYWORD',    r'\b(set|const|mk|givout|if|elsif|else|for|in|while|brk|con|try|error|final|true|fal|null|and|or|not|xor|async|awt|cls|global|pass|get|input)\b'),
+    ('KEYWORD',    r'\b(set|const|mk|givout|if|elsif|else|for|in|while|brk|con|try|error|final|true|fal|null|and|or|not|xor|async|awt|cls|global|pass|get|input|match|case)\b'),
 
 
     # Data Types (used in `set type; name = ...`)
@@ -39,7 +39,9 @@ RULES = [
     ('TUP_OPEN',   r'\(\['),
     ('TUP_CLOSE',  r'\]\)'),
     ('FAT_ARROW',  r'=>'),
+    ('PIPELINE',   r'\|>'),
     ('SAFE_NAV',   r'\?\.'),
+
     ('NULL_COAL',  r'\?\?'),
     ('POWER',      r'\*\*'),
     ('EQ',         r'=='),

@@ -99,9 +99,9 @@ def main():
         return
 
 
-    rel_asm = f".\\{os.path.basename(asm_file)}"
-    rel_obj = f".\\{os.path.basename(obj_file)}"
-    rel_exe = f".\\{os.path.basename(exe_file)}"
+    rel_asm = asm_file
+    rel_obj = obj_file
+    rel_exe = exe_file
 
     print(f"[2/3] Assembling with NASM -> '{rel_obj}'...")
     res_nasm = subprocess.run([nasm_path, "-f", "win64", rel_asm, "-o", rel_obj])
