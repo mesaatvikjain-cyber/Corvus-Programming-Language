@@ -2,28 +2,31 @@
   <img src="Documentation/corvus_logo.png" alt="Corvus Programming Language Logo" width="240"/>
 </p>
 
-<h1 align="center">Corvus Programming Language</h1>
+<h1 align="center">Corvus Programming Language (v2.0)</h1>
 
 <p align="center">
-  <b>A modern, clean, and general-purpose programming language built in Python — featuring explicit block scoping, static type annotations, first-class lambdas, OOP, and friendly diagnostic errors.</b>
+  <b>A modern, clean, general-purpose programming language featuring explicit block scoping <code>[ ... ]</code>, static type annotations, first-class lambdas, OOP, native input, an AST Interpreter, and a 64-bit x86 Native Assembly Compiler.</b>
 </p>
 
 <p align="center">
   <a href="#-the-story-behind-corvus">The Story</a> •
   <a href="#-key-features">Key Features</a> •
+  <a href="#-architecture--dual-engine">Architecture</a> •
   <a href="#-quickstart">Quickstart</a> •
-  <a href="#-code-showcase">Code Examples</a> •
-  <a href="#-license">License</a>
+  <a href="#-code-showcase">Code Showcase</a> •
+  <a href="#-license--author">License</a>
 </p>
 
 ---
 
 ## 📖 The Story Behind Corvus
 
-> *"I got inspired to build my own programming language after watching a video about a programmer who created G# and C#. Since I already knew Python, I decided to take on the challenge and build my very own programming language from scratch!"*  
-> — **Saatvik Jain** (11-Year-Old Creator of Corvus)
+> *"I got inspired to build my own programming language after watching a video about a programmer who created G# and C#, and a video by AstroSam. Since I already knew Python, I decided to take on the challenge and build my very own programming language from scratch!"*  
+> — **Saatvik Jain** (Creator of Corvus)
 
-**Corvus** was born out of curiosity and a passion for computer science. Instead of relying on indentation (like Python) or curly braces (like C/JavaScript), Corvus introduces a unique syntax using square brackets `[ ... ]` for code blocks, reserving curly braces `{ ... }` for native lists. It combines the ease of Python with explicit type declarations, structured error recovery, and actionable developer diagnostics.
+**Corvus** was born out of curiosity and a passion for computer science. Instead of relying on indentation (like Python) or curly braces (like C/JavaScript), Corvus introduces a unique syntax using **square brackets `[ ... ]` for code blocks**, reserving **curly braces `{ ... }` for native lists**. 
+
+It has grown from an interpreted language into a full-fledged compiled language with an automated **64-bit x86 NASM Machine Code Compiler (`CorvusC`)** that translates `.crv` source code into standalone `.exe` executables!
 
 ---
 
@@ -31,33 +34,78 @@
 
 * **📦 Explicit Scope Delimiters**: Code blocks use brackets `[ ... ]` for clean, unambiguous scope boundaries.
 * **🏷️ Explicit Type Declarations**: `set <type>; name = value` for typed variables and `set const; NAME = value` for immutable constants.
-* **🎯 Actionable Error Diagnostics**: Custom diagnostic engine that points to the exact line/column with caret pointers (`^`) and actionable fix suggestions.
+* **⌨️ Native User Input**: `input("Prompt: ")` supported natively in both Interpreter and Compiled modes.
 * **⚡ First-Class Lambdas**: Inline and block lambdas (`lmb[x] => x * 2`) with functional list transformations (`.map()`, `.filter()`).
 * **🧬 Object-Oriented Programming**: Complete support for classes (`cls Person() [ ... ]`) with `init` constructors and `self` instance dispatch.
+* **⚙️ 64-bit Native NASM Compiler**: Emits pure x86-64 NASM Assembly and links native `.exe` executables via `nasm` and LLVM `clang`.
+* **🎯 Actionable Error Diagnostics**: Custom diagnostic engine that points to the exact line/column with caret pointers (`^`) and fix suggestions.
 * **🛡️ Structured Exception Recovery**: `try [ ... ] error(e) [ ... ] final [ ... ]` blocks.
-* **📚 Native Standard Modules**: Built-in modules including `get math` (`math.pi`, `math.sqrt`) and `get system`.
+* **📚 Built-in Standard Libraries**: Native modules including `get math` (`math.pi`, `math.sqrt`) and `get system`.
+
+---
+
+## 🏗️ Architecture & Dual Engine
+
+Corvus operates on a textbook 5-stage pipeline with two execution backends:
+
+$$\text{Corvus Source (.crv)} \xrightarrow{\text{Lexer}} \text{Tokens} \xrightarrow{\text{Parser}} \text{AST} \begin{cases} \xrightarrow{\text{Evaluator}} \text{Interpreted Execution} \\ \xrightarrow{\text{AsmGenerator}} \text{NASM x86-64} \xrightarrow{\text{Linker}} \text{Native .exe} \end{cases}$$
+
+1. **Lexer** ([`Interpreter/lexercorvus.py`](Interpreter/lexercorvus.py)): Tokenizes source code into typed tokens while handling comments (`?{ ... }`).
+2. **Parser** ([`Interpreter/parsercorvus.py`](Interpreter/parsercorvus.py)): Recursive-descent parser constructing Abstract Syntax Tree (AST) nodes with operator precedence.
+3. **Interpreter Backend** ([`Interpreter/evaluatorcorvus.py`](Interpreter/evaluatorcorvus.py)): AST Visitor interpreter managing lexically-scoped environment trees.
+4. **Compiler Backend** ([`Compiler/compiler_asm.py`](Compiler/compiler_asm.py)): 64-bit x86 NASM Assembly generator supporting Win64 calling conventions and C library `printf` / `scanf` calls.
+5. **Compiler Driver** ([`Compiler/CorvusC.py`](Compiler/CorvusC.py)): One-command build system with automatic toolchain discovery for `nasm` and LLVM `clang`.
 
 ---
 
 ## 🚀 Quickstart
 
 ### Prerequisites
-Make sure you have **Python 3.8+** installed on your computer.
+* **Python 3.8+**
+* Optional for Native `.exe` Compilation:
+  ```powershell
+  winget install NASM.NASM
+  winget install MartinStorsjo.LLVM-MinGW.UCRT
+  ```
 
-### Running a Corvus Script
-Clone the repository and run any `.crv` file using the Corvus driver:
+### Installation & Global CLI Setup
+Clone the repository and add the `bin/` directory to your system PATH:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/Corvus.git
+git clone https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-.git
 cd Corvus
-python Corvus.py test_v01.crv
+```
+
+### Running Corvus Commands
+
+#### 1. Native Compiler (`corvusc`)
+```cmd
+# Compile and run native executable directly
+corvusc Examples-and-Tests/01_hello_and_input.crv -r
+
+# Compile to custom binary name
+corvusc main.crv -o my_app.exe
+```
+
+#### 2. Interpreter (`corvus`)
+```cmd
+corvus Examples-and-Tests/02_recursion_factorial.crv
 ```
 
 ---
 
 ## 💻 Code Showcase
 
-### 1. Factorial Recursion & Control Flow
+### 1. Interactive Native Input & Arithmetic
+```corvus
+set str; name = input("Enter your name: ")
+set int; age = input("Enter your age: ")
+
+log("Hello,", name)
+log("Next year you will be:", age + 1)
+```
+
+### 2. Factorial Recursion & Control Flow
 ```corvus
 ?{ Pure recursive function in Corvus }
 mk func factorial(n) [
@@ -70,7 +118,7 @@ mk func factorial(n) [
 log("Factorial of 5 is:", factorial(5))
 ```
 
-### 2. Lambdas & Higher-Order List Operations
+### 3. Lambdas & Higher-Order List Operations
 ```corvus
 set lis; numbers = {1, 2, 3, 4, 5}
 set lmb; double_fn = lmb[x] => x * 2
@@ -79,7 +127,7 @@ set lis; doubled_list = numbers.map(double_fn)
 log("Doubled numbers:", doubled_list)
 ```
 
-### 3. Object-Oriented Class Declaration
+### 4. Object-Oriented Class Declaration
 ```corvus
 cls Person() [
     set str; name
@@ -95,40 +143,36 @@ cls Person() [
     ]
 ]
 
-set Person; user = Person("Saatvik Jain", 22)
+set Person; user = Person("Saatvik Jain", 11)
 user.describe()
-```
-
-### 4. Diagnostic Error Handling
-```corvus
-try [
-    log("Executing calculation...")
-    set int; result = 10 / 0
-] error(err) [
-    log("Caught error safely ->", err["message"])
-] final [
-    log("Cleanup block executed.")
-]
 ```
 
 ---
 
-## 🏗️ Architecture & How It Works
+## 📂 Repository Structure
 
-Corvus is built using a textbook 5-stage compiler pipeline:
-
-$$\text{Corvus Source Code (.crv)} \xrightarrow{\text{Lexer}} \text{Tokens} \xrightarrow{\text{Parser}} \text{AST} \xrightarrow{\text{Evaluator + Environment}} \text{Execution}$$
-
-1. **Lexer** ([`lexercorvus.py`](lexercorvus.py)): Tokenizes source code into typed tokens while handling comments (`?{ ... }`) and multi-line offsets.
-2. **Parser** ([`parsercorvus.py`](parsercorvus.py)): Recursive-descent parser constructing Abstract Syntax Tree (AST) nodes with an operator precedence ladder.
-3. **AST** ([`astnodes.py`](astnodes.py)): Strongly-typed dataclass representation of all language primitives.
-4. **Evaluator** ([`evaluatorcorvus.py`](evaluatorcorvus.py)): AST Visitor interpreter managing lexically-scoped `Environment` trees and runtime dispatch.
-5. **Diagnostics** ([`errors.py`](errors.py)): Formatted exception formatter printing precise line/column pointers and fix suggestions.
+```
+Corvus/
+├── bin/                    # Global CLI launch scripts (corvus.bat, corvusc.bat)
+├── Compiler/               # 64-bit Native NASM Compiler & CorvusC CLI Driver
+│   ├── compiler_asm.py     # x86-64 NASM Code Generator
+│   ├── CorvusC.py          # One-Click Compiler CLI Driver
+│   └── Lexercompiler.py    # Compiler Lexer
+├── Interpreter/            # AST Visitor Interpreter Engine
+│   ├── Corvus.py           # Interpreter CLI Driver
+│   ├── evaluatorcorvus.py  # AST Evaluator & Scoping Environment
+│   ├── lexercorvus.py      # Lexer
+│   ├── parsercorvus.py     # Parser
+│   └── errors.py           # Diagnostic Caret Error Formatter
+├── Documentation/          # Official Specifications (.docx) & Logos
+├── Editor-Extension/       # VS Code Syntax Highlighting Extension
+└── Examples-and-Tests/     # Runnable Corvus Example Programs
+```
 
 ---
 
 ## 📄 License & Author
 
-* **Author**: Saatvik Jain (11-Year-Old Developer)
-* **Documentation**: See [`Corvus v0.1.0.docx`](Corvus%20v0.1.0.docx) for the full language reference specification.
+* **Author**: Saatvik Jain (Creator of Corvus)
+* **Documentation**: See [`Documentation/Corvus v0.1.0.docx`](Documentation/) for the full language reference specification.
 * **License**: Released under the open-source [MIT License](LICENSE).
