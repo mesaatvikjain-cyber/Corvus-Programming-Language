@@ -9,12 +9,24 @@
 </p>
 
 <p align="center">
+  <a href="Documentation/webpage_corvus/index.html"><b>🌐 Official Documentation Webpage</b></a> •
+  <a href="Documentation/HOSTING.md"><b>☁️ Hosting Guide</b></a> •
   <a href="#-repository-version-sitemap">Version Sitemap</a> •
   <a href="#-the-story-behind-corvus">The Story</a> •
   <a href="#-version-matrix--features">Version Matrix</a> •
-  <a href="#-quickstart">Quickstart</a> •
-  <a href="#-license--author">License</a>
+  <a href="#-quickstart">Quickstart</a>
 </p>
+
+---
+
+## 🌐 Official Documentation Website (`webpage_corvus`)
+
+Corvus now features a complete, interactive, self-contained **Master Documentation Website** located inside [`Documentation/webpage_corvus/`](Documentation/webpage_corvus/index.html) (and mirrored in [`docs/`](docs/index.html) for GitHub Pages).
+
+### 🚀 Highlights of the Documentation Webpage
+- **14 Exhaustive Chapters**: Covers Language Story, Syntax, Control Flow, Lambdas, OOP, Functional Pipelines, Ref-Counting Memory GC, "Murder of Crows" Concurrency, Native C FFI, Standard Library, TAC IR Compiler, v4.1 Super Optimizer, Self-Hosted Architecture, and VS Code Tooling.
+- **Interactive Features**: Real-time Search Filter, Active Sidebar Tracker, 1-Click Code Snippet Copying, and Responsive Dark Theme.
+- **Free Online Hosting Support**: Easily host on **GitHub Pages**, **Vercel**, **Netlify**, or **Cloudflare Pages**. See [Documentation/HOSTING.md](Documentation/HOSTING.md) for step-by-step instructions.
 
 ---
 
@@ -73,12 +85,7 @@ It has grown from an interpreted prototype into a **self-hosted, IR-optimized sy
 - **🔌 VS Code Extension Enhancements v0.3.0 (`Editor-Extension/`)**: Real-time Language Diagnostics / Syntax Linter on save and direct execution commands.
 
 ### 6. Version 4.1 (`Version_4.1/`)
-- **⚡ Super High-Level Optimization Engine (`super_optimizer.py`)**:
-  - **Constant Propagation Pass**: Propagates constant variable definitions across basic blocks prior to expression evaluation.
-  - **Algebraic Simplification & Strength Reduction**: Replaces arithmetic operations with cheaper instructions (`x * 0 -> 0`, `x + 0 -> x`, `x * 1 -> x`, `x * 2^n -> x << n`, `x / 2^n -> x >> n`).
-  - **Constant Branch Folding**: Evaluates constant conditional checks at compile time (`if (1)`) and prunes un-taken branch paths.
-  - **CFG Jump Threading**: Collapses chained jumps and eliminates redundant jump target labels.
-  - **Assembly Peephole Optimization Pass (`optimize_assembly`)**: Strips redundant store/load sequences and self-register moves from emitted NASM assembly.
+- **⚡ Super High-Level Optimization Engine (`super_optimizer.py`)**: Constant Propagation, Algebraic Strength Reduction (`x * 2^n -> x << n`, `x / 2^n -> x >> n`), Constant Branch Folding (`if (1)`), CFG Jump Threading, Assembly Peephole Optimization.
 
 ---
 
