@@ -5,7 +5,7 @@
 <h1 align="center">Corvus Programming Language</h1>
 
 <p align="center">
-  <b>A modern, multi-version systems and application language featuring explicit block scoping <code>[ ... ]</code>, static type annotations, first-class lambdas, OOP, Three-Address Code (TAC) IR Optimization, Self-Hosted Compiler, Deterministic Scope Memory Ref-Counting, Interactive REPL, Native Standard Library Expansion, and VS Code Language Diagnostics.</b>
+  <b>A modern, multi-version systems and application language featuring explicit block scoping <code>[ ... ]</code>, static type annotations, first-class lambdas, OOP, Three-Address Code (TAC) IR Optimization, Self-Hosted Compiler, Deterministic Scope Memory Ref-Counting, Interactive REPL, Super High-Level Optimization Engine, and VS Code Language Diagnostics.</b>
 </p>
 
 <p align="center">
@@ -28,7 +28,8 @@ The Corvus codebase is structured into explicit, standalone version releases so 
 | **[`Version_2.0/`](Version_2.0/)** | **v2.0** | Multi-Platform Native Assembly Compiler (`--target windows\|linux\|macos`), Pattern Matching, Pipeline Operator (`\|>`), Built-in Libs | NASM x86_64 Win64, ELF64, Mach-O Compiler & Interpreter |
 | **[`Version_3.0/`](Version_3.0/)** | **v3.0** | **Self-Hosted Compiler (`CorvusCompiler.crv`)**, **Three-Address Code (TAC) IR Optimizer**, **Ref-Counting GC**, **"Murder of Crows" 🐦 Concurrency Engine**, **Native C FFI** | Optimized TAC IR Compiler, Self-Hosted Corvus Compiler & Interpreter |
 | **[`Version_3.1/`](Version_3.1/)** | **v3.1** | **Enterprise Error Handling & Resilience Engine**: **Call Stack Tracebacks**, **Panic-Mode Parser Recovery**, **Assembly Runtime Panic Guards (`__corvus_panic_null`, `__corvus_panic_bounds`)** | Resilient Multi-Platform TAC IR Compiler & Enterprise Interpreter |
-| **[`Version_4.0/`](Version_4.0/)** | **v4.0** | **Native Corvus Standard Library Expansion (`math.crv`, `string.crv`, `file.crv`, `sys.crv`)**, **Advanced TAC IR Backend Optimizations (Function Inlining, Loop Unrolling, CSE)**, **Interactive REPL Shell (`repl.py`)**, **VS Code Extension v0.3.0 with Real-Time Language Diagnostics/Linter** | Full Enterprise TAC IR Compiler, Native Executable Compiler & Interactive REPL Shell |
+| **[`Version_4.0/`](Version_4.0/)** | **v4.0** | **Native Corvus Standard Library Expansion (`math.crv`, `string.crv`, `file.crv`, `sys.crv`)**, **Advanced TAC IR Backend Optimizations**, **Interactive REPL Shell (`repl.py`)**, **VS Code Extension v0.3.0** | Full Enterprise TAC IR Compiler, Native Executable Compiler & Interactive REPL |
+| **[`Version_4.1/`](Version_4.1/)** | **v4.1** | **Super High-Level Optimization Engine**: **Constant Propagation**, **Algebraic Strength Reduction (`x * 2^n -> x << n`, `x / 2^n -> x >> n`)**, **Constant Branch Folding (`if (1)`)**, **CFG Jump Threading**, **Assembly Peephole Optimization** | Super-Optimized TAC IR Compiler & Native Executable Generator |
 
 ---
 
@@ -63,29 +64,21 @@ It has grown from an interpreted prototype into a **self-hosted, IR-optimized sy
 - **🚀 Self-Hosted Corvus Compiler & Interpreter**: `Compiler_SelfHosted/CorvusCompiler.crv` and `CorvusInterpreter.crv` written directly in pure Corvus syntax!
 
 ### 4. Version 3.1 (`Version_3.1/`)
-- **🛡️ Enterprise Error Handling & Resilience Engine**:
-  - **Visual Diagnostics & Call Stack Tracebacks**: Formatted error reports displaying active function call stack frames and caret pointers (`^^^^^`).
-  - **Panic-Mode Parser Recovery (`synchronize()`)**: Prevents cascading compilation failure by skipping to the next statement boundary upon syntax errors.
-  - **Assembly Runtime Safety Guards**: Native assembly guards (`__corvus_panic_null`, `__corvus_panic_bounds`, `__corvus_panic_divzero`).
+- **🛡️ Enterprise Error Handling & Resilience Engine**: Visual Diagnostics, Call Stack Tracebacks, Panic-Mode Parser Recovery (`synchronize()`), and Assembly Runtime Safety Guards.
 
 ### 5. Version 4.0 (`Version_4.0/`)
-- **📚 Native Corvus Standard Library Expansion (`StdLib/`)**:
-  - `math.crv`: `abs`, `max`, `min`, `pow`, `factorial`, `clamp`, `sqrt_approx`.
-  - `string.crv`: `repeat_str`, `pad_left`, `pad_right`, `is_empty`.
-  - `file.crv`: `read_all`, `write_all`, `file_exists`.
-  - `sys.crv`: `get_platform`, `get_version`.
-- **🚀 Advanced TAC IR Compiler Optimizations (`Compiler_Core/optimizer.py`)**:
-  - **Function Inlining Pass (`inlining_pass`)**: Inlines non-recursive leaf functions to eliminate call overhead.
-  - **Loop Unrolling Pass (`loop_unrolling_pass`)**: Detects and expands small fixed-iteration loops in TAC IR.
-  - **Common Subexpression Elimination (`cse_pass`)**: Eliminates redundant expression computations across basic blocks.
-- **💻 Interactive REPL Shell (`Interpreter/repl.py`)**:
-  - Multi-line block detection (unclosed braces/parentheses).
-  - Tab auto-completion for keywords, builtins, and active symbols.
-  - Interactive state directives (`.help`, `.vars`, `.funcs`, `.clear`, `.reset`, `.exit`).
-- **🔌 VS Code Extension Enhancements v0.3.0 (`Editor-Extension/`)**:
-  - Real-time Language Diagnostics / Syntax Linter on save.
-  - Inline execution commands (`Corvus: Run File in Interpreter`, `Corvus: Compile & Run Native Binary`).
-  - Integrated status bar execution control (`▶ Run Corvus`).
+- **📚 Native Corvus Standard Library Expansion (`StdLib/`)**: `math.crv`, `string.crv`, `file.crv`, `sys.crv`.
+- **🚀 Advanced TAC IR Backend Optimizations**: Function Inlining Pass, Loop Unrolling Pass, Common Subexpression Elimination (`cse_pass`).
+- **💻 Interactive REPL Shell (`Interpreter/repl.py`)**: Multi-line block detection, tab auto-completion, state directives (`.vars`, `.funcs`, `.clear`, `.reset`, `.exit`).
+- **🔌 VS Code Extension Enhancements v0.3.0 (`Editor-Extension/`)**: Real-time Language Diagnostics / Syntax Linter on save and direct execution commands.
+
+### 6. Version 4.1 (`Version_4.1/`)
+- **⚡ Super High-Level Optimization Engine (`super_optimizer.py`)**:
+  - **Constant Propagation Pass**: Propagates constant variable definitions across basic blocks prior to expression evaluation.
+  - **Algebraic Simplification & Strength Reduction**: Replaces arithmetic operations with cheaper instructions (`x * 0 -> 0`, `x + 0 -> x`, `x * 1 -> x`, `x * 2^n -> x << n`, `x / 2^n -> x >> n`).
+  - **Constant Branch Folding**: Evaluates constant conditional checks at compile time (`if (1)`) and prunes un-taken branch paths.
+  - **CFG Jump Threading**: Collapses chained jumps and eliminates redundant jump target labels.
+  - **Assembly Peephole Optimization Pass (`optimize_assembly`)**: Strips redundant store/load sequences and self-register moves from emitted NASM assembly.
 
 ---
 
@@ -103,18 +96,18 @@ It has grown from an interpreted prototype into a **self-hosted, IR-optimized sy
 
 ### Executing Across Corvus Versions
 
-#### Launching the Interactive REPL Shell (v4.0)
+#### Launching the Interactive REPL Shell (v4.1)
 ```bash
-python Version_4.0/Interpreter/Corvus.py --repl
+python Version_4.1/Interpreter/Corvus.py --repl
 ```
 
-#### Running Version 4.0 Test Suite
+#### Running Version 4.1 Super Optimization Test Suite
 ```bash
 # Interpreter
-python Version_4.0/Interpreter/Corvus.py Version_4.0/Examples-and-Tests/12_version4_suite.crv
+python Version_4.1/Interpreter/Corvus.py Version_4.1/Examples-and-Tests/13_super_optimization_suite.crv
 
 # Native Windows Executable Compiler
-python Version_4.0/Compiler_Windows/CorvusC_win64.py Version_4.0/Examples-and-Tests/12_version4_suite.crv
+python Version_4.1/Compiler_Windows/CorvusC_win64.py Version_4.1/Examples-and-Tests/13_super_optimization_suite.crv
 ```
 
 ---
