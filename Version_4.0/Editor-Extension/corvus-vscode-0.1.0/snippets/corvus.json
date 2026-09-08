@@ -1,0 +1,185 @@
+{
+  "Function": {
+    "prefix": "func",
+    "body": [
+      "mk func ${1:name}(${2:parameters}) [",
+      "\t${0}",
+      "]"
+    ],
+    "description": "Create a Corvus function"
+  },
+  "Async Function": {
+    "prefix": "afunc",
+    "body": [
+      "async mk func ${1:name}(${2:parameters}) [",
+      "\t${0}",
+      "]"
+    ],
+    "description": "Create an async Corvus function"
+  },
+  "If": {
+    "prefix": "if",
+    "body": [
+      "if (${1:condition}) [",
+      "\t${0}",
+      "]"
+    ],
+    "description": "Create a Corvus if block"
+  },
+  "If Else": {
+    "prefix": "ifelse",
+    "body": [
+      "if (${1:condition}) [",
+      "\t${2}",
+      "] else [",
+      "\t${0}",
+      "]"
+    ],
+    "description": "Create a Corvus if-else block"
+  },
+  "Match": {
+    "prefix": "match",
+    "body": [
+      "match ${1:target} [",
+      "\tcase ${2:pattern} => ${3:action}",
+      "\telse => ${0:default_action}",
+      "]"
+    ],
+    "description": "Create a Corvus structural pattern matching block"
+  },
+  "For Loop": {
+    "prefix": "for",
+    "body": [
+      "for (${1:item} in ${2:collection}) [",
+      "\t${0}",
+      "]"
+    ],
+    "description": "Create a Corvus for loop"
+  },
+  "While Loop": {
+    "prefix": "while",
+    "body": [
+      "while (${1:condition}) [",
+      "\t${0}",
+      "]"
+    ],
+    "description": "Create a Corvus while loop"
+  },
+  "Variable": {
+    "prefix": "set",
+    "body": [
+      "set ${1:int}; ${2:name} = ${0:value}"
+    ],
+    "description": "Declare a Corvus variable"
+  },
+  "Constant": {
+    "prefix": "const",
+    "body": [
+      "set const; ${1:NAME} = ${0:value}"
+    ],
+    "description": "Declare a Corvus constant"
+  },
+  "Class": {
+    "prefix": "cls",
+    "body": [
+      "cls ${1:Person}() [",
+      "\tset ${2:str}; ${3:name}",
+      "",
+      "\tmk func init(${4:name_val}) [",
+      "\t\tself.${3:name} = ${4:name_val}",
+      "\t]",
+      "",
+      "\tmk func describe() [",
+      "\t\t${0}",
+      "\t]",
+      "]"
+    ],
+    "description": "Declare a Corvus class"
+  },
+  "Try Catch": {
+    "prefix": "try",
+    "body": [
+      "try [",
+      "\t${1}",
+      "] error(${2:e}) [",
+      "\t${0}",
+      "] final [",
+      "\t",
+      "]"
+    ],
+    "description": "Create a Corvus try/error/final block"
+  },
+  "Lambda": {
+    "prefix": "lmb",
+    "body": [
+      "set lmb; ${1:name} = lmb[${2:x}] => ${0:x * 2}"
+    ],
+    "description": "Create a Corvus lambda"
+  },
+  "Pipeline": {
+    "prefix": "pipe",
+    "body": [
+      "${1:data} |> ${2:fn1} |> ${0:fn2}"
+    ],
+    "description": "Pipeline operator data transformation"
+  },
+  "Log Output": {
+    "prefix": "log",
+    "body": [
+      "log(${0:message})"
+    ],
+    "description": "Print output using log()"
+  },
+  "Native Input": {
+    "prefix": "input",
+    "body": [
+      "set str; ${1:name} = input(\"${2:Enter prompt: }\")"
+    ],
+    "description": "Read native user input"
+  },
+  "Module Import": {
+    "prefix": "get",
+    "body": [
+      "get ${1:math}"
+    ],
+    "description": "Import a Corvus module or Python library"
+  },
+  "GUI Alert": {
+    "prefix": "alert",
+    "body": [
+      "gui.alert(\"${1:Title}\", \"${0:Message}\")"
+    ],
+    "description": "Display a GUI alert box"
+  },
+  "HTTP GET": {
+    "prefix": "httpget",
+    "body": [
+      "set str; ${1:response} = http.get(\"${0:https://api.example.com}\")"
+    ],
+    "description": "Make an HTTP GET request"
+  },
+  "Memory Allocation": {
+    "prefix": "memalloc",
+    "body": [
+      "set str; ${1:ptr} = mem.alloc(${0:1024})"
+    ],
+    "description": "Allocate heap memory buffer"
+  },
+  "FFI Bind": {
+    "prefix": "ffibind",
+    "body": [
+      "set any; ${1:lib} = ffi.load(\"${2:c}\")",
+      "set any; ${3:func} = ffi.bind(${1:lib}, \"${4:symbol}\", [\"${5:str}\"], \"${6:int}\")",
+      "ffi.call(${3:func}, ${0})"
+    ],
+    "description": "Bind and invoke native C shared library function via FFI"
+  },
+  "Murder of Crows Task": {
+    "prefix": "crowfly",
+    "body": [
+      "set any; ${1:crow1} = crow.fly(${2:task_func}, ${3:arg})",
+      "set lis; ${4:results} = crow.flock([${1:crow1}])"
+    ],
+    "description": "Spawn worker crow thread and await flock results"
+  }
+}
