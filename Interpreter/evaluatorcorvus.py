@@ -1,7 +1,12 @@
 import math
 import sys
 import os
+import random
+import time
+import json
+import importlib
 from concurrent.futures import ThreadPoolExecutor, Future
+
 from errors import CorvusError
 from astnodes import (
     ProgramNode, LiteralNode, IdentifierNode, ListNode, TupleNode, DictNode,
@@ -562,7 +567,14 @@ class Evaluator:
                 "tan": math.tan,
                 "pi": math.pi,
                 "floor": math.floor,
-                "ceil": math.ceil
+                "ceil": math.ceil,
+                "abs": abs,
+                "log": math.log,
+                "exp": math.exp,
+                "radians": math.radians,
+                "degrees": math.degrees,
+                "factorial": math.factorial,
+                "gcd": math.gcd
             }
             mod_obj = ModuleNamespace("math", math_symbols)
             self.env.define("math", mod_obj, "module")
@@ -571,16 +583,95 @@ class Evaluator:
             sys_symbols = {
                 "os": os.name,
                 "args": sys.argv,
-                "exit": sys.exit
+                "exit": sys.exit,
+                "platform": sys.platform,
+                "version": sys.version,
+                "getenv": os.getenv
             }
             mod_obj = ModuleNamespace("system", sys_symbols)
             self.env.define("system", mod_obj, "module")
+
+        elif mod_name == "random":
+            rand_symbols = {
+                "randint": random.randint,
+                "choice": random.choice,
+                "random": random.random,
+                "shuffle": random.shuffle,
+                "sample": random.sample,
+                "uniform": random.uniform,
+                "randrange": random.randrange
+            }
+            mod_obj = ModuleNamespace("random", rand_symbols)
+            self.env.define("random", mod_obj, "module")
+
+        elif mod_name == "time":
+            time_symbols = {
+                "time": time.time,
+                "sleep": time.sleep,
+                "ctime": time.ctime,
+                "stamp": lambda: int(time.time())
+            }
+            mod_obj = ModuleNamespace("time", time_symbols)
+            self.env.define("time", mod_obj, "module")
+
+        elif mod_name == "json":
+            json_symbols = {
+                "dumps": json.dumps,
+                "loads": json.loads,
+                "stringify": json.dumps,
+                "parse": json.loads
+            }
+            mod_obj = ModuleNamespace("json", json_symbols)
+            self.env.define("json", mod_obj, "module")
+
+        elif mod_name == "file":
+            def file_read(path):
+                with open(path, "r", encoding="utf-8") as f:
+                    return f.read()
+
+            def file_write(path, content):
+                with open(path, "w", encoding="utf-8") as f:
+                    f.write(str(content))
+                return True
+
+            def file_append(path, content):
+                with open(path, "a", encoding="utf-8") as f:
+                    f.write(str(content))
+                return True
+
+            def file_lines(path):
+                with open(path, "r", encoding="utf-8") as f:
+                    return [line.rstrip("\n") for line in f]
+
+            file_symbols = {
+                "read": file_read,
+                "write": file_write,
+                "append": file_append,
+                "lines": file_lines,
+                "exists": os.path.exists,
+                "remove": os.remove
+            }
+            mod_obj = ModuleNamespace("file", file_symbols)
+            self.env.define("file", mod_obj, "module")
+
         else:
-            raise CorvusError(
-                error_type="Corvus ModuleError",
-                message=f"Module '{mod_name}' not found.",
-                suggestion="Built-in modules supported in v0.1: 'math', 'system'."
-            )
+            # Universal Python Module Bridge: dynamically import any Python library
+            try:
+                py_mod = importlib.import_module(mod_name)
+                mod_symbols = {
+                    attr: getattr(py_mod, attr)
+                    for attr in dir(py_mod)
+                    if not attr.startswith("__")
+                }
+                mod_obj = ModuleNamespace(mod_name, mod_symbols)
+                self.env.define(mod_name, mod_obj, "module")
+            except ImportError:
+                raise CorvusError(
+                    error_type="Corvus ModuleError",
+                    message=f"Module '{mod_name}' could not be loaded.",
+                    suggestion=f"Ensure '{mod_name}' is installed or available in Python."
+                )
+
 
     def visit_TryErrorNode(self, node: TryErrorNode):
         res = None
