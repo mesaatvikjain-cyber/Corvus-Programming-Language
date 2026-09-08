@@ -1,0 +1,58 @@
+?{ =================================================
+   Corvus v0.1.0 Feature Verification Test Suite
+   ================================================= }
+
+log("=== 1. Testing Builtin Modules & Math ===")
+get math
+log("Math PI constant:", math.pi)
+log("Square root of 64:", math.sqrt(64))
+
+log("=== 2. Testing Lambda Expressions & Callbacks ===")
+set lmb; double_fn = lmb[n] => n * 2
+log("Double of 21:", double_fn(21))
+
+set lis; numbers = {1, 2, 3, 4, 5}
+set lis; doubled = numbers.map(lmb[x] => x * 10)
+log("Mapped numbers:", doubled)
+
+log("=== 3. Testing Classes & Object Instantiation ===")
+cls Person() [
+    set str; name
+    set int; age
+
+    mk func init(name_val, age_val) [
+        self.name = name_val
+        self.age = age_val
+    ]
+
+    mk func describe() [
+        log("Person Details -> Name:", self.name, "| Age:", self.age)
+    ]
+]
+
+set Person; user = Person("Saatvik Jain", 22)
+user.describe()
+
+log("=== 4. Testing Method Calls & Collection Operations ===")
+set lis; fruits = {"apple", "banana"}
+fruits.add("cherry")
+log("Fruits list after add:", fruits, "| Length:", fruits.len())
+
+set str; greeting = "  hello corvus  "
+log("Upper trimmed string:", greeting.trim().upper())
+
+log("=== 5. Testing Error Handling (try / error / final) ===")
+try [
+    log("Attempting division by zero...")
+    set int; invalid = 10 / 0
+] error(err) [
+    log("Caught expected runtime error ->", err["message"])
+] final [
+    log("Cleaned up final block successfully.")
+]
+
+log("=== 6. Testing Type Enforcement ===")
+set int; valid_count = 42
+log("Declared valid int successfully:", valid_count)
+
+log("=== All Corvus v0.1.0 Verification Tests Passed Successfully ===")

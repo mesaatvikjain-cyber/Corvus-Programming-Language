@@ -1,0 +1,50 @@
+{
+  "name": "corvus-language-support",
+  "displayName": "Corvus Language Support",
+  "description": "Syntax highlighting, language configuration, and snippets for the Corvus programming language.",
+  "version": "0.2.0",
+  "publisher": "mesaatvikjain",
+  "icon": "icon.png",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "corvus",
+    "programming language",
+    "language support"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "corvus",
+        "aliases": [
+          "Corvus",
+          "corvus"
+        ],
+        "extensions": [
+          ".crv",
+          ".Crv"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "corvus",
+        "scopeName": "source.corvus",
+        "path": "./syntaxes/corvus.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "corvus",
+        "path": "./snippets/corvus.json"
+      }
+    ]
+  }
+}

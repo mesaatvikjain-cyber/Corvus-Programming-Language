@@ -2,20 +2,31 @@
   <img src="Documentation/corvus_logo.png" alt="Corvus Programming Language Logo" width="240"/>
 </p>
 
-<h1 align="center">Corvus Programming Language (v2.0)</h1>
+<h1 align="center">Corvus Programming Language</h1>
 
 <p align="center">
-  <b>A modern, clean, general-purpose programming language featuring explicit block scoping <code>[ ... ]</code>, static type annotations, first-class lambdas, OOP, native input, an AST Interpreter, and a 64-bit x86 Native Assembly Compiler.</b>
+  <b>A modern, multi-version systems and application language featuring explicit block scoping <code>[ ... ]</code>, static type annotations, first-class lambdas, OOP, Three-Address Code (TAC) IR Optimization, Self-Hosted Compiler, Deterministic Scope Memory Ref-Counting, and "Murder of Crows" 🐦 Concurrency Engine.</b>
 </p>
 
 <p align="center">
+  <a href="#-repository-version-sitemap">Version Sitemap</a> •
   <a href="#-the-story-behind-corvus">The Story</a> •
-  <a href="#-key-features">Key Features</a> •
-  <a href="#-architecture--dual-engine">Architecture</a> •
+  <a href="#-version-matrix--features">Version Matrix</a> •
   <a href="#-quickstart">Quickstart</a> •
-  <a href="#-code-showcase">Code Showcase</a> •
   <a href="#-license--author">License</a>
 </p>
+
+---
+
+## 📂 Repository Version Sitemap
+
+The Corvus codebase is structured into explicit, standalone version releases so users and developers can select, compare, or run any generation of the language:
+
+| Directory | Version | Core Features | Execution Engine |
+| :--- | :--- | :--- | :--- |
+| **[`Version_1.1/`](Version_1.1/)** | **v1.1** | Basic AST Interpreter, Lambdas, OOP, CPM Package Manager | Python AST Visitor Interpreter |
+| **[`Version_2.0/`](Version_2.0/)** | **v2.0** | Multi-Platform Native Assembly Compiler (`--target windows\|linux\|macos`), Pattern Matching, Pipeline Operator (`\|>`), Built-in Libs | NASM x86_64 Win64, ELF64, Mach-O Compiler & Interpreter |
+| **[`Version_3.0/`](Version_3.0/)** | **v3.0** | **Self-Hosted Compiler (`CorvusCompiler.crv`)**, **Three-Address Code (TAC) IR Optimizer (Constant Folding & DCE)**, **Deterministic Scope Memory Ref-Counting**, **"Murder of Crows" 🐦 Concurrency Engine**, **Native C FFI (`ffi.load`, `ffi.bind`)**, **VS Code Extension v0.3.0** | Optimized TAC IR Compiler, Self-Hosted Corvus Compiler & Enterprise Interpreter |
 
 ---
 
@@ -26,43 +37,31 @@
 
 **Corvus** was born out of curiosity and a passion for computer science. Instead of relying on indentation (like Python) or curly braces (like C/JavaScript), Corvus introduces a unique syntax using **square brackets `[ ... ]` for code blocks**, reserving **curly braces `{ ... }` for native lists**. 
 
-It has grown from an interpreted language into a full-fledged compiled language with an automated **64-bit x86 NASM Machine Code Compiler (`CorvusC`)** that translates `.crv` source code into standalone `.exe` executables!
+It has grown from an interpreted prototype into a **self-hosted, IR-optimized systems language** with native cross-platform assembly generation (`CorvusC`) that outputs standalone binary executables!
 
 ---
 
-## 🌟 Key Features
+## 🌟 Version Matrix & Features
 
-* **🔀 Functional Pipeline Operator (`|>`)**: Expression chaining left-to-right (`val |> double_fn |> add_ten`).
-* **🎯 Structural Pattern Matching (`match / case / else`)**: Pattern matching control flow (`match code [ case 200 => ... case 404 => ... else => ... ]`).
-* **📦 Explicit Scope Delimiters**: Code blocks use brackets `[ ... ]` for clean, unambiguous scope boundaries.
-* **🏷️ Explicit Type Declarations**: `set <type>; name = value` for typed variables and `set const; NAME = value` for immutable constants.
-* **⌨️ Native User Input**: `input("Prompt: ")` supported natively in both Interpreter and Compiled modes.
-* **⚡ First-Class Lambdas**: Inline and block lambdas (`lmb[x] => x * 2`) with functional list transformations (`.map()`, `.filter()`).
-* **🧬 Object-Oriented Programming**: Complete support for classes (`cls Person() [ ... ]`) with `init` constructors and `self` instance dispatch.
-* **⚙️ 64-bit Native NASM Compiler**: Emits pure x86-64 NASM Assembly and links native `.exe` executables via `nasm` and LLVM `clang`.
-* **🔗 Universal Python Module Bridge & CPM Package Manager**: Import any Python library (`get os`, `get urllib`) or install Corvus community packages with `cpm install`.
-* **🎯 Actionable Error Diagnostics**: Custom diagnostic engine that points to the exact line/column with caret pointers (`^`) and fix suggestions.
-* **🧰 Full Suite of Built-in Utility Functions**: Native global functions including `type()`, `range()`, `sum()`, `min()`, `max()`, `abs()`, `round()`, `any()`, `all()`, `reversed()`, `sorted()`, and `enumerate()`.
-* **📚 Built-in Standard Libraries**: Native modules including `get math`, `get system`, `get random`, `get time`, `get file`, `get json`, `get gui` (`gui.alert`, `gui.prompt`), `get http` (`http.get`, `http.post`), and `get process` (`process.run`, `process.cwd`).
+### 1. Version 1.1 (`Version_1.1/`)
+- Pure AST Visitor Interpreter.
+- Lexically scoped environment trees, recursion, lambdas, classes, and Python bridge.
 
+### 2. Version 2.0 (`Version_2.0/`)
+- **Multi-Platform Assembly Generator**: Native 64-bit x86 NASM generation targeting Windows (Win64 ABI), Linux (ELF64 System V ABI), and macOS (Mach-O System V ABI).
+- **Functional Pipeline (`|>`) & Pattern Matching (`match ... case ... else`)**.
+- Built-in libraries (`math`, `system`, `gui`, `http`, `process`).
 
----
-
-## 🏗️ Architecture & Dual Engine
-
-Corvus operates on a textbook 5-stage pipeline with two execution backends:
-
-$$\text{Corvus Source (.crv)} \xrightarrow{\text{Lexer}} \text{Tokens} \xrightarrow{\text{Parser}} \text{AST} \begin{cases} \xrightarrow{\text{Evaluator}} \text{Interpreted Execution} \\ \xrightarrow{\text{AsmGenerator}} \text{NASM x86-64} \xrightarrow{\text{Linker}} \text{Native .exe} \end{cases}$$
-
-1. **Lexer** ([`Interpreter/lexercorvus.py`](Interpreter/lexercorvus.py)): Tokenizes source code into typed tokens while handling comments (`?{ ... }`, `//`, `#`).
-2. **Parser** ([`Interpreter/parsercorvus.py`](Interpreter/parsercorvus.py)): Recursive-descent parser constructing Abstract Syntax Tree (AST) nodes with operator precedence.
-3. **Interpreter Backend** ([`Interpreter/evaluatorcorvus.py`](Interpreter/evaluatorcorvus.py)): AST Visitor interpreter managing lexically-scoped environment trees and CPM module loading.
-4. **Multi-Platform Compiler Backends**:
-   - **`Compiler_Windows`** ([`Compiler_Windows/`](Compiler_Windows/)): NASM `win64` generator using Microsoft x64 ABI (`rcx`, `rdx`, `r8`, `r9`, 32-byte shadow space, `ExitProcess`, `.obj`/`.exe`).
-   - **`Compiler_Linux`** ([`Compiler_Linux/`](Compiler_Linux/)): NASM `elf64` generator using System V AMD64 ABI (`rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9`, `exit`/`printf`, `.o`/ELF binary).
-   - **`Compiler_MacOS`** ([`Compiler_MacOS/`](Compiler_MacOS/)): NASM `macho64` generator using System V AMD64 ABI with Mach-O symbol mangling (`_main`, `_printf`, `.o`/Mach-O binary).
-5. **Unified Compiler Driver** ([`Compiler/CorvusC.py`](Compiler/CorvusC.py)): Auto-detects host OS (`win32`, `linux`, `darwin`) or accepts explicit `--target windows|linux|macos` cross-compilation flags.
-6. **Package Manager (`cpm`)** ([`bin/cpm.py`](bin/cpm.py)): Official package manager for project manifest management (`corvus.json`) and dependency installation.
+### 3. Version 3.0 (`Version_3.0/`)
+- **⚡ Three-Address Code (TAC) Intermediate Representation (IR)**: Translates AST into linear TAC instructions (`ir.py`).
+- **🔥 IR Optimization Passes (`optimizer.py`)**:
+  - **Constant Folding**: Evaluates constant expressions like `2 + 3 -> 5` at compile time.
+  - **Dead Code Elimination (DCE)**: Eliminates unreachable instructions and unused temporaries.
+- **🐦 "Murder of Crows" Concurrency Engine (`crow`)**: Worker thread pools (`crow.fly`), thread synchronization (`crow.flock`), and thread-safe channels (`crow.channel`).
+- **🧬 Native C Foreign Function Interface (`ffi`)**: Dynamic linking to native C shared libraries (`ffi.load`, `ffi.bind`, `ffi.call`) without Python dependencies.
+- **💾 Deterministic Scope Memory Ref-Counting (`mem`)**: Automatic memory tracking and heap scope exit cleanup (`free`/`HeapFree`) in NASM assembly generation.
+- **🚀 Self-Hosted Corvus Compiler & Interpreter**: `Compiler_SelfHosted/CorvusCompiler.crv` and `CorvusInterpreter.crv` written directly in pure Corvus syntax!
+- **🎨 VS Code Extension v0.3.0**: Top-tier bracket pair colorization, auto-closing bracket rules, and snippets for `[...]`, `{...}`, `mem`, `ffi`, `crow`, and `mk func`.
 
 ---
 
@@ -70,150 +69,45 @@ $$\text{Corvus Source (.crv)} \xrightarrow{\text{Lexer}} \text{Tokens} \xrightar
 
 ### Prerequisites
 * **Python 3.8+**
-* Optional for Native `.exe` Compilation:
+* Optional for Native Executable Compilation:
   ```powershell
   winget install NASM.NASM
   winget install MartinStorsjo.LLVM-MinGW.UCRT
   ```
 
-### Installation & Global CLI Setup
-Clone the repository and add the `bin/` directory to your system PATH:
+---
 
+### Executing Across Corvus Versions
+
+#### Version 1.1 Interpreter
 ```bash
-git clone https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-.git
-cd Corvus
+python Version_1.1/Interpreter/Corvus.py Version_1.1/Examples-and-Tests/02_recursion_factorial.crv
 ```
 
-### Running Corvus Commands
+#### Version 2.0 Multi-Platform Compiler & Interpreter
+```bash
+# Interpreter
+python Version_2.0/Interpreter/Corvus.py Version_2.0/Examples-and-Tests/09_pipeline_and_pattern_matching.crv
 
-#### 1. Corvus Package Manager (`cpm`)
-```cmd
-# Initialize a new Corvus project manifest (corvus.json)
-cpm init
-
-# Install a package from GitHub or local path
-cpm install username/repository
-cpm install ./local_package_folder
-
-# Install all project dependencies
-cpm install
-
-# List installed local & global packages
-cpm list
+# Compiler
+python Version_2.0/Compiler/CorvusC.py Version_2.0/Examples-and-Tests/09_pipeline_and_pattern_matching.crv --target windows -r
 ```
 
-#### 2. Native Compiler (`corvusc`)
-```cmd
-# Compile and run native executable directly
-corvusc Examples-and-Tests/01_hello_and_input.crv -r
+#### Version 3.0 Enterprise Engine (Self-Hosted, TAC IR & Concurrency)
+```bash
+# Corvus v3.0 Interpreter
+python Version_3.0/Interpreter/Corvus.py Version_3.0/Examples-and-Tests/10_enterprise_memory_ffi_crows.crv
 
-# Compile to custom binary name
-corvusc main.crv -o my_app.exe
-```
+# Corvus v3.0 Self-Hosted Compiler Execution
+python Version_3.0/Interpreter/Corvus.py Version_3.0/Compiler_SelfHosted/CorvusCompiler.crv
 
-#### 3. Interpreter (`corvus`)
-```cmd
-corvus Examples-and-Tests/06_cpm_package_demo.crv
-```
-
-
----
-
-## 💻 Code Showcase
-
-### 1. Interactive Native Input & Arithmetic
-```corvus
-set str; name = input("Enter your name: ")
-set int; age = input("Enter your age: ")
-
-log("Hello,", name)
-log("Next year you will be:", age + 1)
-```
-
-### 2. Factorial Recursion & Control Flow
-```corvus
-?{ Pure recursive function in Corvus }
-mk func factorial(n) [
-    if (n <= 1) [
-        givout 1
-    ]
-    givout n * factorial(n - 1)
-]
-
-log("Factorial of 5 is:", factorial(5))
-```
-
-### 3. Lambdas & Higher-Order List Operations
-```corvus
-set lis; numbers = {1, 2, 3, 4, 5}
-set lmb; double_fn = lmb[x] => x * 2
-
-set lis; doubled_list = numbers.map(double_fn)
-log("Doubled numbers:", doubled_list)
-```
-
-### 4. Object-Oriented Class Declaration
-```corvus
-cls Person() [
-    set str; name
-    set int; age
-
-    mk func init(name_val, age_val) [
-        self.name = name_val
-        self.age = age_val
-    ]
-
-    mk func describe() [
-        log("Person -> Name:", self.name, "| Age:", self.age)
-    ]
-]
-
-set Person; user = Person("Saatvik Jain", 11)
-user.describe()
-```
-
-### 5. Pipeline Operator & Structural Pattern Matching
-```corvus
-// Left-to-Right Function Chaining
-set int; val = 10
-set lmb; double_fn = lmb[x] => x * 2
-set lmb; add_ten = lmb[x] => x + 10
-
-set int; result = val |> double_fn |> add_ten
-log("Pipeline result:", result)
-
-// Pattern Matching
-set int; status_code = 404
-match status_code [
-    case 200 => log("Status 200: OK Success")
-    case 404 => log("Status 404: Resource Not Found")
-    case 500 => log("Status 500: Server Error")
-    else => log("Status Unknown")
-]
-```
-
----
-
-## 📂 Repository Structure
-
-```
-Corvus/
-├── bin/                    # Cross-platform CLI launch scripts (corvus, corvusc, cpm, *.bat)
-├── Compiler/               # Unified Multi-Platform Compiler Driver (CorvusC.py)
-├── Compiler_Core/          # Shared Compiler Frontend (Lexer, Parser, AST, Errors)
-├── Compiler_Windows/       # Win64 Assembly Generator & Compiler Backend (x86-64 NASM)
-├── Compiler_Linux/         # Linux ELF64 Assembly Generator & Compiler Backend (System V ABI)
-├── Compiler_MacOS/         # macOS Mach-O Assembly Generator & Compiler Backend (System V ABI)
-├── Interpreter/            # AST Visitor Interpreter Engine (Corvus.py, evaluator, lexer, parser)
-├── Documentation/          # Official Specifications (.docx) & Logos
-├── Editor-Extension/       # VS Code Language Support Extension v0.2.0 (.vsix)
-└── Examples-and-Tests/     # Runnable Corvus Example Programs
+# Corvus v3.0 Native TAC IR Assembly Compiler
+python Version_3.0/Compiler/CorvusC.py Version_3.0/Examples-and-Tests/10_enterprise_memory_ffi_crows.crv --target windows --keep-asm
 ```
 
 ---
 
 ## 📄 License & Author
 
-* **Author**: Saatvik Jain (Creator of Corvus)
-* **Documentation**: See [`Documentation/Corvus v0.1.0.docx`](Documentation/) for the full language reference specification.
-* **License**: Released under the open-source [MIT License](LICENSE).
+Copyright (c) 2026 **Saatvik Jain**. All rights reserved.  
+Distributed under the **MIT License**.

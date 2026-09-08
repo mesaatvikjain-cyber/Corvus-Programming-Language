@@ -1,0 +1,12 @@
+# Corvus Standard Library: Networking & Socket Utilities (std_net.crv)
+
+func http_fetch(url) {
+    # Fetches HTTP endpoint response
+    givout http.get(url)
+}
+
+func ping_host(host) {
+    # Pings remote host
+    var code = process.run("ping -c 1 " + host)
+    givout code == 0
+}

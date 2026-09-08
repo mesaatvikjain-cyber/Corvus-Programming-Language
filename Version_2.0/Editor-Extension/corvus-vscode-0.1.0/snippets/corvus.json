@@ -157,29 +157,5 @@
       "set str; ${1:response} = http.get(\"${0:https://api.example.com}\")"
     ],
     "description": "Make an HTTP GET request"
-  },
-  "Memory Allocation": {
-    "prefix": "memalloc",
-    "body": [
-      "set str; ${1:ptr} = mem.alloc(${0:1024})"
-    ],
-    "description": "Allocate heap memory buffer"
-  },
-  "FFI Bind": {
-    "prefix": "ffibind",
-    "body": [
-      "set any; ${1:lib} = ffi.load(\"${2:c}\")",
-      "set any; ${3:func} = ffi.bind(${1:lib}, \"${4:symbol}\", [\"${5:str}\"], \"${6:int}\")",
-      "ffi.call(${3:func}, ${0})"
-    ],
-    "description": "Bind and invoke native C shared library function via FFI"
-  },
-  "Murder of Crows Task": {
-    "prefix": "crowfly",
-    "body": [
-      "set any; ${1:crow1} = crow.fly(${2:task_func}, ${3:arg})",
-      "set lis; ${4:results} = crow.flock([${1:crow1}])"
-    ],
-    "description": "Spawn worker crow thread and await flock results"
   }
 }
