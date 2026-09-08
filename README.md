@@ -27,6 +27,7 @@ The Corvus codebase is structured into explicit, standalone version releases so 
 | **[`Version_1.1/`](Version_1.1/)** | **v1.1** | Basic AST Interpreter, Lambdas, OOP, CPM Package Manager | Python AST Visitor Interpreter |
 | **[`Version_2.0/`](Version_2.0/)** | **v2.0** | Multi-Platform Native Assembly Compiler (`--target windows\|linux\|macos`), Pattern Matching, Pipeline Operator (`\|>`), Built-in Libs | NASM x86_64 Win64, ELF64, Mach-O Compiler & Interpreter |
 | **[`Version_3.0/`](Version_3.0/)** | **v3.0** | **Self-Hosted Compiler (`CorvusCompiler.crv`)**, **Three-Address Code (TAC) IR Optimizer (Constant Folding & DCE)**, **Deterministic Scope Memory Ref-Counting**, **"Murder of Crows" 🐦 Concurrency Engine**, **Native C FFI (`ffi.load`, `ffi.bind`)**, **VS Code Extension v0.3.0** | Optimized TAC IR Compiler, Self-Hosted Corvus Compiler & Enterprise Interpreter |
+| **[`Version_3.1/`](Version_3.1/)** | **v3.1** | **Enterprise Error Handling & Resilience Engine**: **Call Stack Tracebacks**, **Panic-Mode Parser Recovery**, **Assembly Runtime Panic Guards (`__corvus_panic_null`, `__corvus_panic_bounds`)**, **Multi-line Source Snippet Diagnostics** | Resilient Multi-Platform TAC IR Compiler & Enterprise Interpreter |
 
 ---
 
@@ -54,14 +55,17 @@ It has grown from an interpreted prototype into a **self-hosted, IR-optimized sy
 
 ### 3. Version 3.0 (`Version_3.0/`)
 - **⚡ Three-Address Code (TAC) Intermediate Representation (IR)**: Translates AST into linear TAC instructions (`ir.py`).
-- **🔥 IR Optimization Passes (`optimizer.py`)**:
-  - **Constant Folding**: Evaluates constant expressions like `2 + 3 -> 5` at compile time.
-  - **Dead Code Elimination (DCE)**: Eliminates unreachable instructions and unused temporaries.
+- **🔥 IR Optimization Passes (`optimizer.py`)**: Constant Folding (`2 + 3 -> 5`) & Dead Code Elimination (DCE).
 - **🐦 "Murder of Crows" Concurrency Engine (`crow`)**: Worker thread pools (`crow.fly`), thread synchronization (`crow.flock`), and thread-safe channels (`crow.channel`).
 - **🧬 Native C Foreign Function Interface (`ffi`)**: Dynamic linking to native C shared libraries (`ffi.load`, `ffi.bind`, `ffi.call`) without Python dependencies.
 - **💾 Deterministic Scope Memory Ref-Counting (`mem`)**: Automatic memory tracking and heap scope exit cleanup (`free`/`HeapFree`) in NASM assembly generation.
 - **🚀 Self-Hosted Corvus Compiler & Interpreter**: `Compiler_SelfHosted/CorvusCompiler.crv` and `CorvusInterpreter.crv` written directly in pure Corvus syntax!
-- **🎨 VS Code Extension v0.3.0**: Top-tier bracket pair colorization, auto-closing bracket rules, and snippets for `[...]`, `{...}`, `mem`, `ffi`, `crow`, and `mk func`.
+
+### 4. Version 3.1 (`Version_3.1/`)
+- **🛡️ Enterprise Error Handling & Resilience Engine**:
+  - **Visual Diagnostics & Call Stack Tracebacks**: Formatted error reports displaying active function call stack frames, line numbers, and caret pointers (`^^^^^`).
+  - **Panic-Mode Parser Recovery (`synchronize()`)**: Prevents cascading compilation failure by skipping to the next statement boundary upon syntax errors.
+  - **Assembly Runtime Safety Guards**: Native assembly guards (`__corvus_panic_null`, `__corvus_panic_bounds`, `__corvus_panic_divzero`) that print clean error diagnostics instead of OS Segmentation Faults.
 
 ---
 
