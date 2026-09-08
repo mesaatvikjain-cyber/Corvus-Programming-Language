@@ -162,7 +162,35 @@ class Evaluator:
         self.global_env.define("str", lambda val: str(val), "func")
         self.global_env.define("int", lambda val: int(val), "func")
         self.global_env.define("flo", lambda val: float(val), "func")
+        self.global_env.define("bool", lambda val: bool(val), "func")
         self.global_env.define("len", lambda val: len(val), "func")
+        
+        # Expanded Python Built-in Utility Functions
+        def corvus_type(val):
+            if val is None: return "null"
+            if isinstance(val, bool): return "bool"
+            if isinstance(val, int): return "int"
+            if isinstance(val, float): return "flo"
+            if isinstance(val, str): return "str"
+            if isinstance(val, list): return "lis"
+            if isinstance(val, tuple): return "tup"
+            if isinstance(val, dict): return "dic"
+            if callable(val): return "func"
+            return type(val).__name__
+
+        self.global_env.define("type", corvus_type, "func")
+        self.global_env.define("range", lambda *args: list(range(*args)), "func")
+        self.global_env.define("sum", lambda lis: sum(lis), "func")
+        self.global_env.define("min", lambda *args: min(*args) if len(args) > 1 else min(args[0]), "func")
+        self.global_env.define("max", lambda *args: max(*args) if len(args) > 1 else max(args[0]), "func")
+        self.global_env.define("abs", lambda val: abs(val), "func")
+        self.global_env.define("round", lambda val, n=0: round(val, n), "func")
+        self.global_env.define("any", lambda lis: any(lis), "func")
+        self.global_env.define("all", lambda lis: all(lis), "func")
+        self.global_env.define("reversed", lambda lis: list(reversed(lis)), "func")
+        self.global_env.define("sorted", lambda lis, rev=False: sorted(lis, reverse=rev), "func")
+        self.global_env.define("enumerate", lambda lis: list(enumerate(lis)), "func")
+
 
     def evaluate(self, node):
         return self.visit(node)
@@ -654,6 +682,82 @@ class Evaluator:
             }
             mod_obj = ModuleNamespace("file", file_symbols)
             self.env.define("file", mod_obj, "module")
+
+        elif mod_name == "gui":
+            def gui_alert(title, msg=""):
+                try:
+                    import tkinter.messagebox as mb
+                    mb.showinfo(str(title), str(msg))
+                except Exception:
+                    print(f"[GUI Alert] {title}: {msg}")
+                return True
+
+            def gui_prompt(title, prompt_str=""):
+                try:
+                    import tkinter.simpledialog as sd
+                    return sd.askstring(str(title), str(prompt_str))
+                except Exception:
+                    return input(f"{title} ({prompt_str}): ")
+
+            def gui_info(msg):
+                return gui_alert("Corvus Info", msg)
+
+            gui_symbols = {
+                "alert": gui_alert,
+                "prompt": gui_prompt,
+                "info": gui_info
+            }
+            mod_obj = ModuleNamespace("gui", gui_symbols)
+            self.env.define("gui", mod_obj, "module")
+
+        elif mod_name == "http":
+            def http_get(url):
+                import urllib.request
+                req = urllib.request.urlopen(str(url))
+                return req.read().decode("utf-8")
+
+            def http_post(url, data=""):
+                import urllib.request
+                encoded = str(data).encode("utf-8")
+                req = urllib.request.Request(str(url), data=encoded, headers={"Content-Type": "application/json"})
+                res = urllib.request.urlopen(req)
+                return res.read().decode("utf-8")
+
+            def http_download(url, filename):
+                import urllib.request
+                urllib.request.urlretrieve(str(url), str(filename))
+                return True
+
+            http_symbols = {
+                "get": http_get,
+                "post": http_post,
+                "download": http_download
+            }
+            mod_obj = ModuleNamespace("http", http_symbols)
+            self.env.define("http", mod_obj, "module")
+
+        elif mod_name == "process":
+            def process_run(cmd):
+                import subprocess
+                res = subprocess.run(str(cmd), shell=True, capture_output=True, text=True)
+                return res.stdout.strip()
+
+            def process_shell(cmd):
+                import subprocess
+                res = subprocess.run(str(cmd), shell=True, capture_output=True, text=True)
+                return {"stdout": res.stdout, "stderr": res.stderr, "code": res.returncode}
+
+            def process_cwd():
+                return os.getcwd()
+
+            proc_symbols = {
+                "run": process_run,
+                "shell": process_shell,
+                "cwd": process_cwd
+            }
+            mod_obj = ModuleNamespace("process", proc_symbols)
+            self.env.define("process", mod_obj, "module")
+
 
         else:
             # 1. First attempt to load a Corvus package from corvus_modules/ or global package store

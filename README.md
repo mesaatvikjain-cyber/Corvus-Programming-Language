@@ -40,8 +40,9 @@ It has grown from an interpreted language into a full-fledged compiled language 
 * **⚙️ 64-bit Native NASM Compiler**: Emits pure x86-64 NASM Assembly and links native `.exe` executables via `nasm` and LLVM `clang`.
 * **🔗 Universal Python Module Bridge & CPM Package Manager**: Import any Python library (`get os`, `get urllib`) or install Corvus community packages with `cpm install`.
 * **🎯 Actionable Error Diagnostics**: Custom diagnostic engine that points to the exact line/column with caret pointers (`^`) and fix suggestions.
-* **🛡️ Structured Exception Recovery**: `try [ ... ] error(e) [ ... ] final [ ... ]` blocks.
-* **📚 Built-in Standard Libraries**: Native modules including `get math` (`math.pi`, `math.sqrt`), `get system`, `get random`, `get time`, `get file`, and `get json`.
+* **🧰 Full Suite of Built-in Utility Functions**: Native global functions including `type()`, `range()`, `sum()`, `min()`, `max()`, `abs()`, `round()`, `any()`, `all()`, `reversed()`, `sorted()`, and `enumerate()`.
+* **📚 Built-in Standard Libraries**: Native modules including `get math`, `get system`, `get random`, `get time`, `get file`, `get json`, `get gui` (`gui.alert`, `gui.prompt`), `get http` (`http.get`, `http.post`), and `get process` (`process.run`, `process.cwd`).
+
 
 ---
 

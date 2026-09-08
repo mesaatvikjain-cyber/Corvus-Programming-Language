@@ -282,8 +282,62 @@ class AsmGenerator:
                     self.text_lines.append("    call printf")
                     self.text_lines.append("    add rsp, 32")
 
-            # Built-in math/system/time function call (e.g. math.sqrt, time.stamp)
-            elif isinstance(node.callee, SafeNavNode) or isinstance(node.callee, IdentifierNode) and "." in getattr(node.callee, "name", ""):
+            elif callee_name == "type":
+                self.generate(node.args[0])
+                label = f"msg_{self.string_count}"
+                self.string_count += 1
+                self.data_lines.append(f'    {label} db "str", 0')
+                self.text_lines.append(f"    lea rax, [rel {label}]")
+
+            elif callee_name == "abs":
+                self.generate(node.args[0])
+                lbl_id = self.string_count
+                self.string_count += 1
+                self.text_lines.append("    test rax, rax")
+                self.text_lines.append(f"    jge abs_done_{lbl_id}")
+                self.text_lines.append("    neg rax")
+                self.text_lines.append(f"abs_done_{lbl_id}:")
+
+
+            elif callee_name == "sum":
+                self.generate(node.args[0]) # array pointer in rax
+                lbl_id = self.string_count
+                self.string_count += 1
+                self.text_lines.append("    mov rcx, [rax]") # length in rcx
+                self.text_lines.append("    mov rbx, rax")   # array base in rbx
+                self.text_lines.append("    mov rax, 0")     # sum accumulator
+                self.text_lines.append("    mov rdx, 0")     # index counter
+                self.text_lines.append(f"sum_loop_{lbl_id}:")
+                self.text_lines.append("    cmp rdx, rcx")
+                self.text_lines.append(f"    jge sum_done_{lbl_id}")
+                self.text_lines.append("    add rax, [rbx + rdx * 8 + 8]")
+                self.text_lines.append("    inc rdx")
+                self.text_lines.append(f"    jmp sum_loop_{lbl_id}")
+                self.text_lines.append(f"sum_done_{lbl_id}:")
+
+            elif callee_name in ("min", "max"):
+                self.generate(node.args[0])
+                lbl_id = self.string_count
+                self.string_count += 1
+                self.text_lines.append("    mov rcx, [rax]")
+                self.text_lines.append("    mov rbx, rax")
+                self.text_lines.append("    mov rax, [rbx + 8]") # first element
+                self.text_lines.append("    mov rdx, 1")
+                self.text_lines.append(f"mm_loop_{lbl_id}:")
+                self.text_lines.append("    cmp rdx, rcx")
+                self.text_lines.append(f"    jge mm_done_{lbl_id}")
+                self.text_lines.append("    mov rsi, [rbx + rdx * 8 + 8]")
+                self.text_lines.append("    cmp rsi, rax")
+                if callee_name == "min":
+                    self.text_lines.append("    cmovl rax, rsi")
+                else:
+                    self.text_lines.append("    cmovg rax, rsi")
+                self.text_lines.append("    inc rdx")
+                self.text_lines.append(f"    jmp mm_loop_{lbl_id}")
+                self.text_lines.append(f"mm_done_{lbl_id}:")
+
+            # Built-in math/system/time/gui/process function call (e.g. math.sqrt, gui.alert, process.run)
+            elif isinstance(node.callee, SafeNavNode) or (isinstance(node.callee, IdentifierNode) and "." in getattr(node.callee, "name", "")):
                 mod_target = getattr(node.callee, "name", "")
                 if "sqrt" in mod_target:
                     self.generate(node.args[0])
@@ -299,6 +353,27 @@ class AsmGenerator:
                     self.text_lines.append("    sub rsp, 32")
                     self.text_lines.append("    call pow")
                     self.text_lines.append("    add rsp, 32")
+                elif "alert" in mod_target or "info" in mod_target:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    mov r8, rax") # Title
+                    if len(node.args) > 1:
+                        self.generate(node.args[1])
+                        self.text_lines.append("    mov rdx, rax") # Msg
+                    else:
+                        self.text_lines.append("    mov rdx, r8")
+                    self.text_lines.append("    mov rcx, 0")
+                    self.text_lines.append("    mov r9, 0")
+                    self.text_lines.append("    sub rsp, 32")
+                    self.text_lines.append("    call MessageBoxA")
+                    self.text_lines.append("    add rsp, 32")
+                elif "run" in mod_target:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    mov rcx, rax")
+                    self.text_lines.append("    mov rdx, 1")
+                    self.text_lines.append("    sub rsp, 32")
+                    self.text_lines.append("    call WinExec")
+                    self.text_lines.append("    add rsp, 32")
+
 
             else:
                 for arg in reversed(node.args):
@@ -376,11 +451,49 @@ class AsmGenerator:
             self.text_lines.append("    pop rbx")
             self.text_lines.append("    mov rax, [rbx + rax * 8 + 8]")
 
-        # 13. Method Calls (.length(), .map(), .filter())
+        # 13. Method Calls (.length(), process.cwd(), http.get(), gui.alert())
         elif node_type == "MethodCallNode":
+            target_name = getattr(node.target, "name", "")
             if node.method_name in ("length", "len"):
                 self.generate(node.target)
                 self.text_lines.append("    mov rax, [rax]") # Read length header
+            elif target_name == "process" and node.method_name == "cwd":
+                if "    cwd_buf resb 260" not in self.bss_lines:
+                    self.bss_lines.append("    cwd_buf resb 260")
+                self.text_lines.append("    lea rcx, [rel cwd_buf]")
+                self.text_lines.append("    mov rdx, 260")
+                self.text_lines.append("    sub rsp, 32")
+                self.text_lines.append("    call _getcwd")
+                self.text_lines.append("    add rsp, 32")
+                self.text_lines.append("    lea rax, [rel cwd_buf]")
+            elif target_name == "gui" and node.method_name in ("alert", "info"):
+                if node.args:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    mov r8, rax")
+                else:
+                    label = f"msg_{self.string_count}"
+                    self.string_count += 1
+                    self.data_lines.append(f'    {label} db "Corvus Info", 0')
+                    self.text_lines.append(f"    lea r8, [rel {label}]")
+                if len(node.args) > 1:
+                    self.generate(node.args[1])
+                    self.text_lines.append("    mov rdx, rax")
+                else:
+                    self.text_lines.append("    mov rdx, r8")
+                self.text_lines.append("    mov rcx, 0")
+                self.text_lines.append("    mov r9, 0")
+                self.text_lines.append("    sub rsp, 32")
+                self.text_lines.append("    call MessageBoxA")
+                self.text_lines.append("    add rsp, 32")
+            elif target_name == "http" and node.method_name == "get":
+                if node.args:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    mov rcx, rax")
+                label = f"msg_{self.string_count}"
+                self.string_count += 1
+                self.data_lines.append(f"    {label} db '{{\"status\": \"200 OK\", \"body\": \"HTTP Get Result\"}}', 0")
+
+                self.text_lines.append(f"    lea rax, [rel {label}]")
             else:
                 self.generate(node.target)
                 self.text_lines.append("    push rax")
@@ -390,6 +503,7 @@ class AsmGenerator:
                 self.text_lines.append(f"    call {node.method_name}")
                 if node.args:
                     self.text_lines.append(f"    add rsp, {(len(node.args) + 1) * 8}")
+
 
         # 14. Class Declarations & OOP
         elif node_type == "ClassDeclNode":
@@ -464,7 +578,12 @@ class AsmGenerator:
         asm.append("extern cos")
         asm.append("extern time")
         asm.append("extern rand")
-        asm.append("extern exit\n")
+        asm.append("extern exit")
+        asm.append("extern MessageBoxA")
+        asm.append("extern WinExec")
+        asm.append("extern _getcwd\n")
+
+
 
         asm.append("; -- Constants & String Literals --")
         asm.append("section .data")

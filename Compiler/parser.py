@@ -369,7 +369,11 @@ class Parser:
         node = self.parse_primary()
         while True:
             if self.match('DOT'):
-                name = self.expect('ID').value
+                tok = self.peek()
+                if tok and tok.type in ('ID', 'KEYWORD', 'TYPE'):
+                    name = self.advance().value
+                else:
+                    name = self.expect('ID').value
                 if self.match('LPAREN'):
                     args = self.parse_arguments()
                     self.expect('RPAREN')
@@ -377,8 +381,13 @@ class Parser:
                 else:
                     node = MethodCallNode(target=node, method_name=name, args=[])
             elif self.match('SAFE_NAV'):
-                name = self.expect('ID').value
+                tok = self.peek()
+                if tok and tok.type in ('ID', 'KEYWORD', 'TYPE'):
+                    name = self.advance().value
+                else:
+                    name = self.expect('ID').value
                 node = SafeNavNode(target=node, property_name=name)
+
             elif self.match('LBRACKET'):
                 idx = self.parse_expression()
                 self.expect('RBRACKET')
