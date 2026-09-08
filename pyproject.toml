@@ -20,4 +20,4 @@ classifiers = [
 Homepage = "https://github.com"
 
 [tool.setuptools]
-packages = ["Interpreter", "Compiler"]
+packages = ["Interpreter", "Compiler", "Compiler_Core", "Compiler_Windows", "Compiler_Linux", "Compiler_MacOS"]

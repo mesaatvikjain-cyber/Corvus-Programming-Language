@@ -57,8 +57,11 @@ $$\text{Corvus Source (.crv)} \xrightarrow{\text{Lexer}} \text{Tokens} \xrightar
 1. **Lexer** ([`Interpreter/lexercorvus.py`](Interpreter/lexercorvus.py)): Tokenizes source code into typed tokens while handling comments (`?{ ... }`, `//`, `#`).
 2. **Parser** ([`Interpreter/parsercorvus.py`](Interpreter/parsercorvus.py)): Recursive-descent parser constructing Abstract Syntax Tree (AST) nodes with operator precedence.
 3. **Interpreter Backend** ([`Interpreter/evaluatorcorvus.py`](Interpreter/evaluatorcorvus.py)): AST Visitor interpreter managing lexically-scoped environment trees and CPM module loading.
-4. **Compiler Backend** ([`Compiler/compiler_asm.py`](Compiler/compiler_asm.py)): 64-bit x86 NASM Assembly generator supporting Win64 calling conventions and C library `printf` / `scanf` calls.
-5. **Compiler Driver** ([`Compiler/CorvusC.py`](Compiler/CorvusC.py)): One-command build system with automatic toolchain discovery for `nasm` and LLVM `clang`.
+4. **Multi-Platform Compiler Backends**:
+   - **`Compiler_Windows`** ([`Compiler_Windows/`](Compiler_Windows/)): NASM `win64` generator using Microsoft x64 ABI (`rcx`, `rdx`, `r8`, `r9`, 32-byte shadow space, `ExitProcess`, `.obj`/`.exe`).
+   - **`Compiler_Linux`** ([`Compiler_Linux/`](Compiler_Linux/)): NASM `elf64` generator using System V AMD64 ABI (`rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9`, `exit`/`printf`, `.o`/ELF binary).
+   - **`Compiler_MacOS`** ([`Compiler_MacOS/`](Compiler_MacOS/)): NASM `macho64` generator using System V AMD64 ABI with Mach-O symbol mangling (`_main`, `_printf`, `.o`/Mach-O binary).
+5. **Unified Compiler Driver** ([`Compiler/CorvusC.py`](Compiler/CorvusC.py)): Auto-detects host OS (`win32`, `linux`, `darwin`) or accepts explicit `--target windows|linux|macos` cross-compilation flags.
 6. **Package Manager (`cpm`)** ([`bin/cpm.py`](bin/cpm.py)): Official package manager for project manifest management (`corvus.json`) and dependency installation.
 
 ---
@@ -195,19 +198,15 @@ match status_code [
 
 ```
 Corvus/
-├── bin/                    # Global CLI launch scripts (corvus.bat, corvusc.bat)
-├── Compiler/               # 64-bit Native NASM Compiler & CorvusC CLI Driver
-│   ├── compiler_asm.py     # x86-64 NASM Code Generator
-│   ├── CorvusC.py          # One-Click Compiler CLI Driver
-│   └── Lexercompiler.py    # Compiler Lexer
-├── Interpreter/            # AST Visitor Interpreter Engine
-│   ├── Corvus.py           # Interpreter CLI Driver
-│   ├── evaluatorcorvus.py  # AST Evaluator & Scoping Environment
-│   ├── lexercorvus.py      # Lexer
-│   ├── parsercorvus.py     # Parser
-│   └── errors.py           # Diagnostic Caret Error Formatter
+├── bin/                    # Cross-platform CLI launch scripts (corvus, corvusc, cpm, *.bat)
+├── Compiler/               # Unified Multi-Platform Compiler Driver (CorvusC.py)
+├── Compiler_Core/          # Shared Compiler Frontend (Lexer, Parser, AST, Errors)
+├── Compiler_Windows/       # Win64 Assembly Generator & Compiler Backend (x86-64 NASM)
+├── Compiler_Linux/         # Linux ELF64 Assembly Generator & Compiler Backend (System V ABI)
+├── Compiler_MacOS/         # macOS Mach-O Assembly Generator & Compiler Backend (System V ABI)
+├── Interpreter/            # AST Visitor Interpreter Engine (Corvus.py, evaluator, lexer, parser)
 ├── Documentation/          # Official Specifications (.docx) & Logos
-├── Editor-Extension/       # VS Code Syntax Highlighting Extension
+├── Editor-Extension/       # VS Code Language Support Extension v0.2.0 (.vsix)
 └── Examples-and-Tests/     # Runnable Corvus Example Programs
 ```
 

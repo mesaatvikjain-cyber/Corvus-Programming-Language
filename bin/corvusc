@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+CORVUS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export PYTHONPATH="$CORVUS_DIR:$PYTHONPATH"
+python3 "$CORVUS_DIR/Compiler/CorvusC.py" "$@"
