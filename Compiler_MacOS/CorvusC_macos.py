@@ -41,6 +41,16 @@ def compile_macos(source_path, output_path=None, run_after=False, keep_asm=False
         out.write(generator.build_full_asm())
 
     print(f"  --> Generated assembly: {asm_file}")
+
+    # Check if host platform is macOS
+    is_macos_host = (sys.platform == "darwin")
+
+    if not is_macos_host:
+        print("\n[INFO] Target Mach-O Assembly (.asm) generated successfully!")
+        print("To assemble and link on a macOS host, run:")
+        print(f"  nasm -f macho64 {asm_file} -o {obj_file} && clang {obj_file} -o {exe_file} -lSystem\n")
+        return asm_file
+
     nasm_path = find_tool(["nasm"])
     linker_path = find_tool(["clang", "gcc", "xcrun"])
 

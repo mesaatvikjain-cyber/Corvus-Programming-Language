@@ -41,6 +41,16 @@ def compile_linux(source_path, output_path=None, run_after=False, keep_asm=False
         out.write(generator.build_full_asm())
 
     print(f"  --> Generated assembly: {asm_file}")
+
+    # Check if host platform is Linux
+    is_linux_host = sys.platform.startswith("linux")
+
+    if not is_linux_host:
+        print("\n[INFO] Target ELF64 Assembly (.asm) generated successfully!")
+        print("To assemble and link on a Linux host, run:")
+        print(f"  nasm -f elf64 {asm_file} -o {obj_file} && gcc {obj_file} -o {exe_file} -no-pie\n")
+        return asm_file
+
     nasm_path = find_tool(["nasm"])
     linker_path = find_tool(["gcc", "clang", "ld"])
 
