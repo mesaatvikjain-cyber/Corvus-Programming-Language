@@ -655,7 +655,11 @@ class Evaluator:
             self.env.define("file", mod_obj, "module")
 
         else:
-            # Universal Python Module Bridge: dynamically import any Python library
+            # 1. First attempt to load a Corvus package from corvus_modules/ or global package store
+            if self._try_load_corvus_package(mod_name):
+                return
+
+            # 2. Universal Python Module Bridge fallback: dynamically import any Python library
             try:
                 py_mod = importlib.import_module(mod_name)
                 mod_symbols = {
@@ -668,9 +672,78 @@ class Evaluator:
             except ImportError:
                 raise CorvusError(
                     error_type="Corvus ModuleError",
-                    message=f"Module '{mod_name}' could not be loaded.",
-                    suggestion=f"Ensure '{mod_name}' is installed or available in Python."
+                    message=f"Module or Corvus package '{mod_name}' could not be loaded.",
+                    suggestion=f"Ensure '{mod_name}' is installed via 'cpm install {mod_name}' or available in Python."
                 )
+
+    def _try_load_corvus_package(self, mod_name: str) -> bool:
+        search_dirs = [
+            os.path.join(os.getcwd(), "corvus_modules", mod_name),
+            os.path.expanduser(os.path.join("~", ".corvus", "packages", mod_name))
+        ]
+
+        current_script = getattr(self, "current_file_path", None)
+        if current_script:
+            script_dir = os.path.dirname(os.path.abspath(current_script))
+            search_dirs.insert(0, os.path.join(script_dir, "corvus_modules", mod_name))
+
+        package_dir = None
+        for s_dir in search_dirs:
+            if os.path.isdir(s_dir):
+                package_dir = s_dir
+                break
+
+        if not package_dir:
+            return False
+
+        entry_file = None
+        manifest_path = os.path.join(package_dir, "corvus.json")
+        if os.path.exists(manifest_path):
+            try:
+                with open(manifest_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    main_rel = data.get("main", "main.crv")
+                    entry_file = os.path.join(package_dir, main_rel)
+            except Exception:
+                pass
+
+        if not entry_file or not os.path.exists(entry_file):
+            for candidate in ["main.crv", f"{mod_name}.crv", "index.crv"]:
+                cand_path = os.path.join(package_dir, candidate)
+                if os.path.exists(cand_path):
+                    entry_file = cand_path
+                    break
+
+        if not entry_file or not os.path.exists(entry_file):
+            return False
+
+        try:
+            with open(entry_file, "r", encoding="utf-8") as f:
+                code = f.read()
+
+            from lexercorvus import tokenize
+            from parsercorvus import Parser
+
+            tokens = tokenize(code)
+            parser = Parser(tokens)
+            ast = parser.parse()
+
+            pkg_env = Environment(parent=self.global_env)
+            pkg_evaluator = Evaluator(pkg_env)
+            pkg_evaluator.current_file_path = entry_file
+            pkg_evaluator.evaluate(ast)
+
+            mod_symbols = {k: v for k, v in pkg_env.values.items()}
+            mod_obj = ModuleNamespace(mod_name, mod_symbols)
+            self.env.define(mod_name, mod_obj, "module")
+            return True
+        except Exception as e:
+            raise CorvusError(
+                error_type="Corvus PackageError",
+                message=f"Failed to load Corvus package '{mod_name}' from '{entry_file}': {str(e)}",
+                suggestion="Verify the syntax and structure of the Corvus package."
+            )
+
 
 
     def visit_TryErrorNode(self, node: TryErrorNode):

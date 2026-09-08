@@ -17,3 +17,7 @@ dist/
 # IDE files
 .vscode/
 .idea/
+
+# Corvus Package Manager installed dependencies
+corvus_modules/
+

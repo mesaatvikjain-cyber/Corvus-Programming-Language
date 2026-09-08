@@ -1,0 +1,11 @@
+# Sample Package Entry File
+
+set str; pkg_author = "Saatvik Jain"
+
+mk func greet(name) [
+    givout "Hello " + name + "! Welcome to CPM Package Ecosystem."
+]
+
+mk func add_numbers(a, b) [
+    givout a + b
+]

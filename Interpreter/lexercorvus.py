@@ -9,8 +9,8 @@ class Token:
     column: int = 1
 
 RULES = [
-    # Comments: ?{ ... }
-    ('COMMENT',    r'\?\{[\s\S]*?\}'),
+    # Comments: ?{ ... }, // ..., # ...
+    ('COMMENT',    r'\?\{[\s\S]*?\}|//[^\n]*|#[^\n]*'),
 
     # Whitespace
     ('NEWLINE',    r'\n'),

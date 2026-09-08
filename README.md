@@ -38,9 +38,10 @@ It has grown from an interpreted language into a full-fledged compiled language 
 * **⚡ First-Class Lambdas**: Inline and block lambdas (`lmb[x] => x * 2`) with functional list transformations (`.map()`, `.filter()`).
 * **🧬 Object-Oriented Programming**: Complete support for classes (`cls Person() [ ... ]`) with `init` constructors and `self` instance dispatch.
 * **⚙️ 64-bit Native NASM Compiler**: Emits pure x86-64 NASM Assembly and links native `.exe` executables via `nasm` and LLVM `clang`.
+* **🔗 Universal Python Module Bridge & CPM Package Manager**: Import any Python library (`get os`, `get urllib`) or install Corvus community packages with `cpm install`.
 * **🎯 Actionable Error Diagnostics**: Custom diagnostic engine that points to the exact line/column with caret pointers (`^`) and fix suggestions.
 * **🛡️ Structured Exception Recovery**: `try [ ... ] error(e) [ ... ] final [ ... ]` blocks.
-* **📚 Built-in Standard Libraries**: Native modules including `get math` (`math.pi`, `math.sqrt`) and `get system`.
+* **📚 Built-in Standard Libraries**: Native modules including `get math` (`math.pi`, `math.sqrt`), `get system`, `get random`, `get time`, `get file`, and `get json`.
 
 ---
 
@@ -50,11 +51,12 @@ Corvus operates on a textbook 5-stage pipeline with two execution backends:
 
 $$\text{Corvus Source (.crv)} \xrightarrow{\text{Lexer}} \text{Tokens} \xrightarrow{\text{Parser}} \text{AST} \begin{cases} \xrightarrow{\text{Evaluator}} \text{Interpreted Execution} \\ \xrightarrow{\text{AsmGenerator}} \text{NASM x86-64} \xrightarrow{\text{Linker}} \text{Native .exe} \end{cases}$$
 
-1. **Lexer** ([`Interpreter/lexercorvus.py`](Interpreter/lexercorvus.py)): Tokenizes source code into typed tokens while handling comments (`?{ ... }`).
+1. **Lexer** ([`Interpreter/lexercorvus.py`](Interpreter/lexercorvus.py)): Tokenizes source code into typed tokens while handling comments (`?{ ... }`, `//`, `#`).
 2. **Parser** ([`Interpreter/parsercorvus.py`](Interpreter/parsercorvus.py)): Recursive-descent parser constructing Abstract Syntax Tree (AST) nodes with operator precedence.
-3. **Interpreter Backend** ([`Interpreter/evaluatorcorvus.py`](Interpreter/evaluatorcorvus.py)): AST Visitor interpreter managing lexically-scoped environment trees.
+3. **Interpreter Backend** ([`Interpreter/evaluatorcorvus.py`](Interpreter/evaluatorcorvus.py)): AST Visitor interpreter managing lexically-scoped environment trees and CPM module loading.
 4. **Compiler Backend** ([`Compiler/compiler_asm.py`](Compiler/compiler_asm.py)): 64-bit x86 NASM Assembly generator supporting Win64 calling conventions and C library `printf` / `scanf` calls.
 5. **Compiler Driver** ([`Compiler/CorvusC.py`](Compiler/CorvusC.py)): One-command build system with automatic toolchain discovery for `nasm` and LLVM `clang`.
+6. **Package Manager (`cpm`)** ([`bin/cpm.py`](bin/cpm.py)): Official package manager for project manifest management (`corvus.json`) and dependency installation.
 
 ---
 
@@ -78,7 +80,23 @@ cd Corvus
 
 ### Running Corvus Commands
 
-#### 1. Native Compiler (`corvusc`)
+#### 1. Corvus Package Manager (`cpm`)
+```cmd
+# Initialize a new Corvus project manifest (corvus.json)
+cpm init
+
+# Install a package from GitHub or local path
+cpm install username/repository
+cpm install ./local_package_folder
+
+# Install all project dependencies
+cpm install
+
+# List installed local & global packages
+cpm list
+```
+
+#### 2. Native Compiler (`corvusc`)
 ```cmd
 # Compile and run native executable directly
 corvusc Examples-and-Tests/01_hello_and_input.crv -r
@@ -87,10 +105,11 @@ corvusc Examples-and-Tests/01_hello_and_input.crv -r
 corvusc main.crv -o my_app.exe
 ```
 
-#### 2. Interpreter (`corvus`)
+#### 3. Interpreter (`corvus`)
 ```cmd
-corvus Examples-and-Tests/02_recursion_factorial.crv
+corvus Examples-and-Tests/06_cpm_package_demo.crv
 ```
+
 
 ---
 
