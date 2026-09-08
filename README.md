@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="corvus_logo.png" alt="Corvus Programming Language Logo" width="240"/>
+  <img src="Documentation/corvus_logo.png" alt="Corvus Programming Language Logo" width="240"/>
 </p>
 
 <h1 align="center">Corvus Programming Language</h1>
