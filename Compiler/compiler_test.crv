@@ -1,8 +1,45 @@
 ?{ =================================================
-   Corvus Compiler Test Suite (Milestone 1)
+   Corvus Compiler Test Suite (Full Version 2.0)
    ================================================= }
 
 log("=== Hello from Corvus Assembly Compiler! ===")
+
 set int; age = 11
-log("Age variable declared successfully:")
+log("Initial age:")
 log(age)
+
+?{ 1. Test Assignment }
+age = age + 1
+log("Age after assignment (age + 1):")
+log(age)
+
+?{ 2. Test Unary Negation }
+set int; neg_val = -5
+log("Unary negative (-5):")
+log(neg_val)
+
+?{ 3. Test Constants }
+set const; MAX_LIMIT = 100
+log("Constant MAX_LIMIT:")
+log(MAX_LIMIT)
+
+?{ 4. Test Native Input }
+set int; user_val = input("Enter a number: ")
+log("You entered:")
+log(user_val)
+
+?{ 5. Test If/Else Control Flow }
+if (user_val >= 10) [
+    log("Your number is 10 or greater!")
+] else [
+    log("Your number is under 10!")
+]
+
+?{ 6. Test Functions }
+mk func add_two(n) [
+    givout n + 2
+]
+
+set int; result = add_two(user_val)
+log("Result of add_two(user_val):")
+log(result)

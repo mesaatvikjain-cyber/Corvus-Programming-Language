@@ -9,6 +9,11 @@ dist/
 *.egg-info/
 .eggs/
 
+# Binary & Assembly Build Outputs
+*.obj
+*.exe
+*.asm
+
 # IDE files
 .vscode/
 .idea/
