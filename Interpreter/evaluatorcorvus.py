@@ -319,7 +319,7 @@ class Evaluator:
             elif method_name == 'pop':
                 idx = args[0] if args else -1
                 return target.pop(idx)
-            elif method_name == 'len':
+            elif method_name in ('len', 'length'):
                 return len(target)
             elif method_name == 'clear':
                 target.clear()
@@ -330,7 +330,7 @@ class Evaluator:
                 return [item for item in target if args[0](item)]
 
         if isinstance(target, str):
-            if method_name == 'len':
+            if method_name in ('len', 'length'):
                 return len(target)
             elif method_name == 'upper':
                 return target.upper()
@@ -343,8 +343,9 @@ class Evaluator:
                 return target.split(delim)
 
         if isinstance(target, (tuple, dict)):
-            if method_name == 'len':
+            if method_name in ('len', 'length'):
                 return len(target)
+
             if isinstance(target, dict):
                 if method_name == 'keys':
                     return list(target.keys())

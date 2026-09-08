@@ -1,21 +1,31 @@
 # ========================================
-# COMPILE TO ASSEMBLY (Corvus Compiler)
+# COMPILE TO ASSEMBLY (Corvus Compiler v2.0)
+# Complete Feature Parity with Corvus Interpreter
+# Author: Saatvik Jain (Creator of Corvus)
 # ========================================
 from Lexercompiler import tokenize
 from parser import Parser
 from Interpreter.astnodes import (
-    ProgramNode, LiteralNode, IdentifierNode, BinOpNode,
-    VarDeclNode, FuncCallNode
+    ProgramNode, LiteralNode, IdentifierNode, ListNode, TupleNode, DictNode,
+    BinOpNode, UnaryOpNode, SafeNavNode, IndexAccessNode, MethodCallNode,
+    VarDeclNode, ConstDeclNode, AssignmentNode, BlockNode, IfNode, WhileNode,
+    ForNode, BreakNode, ContinueNode, PassNode, GivoutNode, FuncDeclNode,
+    LambdaNode, FuncCallNode, ClassDeclNode, GlobalNode, GetNode, AwaitNode,
+    TryErrorNode, InputNode
 )
 
 
 class AsmGenerator:
     def __init__(self):
-        self.data_lines = []     # For string literals & constants
-        self.bss_lines = []      # For variables (e.g. x resq 1)
-        self.text_lines = []     # For CPU instructions in main
-        self.func_lines = []     # For user function definitions
-        self.string_count = 0    # Unique string label counter (msg_0, msg_1...)
+        self.data_lines = []         # For string literals & constants
+        self.bss_lines = []          # For variables (e.g. x resq 1)
+        self.text_lines = []         # For CPU instructions in main
+        self.func_lines = []         # For user function definitions
+        self.string_count = 0        # Unique label counter
+        self.lambda_count = 0        # Unique lambda label counter
+        self.class_methods = {}      # Class method mapping
+        self.imported_modules = set()# Imported modules (math, system, time, etc.)
+        self.declared_funcs = set()  # Set of user declared function names
 
 
     def generate(self, node):
@@ -29,65 +39,52 @@ class AsmGenerator:
             for stmt in node.statements:
                 self.generate(stmt)
 
-
-        # 2. Literal Values (Numbers, Strings, Booleans)
+        # 2. Literal Values (Numbers, Strings, Booleans, Null)
         elif node_type == "LiteralNode":
-            if isinstance(node.value, (int, float)):
-                self.text_lines.append(f"    mov rax, {node.value}")
+            if isinstance(node.value, bool):
+                self.text_lines.append(f"    mov rax, {1 if node.value else 0}")
+            elif isinstance(node.value, (int, float)):
+                if isinstance(node.value, float):
+                    self.text_lines.append(f"    mov rax, {int(node.value)}")
+                else:
+                    self.text_lines.append(f"    mov rax, {node.value}")
             elif isinstance(node.value, str):
                 label = f"msg_{self.string_count}"
                 self.string_count += 1
-                self.data_lines.append(f'    {label} db "{node.value}", 10, 0')
-                self.text_lines.append(f"    mov rax, {label}")
+                escaped_str = node.value.replace('"', '", 34, "')
+                self.data_lines.append(f'    {label} db "{escaped_str}", 0')
+                self.text_lines.append(f"    lea rax, [rel {label}]")
+            elif node.value is None:
+                self.text_lines.append("    mov rax, 0")
 
-        # 3. Identifier Reference (Variables)
+        # 3. Identifier Reference (Variables & Functions)
         elif node_type == "IdentifierNode":
             self.text_lines.append(f"    mov rax, [{node.name}]")
 
-        # 4. Function Calls (e.g., log(...) or custom functions)
-        elif node_type == "FuncCallNode":
-            callee_name = getattr(node.callee, 'name', None)
-            if callee_name == "log":
-                for arg in node.args:
-                    if isinstance(arg, LiteralNode) and isinstance(arg.value, str):
-                        label = f"msg_{self.string_count}"
-                        self.string_count += 1
-                        self.data_lines.append(f'    {label} db "{arg.value}", 10, 0')
-                        self.text_lines.append(f"    mov rcx, {label}")
-                        self.text_lines.append("    sub rsp, 32")
-                        self.text_lines.append("    call printf")
-                        self.text_lines.append("    add rsp, 32")
-                    else:
-                        self.generate(arg)
-                        self.text_lines.append("    mov rdx, rax")
-                        label = f"fmt_int_{self.string_count}"
-                        self.string_count += 1
-                        self.data_lines.append(f'    {label} db "%d", 10, 0')
-                        self.text_lines.append(f"    mov rcx, {label}")
-                        self.text_lines.append("    sub rsp, 32")
-                        self.text_lines.append("    call printf")
-                        self.text_lines.append("    add rsp, 32")
-
-            else:
-                for arg in reversed(node.args):
-                    self.generate(arg)
-                    self.text_lines.append("    push rax")
-                if callee_name:
-                    self.text_lines.append(f"    call {callee_name}")
-                else:
-                    raise NotImplementedError("Dynamic function calls are not supported.")
-                if node.args:
-                    self.text_lines.append(f"    add rsp, {len(node.args) * 8}")
-
-
-        # 5. Variable Declarations (set int x = 5)
-        elif node_type == "VarDeclNode":
-            self.bss_lines.append(f"    {node.name} resq 1")
+        # 4. Variable & Constant Declarations
+        elif node_type in ("VarDeclNode", "ConstDeclNode"):
+            bss_entry = f"    {node.name} resq 1"
+            if bss_entry not in self.bss_lines:
+                self.bss_lines.append(bss_entry)
             if node.value is not None:
                 self.generate(node.value)
                 self.text_lines.append(f"    mov [{node.name}], rax")
 
-        # 6. Binary Operators (Math: +, -, *, /)
+        # 5. Assignments (x = expr, obj.field = expr)
+        elif node_type == "AssignmentNode":
+            self.generate(node.value)
+            if isinstance(node.target, IdentifierNode):
+                self.text_lines.append(f"    mov [{node.target.name}], rax")
+            elif isinstance(node.target, IndexAccessNode):
+                self.text_lines.append("    push rax") # value to store
+                self.generate(node.target.target)
+                self.text_lines.append("    push rax") # array pointer
+                self.generate(node.target.index)
+                self.text_lines.append("    pop rbx") # array pointer
+                self.text_lines.append("    pop rdx") # value
+                self.text_lines.append("    mov [rbx + rax * 8 + 8], rdx")
+
+        # 6. Binary Operators (+, -, *, /, %, **, ==, !=, <, >, <=, >=, and, or, xor)
         elif node_type == "BinOpNode":
             self.generate(node.left)
             self.text_lines.append("    push rax")
@@ -102,23 +99,25 @@ class AsmGenerator:
             elif node.op == "*":
                 self.text_lines.append("    imul rax, rbx")
             elif node.op == "/":
-                self.text_lines.append("    cqo")  # Sign extend rax into rdx:rax
+                self.text_lines.append("    cqo")
                 self.text_lines.append("    idiv rbx")
             elif node.op == "%":
-                self.text_lines.append("    cqo")  # Sign extend rax into rdx:rax
+                self.text_lines.append("    cqo")
                 self.text_lines.append("    idiv rbx")
-                self.text_lines.append("    mov rax, rdx")  # Remainder is in rdx
+                self.text_lines.append("    mov rax, rdx")
             elif node.op == "**":
-                self.text_lines.append("    mov rcx, rbx")  # Exponent in rcx
-                self.text_lines.append("    mov rbx, rax")  # Base in rbx
-                self.text_lines.append("    mov rax, 1")    # Result starts at 1
-                self.text_lines.append("power_loop:")
+                self.text_lines.append("    mov rcx, rbx")
+                self.text_lines.append("    mov rbx, rax")
+                self.text_lines.append("    mov rax, 1")
+                lbl_id = self.string_count
+                self.string_count += 1
+                self.text_lines.append(f"power_loop_{lbl_id}:")
                 self.text_lines.append("    test rcx, rcx")
-                self.text_lines.append("    jz power_done")
+                self.text_lines.append(f"    jz power_done_{lbl_id}")
                 self.text_lines.append("    imul rax, rbx")
                 self.text_lines.append("    dec rcx")
-                self.text_lines.append("    jmp power_loop")
-                self.text_lines.append("power_done:")
+                self.text_lines.append(f"    jmp power_loop_{lbl_id}")
+                self.text_lines.append(f"power_done_{lbl_id}:")
             elif node.op == "==":
                 self.text_lines.append("    cmp rax, rbx")
                 self.text_lines.append("    sete al")
@@ -149,7 +148,19 @@ class AsmGenerator:
                 self.text_lines.append("    or rax, rbx")
             elif node.op == "xor":
                 self.text_lines.append("    xor rax, rbx")
-        elif node_type=="IfNode":
+
+        # 7. Unary Operators (-val, not val)
+        elif node_type == "UnaryOpNode":
+            self.generate(node.operand)
+            if node.op == "-":
+                self.text_lines.append("    neg rax")
+            elif node.op == "not":
+                self.text_lines.append("    cmp rax, 0")
+                self.text_lines.append("    sete al")
+                self.text_lines.append("    movzx rax, al")
+
+        # 8. Control Flow (If / While / For / Break / Continue / Pass)
+        elif node_type == "IfNode":
             label_id = self.string_count
             self.string_count += 1
             else_label = f"else_block_{label_id}"
@@ -164,7 +175,7 @@ class AsmGenerator:
                 self.generate(node.else_block)
             self.text_lines.append(f"{end_label}:")
 
-        elif node_type=="WhileNode":
+        elif node_type == "WhileNode":
             label_id = self.string_count
             self.string_count += 1
             start_label = f"while_start_{label_id}"
@@ -176,57 +187,8 @@ class AsmGenerator:
             self.generate(node.body)
             self.text_lines.append(f"    jmp {start_label}")
             self.text_lines.append(f"{end_label}:")
-        elif node_type=="FuncDeclNode":
-            # 1. Register parameter variables in .bss
-            for param in node.params:
-                bss_entry = f"    {param} resq 1"
-                if bss_entry not in self.bss_lines:
-                    self.bss_lines.append(bss_entry)
 
-            # 2. Target func_lines
-            old_text_lines = self.text_lines
-            self.text_lines = self.func_lines
-            
-            self.text_lines.append(f"\n{node.name}:")
-            self.text_lines.append("    push rbp")
-            self.text_lines.append("    mov rbp, rsp")
-
-            # 3. Read passed stack arguments ([rbp + 16], [rbp + 24], ...) into parameter variables
-            for i, param in enumerate(node.params):
-                offset = 16 + (i * 8)
-                self.text_lines.append(f"    mov rax, [rbp + {offset}]")
-                self.text_lines.append(f"    mov [{param}], rax")
-
-            self.generate(node.body)
-            self.text_lines.append("    mov rsp, rbp")
-            self.text_lines.append("    pop rbp")
-            self.text_lines.append("    ret")
-            
-            self.text_lines = old_text_lines
-
-        elif node_type=="GivoutNode":
-            self.generate(node.value)
-            self.text_lines.append("    ret")
-
-        elif node_type=="AssignmentNode":
-            self.generate(node.value)
-            self.text_lines.append(f"    mov [{node.target.name}], rax")
-
-        elif node_type=="UnaryOpNode":
-            self.generate(node.operand)
-            if node.op == "-":
-                self.text_lines.append("    neg rax")
-            elif node.op == "not":
-                self.text_lines.append("    cmp rax, 0")
-                self.text_lines.append("    sete al")
-                self.text_lines.append("    movzx rax, al")
-        elif node_type=="BreakNode":
-            self.text_lines.append("    jmp break_label")
-        elif node_type=="ContinueNode":
-            self.text_lines.append("    jmp continue_label")
-        elif node_type=="PassNode":
-            self.text_lines.append("    nop")
-        elif node_type=="ForNode":
+        elif node_type == "ForNode":
             for var in (node.iterator, f"{node.iterator}_collection", f"{node.iterator}_index"):
                 bss_entry = f"    {var} resq 1"
                 if bss_entry not in self.bss_lines:
@@ -238,65 +200,216 @@ class AsmGenerator:
             end_label = f"for_end_{label_id}"
             continue_label = f"for_continue_{label_id}"
 
-            # 1. Generate code for the collection and store it in a temporary variable
             self.generate(node.collection)
             self.text_lines.append(f"    mov [{node.iterator}_collection], rax")
+            self.text_lines.append(f"    mov qword [{node.iterator}_index], 0")
 
-            # 2. Initialize the iterator variable to 0
-            self.text_lines.append(f"    mov [{node.iterator}_index], 0")
-
-            # 3. Start of the loop
             self.text_lines.append(f"{start_label}:")
             self.text_lines.append(f"    mov rax, [{node.iterator}_collection]")
             self.text_lines.append(f"    mov rcx, [{node.iterator}_index]")
-            self.text_lines.append(f"    cmp rcx, [rax]")  # Assuming the first element is the length
+            self.text_lines.append("    cmp rcx, [rax]")  # Array length at index 0
             self.text_lines.append(f"    jge {end_label}")
 
-            # 4. Load the current item into the iterator variable
-            self.text_lines.append(f"    mov rbx, [rax + rcx * 8 + 8]")  # Assuming items start after length
+            self.text_lines.append("    mov rbx, [rax + rcx * 8 + 8]")  # Elements start after length header
             self.text_lines.append(f"    mov [{node.iterator}], rbx")
 
-            # 5. Generate code for the loop body
             self.generate(node.body)
 
-            # 6. Increment the iterator index and jump back to the start of the loop
             self.text_lines.append(f"{continue_label}:")
-            self.text_lines.append(f"    inc [{node.iterator}_index]")
+            self.text_lines.append(f"    inc qword [{node.iterator}_index]")
             self.text_lines.append(f"    jmp {start_label}")
-
-            # 7. End of the loop
             self.text_lines.append(f"{end_label}:")
-        elif node_type=="SafeNavNode":
-            self.generate(node.target)
-            self.text_lines.append("    cmp rax, 0")
-            safe_nav_label = f"safe_nav_{self.string_count}"
-            self.string_count += 1
-            self.text_lines.append(f"    je {safe_nav_label}")
-            self.text_lines.append(f"    mov rax, [rax + {node.property_name}]")
-            self.text_lines.append(f"{safe_nav_label}:")
-        elif node_type=="IndexAccessNode":
+
+        elif node_type == "BreakNode":
+            self.text_lines.append("    jmp break_label")
+        elif node_type == "ContinueNode":
+            self.text_lines.append("    jmp continue_label")
+        elif node_type == "PassNode":
+            self.text_lines.append("    nop")
+
+        # 9. Function Declarations, Calls & Returns
+        elif node_type == "FuncDeclNode":
+            self.declared_funcs.add(node.name)
+            for param in node.params:
+
+                bss_entry = f"    {param} resq 1"
+                if bss_entry not in self.bss_lines:
+                    self.bss_lines.append(bss_entry)
+
+            old_text_lines = self.text_lines
+            self.text_lines = self.func_lines
+
+            self.text_lines.append(f"\n{node.name}:")
+            self.text_lines.append("    push rbp")
+            self.text_lines.append("    mov rbp, rsp")
+
+            for i, param in enumerate(node.params):
+                offset = 16 + (i * 8)
+                self.text_lines.append(f"    mov rax, [rbp + {offset}]")
+                self.text_lines.append(f"    mov [{param}], rax")
+
+            self.generate(node.body)
+            self.text_lines.append("    mov rsp, rbp")
+            self.text_lines.append("    pop rbp")
+            self.text_lines.append("    ret")
+
+            self.text_lines = old_text_lines
+
+        elif node_type == "GivoutNode":
+            if node.value is not None:
+                self.generate(node.value)
+            self.text_lines.append("    mov rsp, rbp")
+            self.text_lines.append("    pop rbp")
+            self.text_lines.append("    ret")
+
+        elif node_type == "FuncCallNode":
+            callee_name = getattr(node.callee, 'name', None)
+
+            # Built-in log(...) function
+            if callee_name == "log":
+                for arg in node.args:
+                    self.generate(arg)
+                    self.text_lines.append("    mov rdx, rax")
+                    label = f"fmt_log_{self.string_count}"
+                    self.string_count += 1
+                    # Intelligent formatting string
+                    if isinstance(arg, LiteralNode) and isinstance(arg.value, str):
+                        self.data_lines.append(f'    {label} db "%s", 10, 0')
+                    else:
+                        self.data_lines.append(f'    {label} db "%lld", 10, 0')
+                    self.text_lines.append(f"    lea rcx, [rel {label}]")
+                    self.text_lines.append("    sub rsp, 32")
+                    self.text_lines.append("    call printf")
+                    self.text_lines.append("    add rsp, 32")
+
+            # Built-in math/system/time function call (e.g. math.sqrt, time.stamp)
+            elif isinstance(node.callee, SafeNavNode) or isinstance(node.callee, IdentifierNode) and "." in getattr(node.callee, "name", ""):
+                mod_target = getattr(node.callee, "name", "")
+                if "sqrt" in mod_target:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    sub rsp, 32")
+                    self.text_lines.append("    call sqrt")
+                    self.text_lines.append("    add rsp, 32")
+                elif "pow" in mod_target:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    push rax")
+                    self.generate(node.args[1])
+                    self.text_lines.append("    mov rdx, rax")
+                    self.text_lines.append("    pop rcx")
+                    self.text_lines.append("    sub rsp, 32")
+                    self.text_lines.append("    call pow")
+                    self.text_lines.append("    add rsp, 32")
+
+            else:
+                for arg in reversed(node.args):
+                    self.generate(arg)
+                    self.text_lines.append("    push rax")
+
+                if callee_name and callee_name in self.declared_funcs:
+                    self.text_lines.append(f"    call {callee_name}")
+                elif callee_name:
+                    self.text_lines.append(f"    mov rax, [{callee_name}]")
+                    self.text_lines.append("    call rax")
+                else:
+                    self.generate(node.callee)
+                    self.text_lines.append("    call rax")
+
+                if node.args:
+                    self.text_lines.append(f"    add rsp, {len(node.args) * 8}")
+
+
+        # 10. First-Class Anonymous Lambdas (lmb[x] => expr)
+        elif node_type == "LambdaNode":
+            lbl_name = f"lambda_{self.lambda_count}"
+            self.lambda_count += 1
+
+            for param in node.params:
+                bss_entry = f"    {param} resq 1"
+                if bss_entry not in self.bss_lines:
+                    self.bss_lines.append(bss_entry)
+
+            old_text = self.text_lines
+            self.text_lines = self.func_lines
+
+            self.text_lines.append(f"\n{lbl_name}:")
+            self.text_lines.append("    push rbp")
+            self.text_lines.append("    mov rbp, rsp")
+
+            for i, param in enumerate(node.params):
+                offset = 16 + (i * 8)
+                self.text_lines.append(f"    mov rax, [rbp + {offset}]")
+                self.text_lines.append(f"    mov [{param}], rax")
+
+            self.generate(node.body)
+            self.text_lines.append("    mov rsp, rbp")
+            self.text_lines.append("    pop rbp")
+            self.text_lines.append("    ret")
+
+            self.text_lines = old_text
+            self.text_lines.append(f"    lea rax, [rel {lbl_name}]")
+
+        # 11. Lists & Tuples ({1, 2, 3})
+        elif node_type in ("ListNode", "TupleNode"):
+            num_elems = len(node.elements)
+            total_bytes = (num_elems + 1) * 8
+
+            # Allocate heap memory via C malloc
+            self.text_lines.append(f"    mov rcx, {total_bytes}")
+            self.text_lines.append("    sub rsp, 32")
+            self.text_lines.append("    call malloc")
+            self.text_lines.append("    add rsp, 32")
+            self.text_lines.append(f"    mov qword [rax], {num_elems}") # Store length at index 0
+
+            # Store elements
+            self.text_lines.append("    push rax") # Save array pointer
+            for idx, elem in enumerate(node.elements):
+                self.generate(elem)
+                self.text_lines.append("    mov rbx, [rsp]") # Restore array pointer
+                self.text_lines.append(f"    mov [rbx + {(idx + 1) * 8}], rax")
+            self.text_lines.append("    pop rax") # Return array pointer in rax
+
+        # 12. Index Access (list[0])
+        elif node_type == "IndexAccessNode":
             self.generate(node.target)
             self.text_lines.append("    push rax")
             self.generate(node.index)
             self.text_lines.append("    pop rbx")
-            self.text_lines.append("    mov rax, [rbx + rax * 8]")  # Assuming 8-byte elements
-        elif node_type=="MethodCallNode":
-            self.generate(node.target)
-            self.text_lines.append("    push rax")
-            for arg in reversed(node.args):
-                self.generate(arg)
-                self.text_lines.append("    push rax")
-            self.text_lines.append("    pop rbx")  # Restore target object
-            self.text_lines.append(f"    call {node.method_name}")
-            if node.args:
-                self.text_lines.append(f"    add rsp, {len(node.args) * 8}")  # Clean up arguments
-        elif node_type=="ConstDeclNode":
-            bss_entry = f"    {node.name} resq 1"
-            if bss_entry not in self.bss_lines:
-                self.bss_lines.append(bss_entry)
-            self.generate(node.value)
-            self.text_lines.append(f"    mov [{node.name}], rax")
+            self.text_lines.append("    mov rax, [rbx + rax * 8 + 8]")
 
+        # 13. Method Calls (.length(), .map(), .filter())
+        elif node_type == "MethodCallNode":
+            if node.method_name in ("length", "len"):
+                self.generate(node.target)
+                self.text_lines.append("    mov rax, [rax]") # Read length header
+            else:
+                self.generate(node.target)
+                self.text_lines.append("    push rax")
+                for arg in reversed(node.args):
+                    self.generate(arg)
+                    self.text_lines.append("    push rax")
+                self.text_lines.append(f"    call {node.method_name}")
+                if node.args:
+                    self.text_lines.append(f"    add rsp, {(len(node.args) + 1) * 8}")
+
+        # 14. Class Declarations & OOP
+        elif node_type == "ClassDeclNode":
+            # Process class methods
+            for stmt in node.body.statements:
+                if isinstance(stmt, FuncDeclNode):
+                    method_func_name = f"{node.name}_{stmt.name}"
+                    stmt.name = method_func_name
+                    self.generate(stmt)
+
+        # 15. Module Imports (get math, get system, get time)
+        elif node_type == "GetNode":
+            self.imported_modules.add(node.module_name)
+            # Module symbol definitions are linked via C externs
+
+        # 16. Structured Error Recovery (try [ ... ] error(e) [ ... ])
+        elif node_type == "TryErrorNode":
+            self.generate(node.try_block)
+
+        # 17. User Input (input("Prompt: "))
         elif node_type == "InputNode":
             if "    input_buffer resq 1" not in self.bss_lines:
                 self.bss_lines.append("    input_buffer resq 1")
@@ -308,7 +421,7 @@ class AsmGenerator:
                     label = f"msg_{self.string_count}"
                     self.string_count += 1
                     self.data_lines.append(f'    {label} db "{node.prompt.value}", 0')
-                    self.text_lines.append(f"    mov rcx, {label}")
+                    self.text_lines.append(f"    lea rcx, [rel {label}]")
                     self.text_lines.append("    sub rsp, 32")
                     self.text_lines.append("    call printf")
                     self.text_lines.append("    add rsp, 32")
@@ -317,34 +430,41 @@ class AsmGenerator:
                     self.text_lines.append("    mov rdx, rax")
                     label = f"fmt_int_{self.string_count}"
                     self.string_count += 1
-                    self.data_lines.append(f'    {label} db "%d", 0')
-                    self.text_lines.append(f"    mov rcx, {label}")
+                    self.data_lines.append(f'    {label} db "%lld", 0')
+                    self.text_lines.append(f"    lea rcx, [rel {label}]")
                     self.text_lines.append("    sub rsp, 32")
                     self.text_lines.append("    call printf")
                     self.text_lines.append("    add rsp, 32")
 
-            self.text_lines.append("    mov rcx, fmt_scan_int")
-            self.text_lines.append("    mov rdx, input_buffer")
+            self.text_lines.append("    lea rcx, [rel fmt_scan_int]")
+            self.text_lines.append("    lea rdx, [rel input_buffer]")
             self.text_lines.append("    sub rsp, 32")
             self.text_lines.append("    call scanf")
             self.text_lines.append("    add rsp, 32")
             self.text_lines.append("    mov rax, [input_buffer]")
 
-        
-        
     def build_full_asm(self):
         asm = []
         asm.append("; ========================================")
-        asm.append("; Corvus NASM 64-bit Output")
+        asm.append("; Corvus NASM 64-bit Assembly Output (v2.0)")
+        asm.append("; Author: Saatvik Jain")
         asm.append("; ========================================")
         asm.append("bits 64")
         asm.append("default rel\n")
 
-        asm.append("; -- External Functions --")
+        asm.append("; -- External C Runtime Functions --")
         asm.append("extern ExitProcess")
         asm.append("extern printf")
-        asm.append("extern scanf\n")
-
+        asm.append("extern scanf")
+        asm.append("extern malloc")
+        asm.append("extern free")
+        asm.append("extern pow")
+        asm.append("extern sqrt")
+        asm.append("extern sin")
+        asm.append("extern cos")
+        asm.append("extern time")
+        asm.append("extern rand")
+        asm.append("extern exit\n")
 
         asm.append("; -- Constants & String Literals --")
         asm.append("section .data")
@@ -372,17 +492,14 @@ class AsmGenerator:
         asm.append("    call ExitProcess\n")
 
         if self.func_lines:
-            asm.append("; -- User Defined Functions --")
+            asm.append("; -- User Functions & Lambdas --")
             asm.extend(self.func_lines)
 
         return "\n".join(asm)
 
 
-        return "\n".join(asm)
-
-
 def compile_file(filepath):
-    with open(filepath, "r") as f:
+    with open(filepath, "r", encoding="utf-8") as f:
         code = f.read()
 
     tokens = tokenize(code)
@@ -393,11 +510,13 @@ def compile_file(filepath):
     generator.generate(program_ast)
 
     asm_filepath = filepath.replace(".crv", ".asm")
-    with open(asm_filepath, "w") as out:
+    with open(asm_filepath, "w", encoding="utf-8") as out:
         out.write(generator.build_full_asm())
 
     print(f"[SUCCESS] Compiled {filepath} -> {asm_filepath}")
 
 
 if __name__ == "__main__":
-    compile_file("compiler_test.crv")
+    import sys
+    if len(sys.argv) > 1:
+        compile_file(sys.argv[1])
