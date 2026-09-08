@@ -2,8 +2,9 @@
   "name": "corvus-language-support",
   "displayName": "Corvus Language Support",
   "description": "Syntax highlighting, language configuration, and snippets for the Corvus programming language.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "mesaatvikjain",
+  "icon": "icon.png",
   "license": "MIT",
   "engines": {
     "vscode": "^1.90.0"

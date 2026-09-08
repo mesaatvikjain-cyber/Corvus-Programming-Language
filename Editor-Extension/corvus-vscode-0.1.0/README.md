@@ -1,39 +1,34 @@
-# Corvus Language Support for VS Code
+# Corvus Language Support for VS Code (v0.2.0)
 
-Syntax highlighting, editing configuration, and snippets for the Corvus 0.1 language.
+Rich syntax highlighting, language configuration, code folding, and snippets for the Corvus programming language.
 
 ## Features
 
 - `.crv` and `.Crv` language mode
-- TextMate syntax highlighting
-- Corvus `?{ ... }` block comments
-- Strings and escape sequences
-- Integers and floating-point numbers
-- `true`, `fal`, and `null`
-- Corvus keywords, declaration keywords, logical operators, and async keywords
-- Corvus types
-- Operators and punctuation
-- Function and class declaration highlighting
-- Basic built-in function highlighting
-- Bracket matching and autoclosing
-- Block-comment toggling
-- Indentation for `[ ... ]` blocks
-- Starter snippets
+- TextMate syntax highlighting for Corvus v2.0
+- **Comments**: `//` single-line, `#` single-line, and `?{ ... }` block comments with Ctrl+/ toggle support
+- **Operators**: Pipeline operator `|>`, Fat arrow `=>`, Safe navigation `?.`, Null coalescing `??`, and logical `and`/`or`/`not`/`xor`
+- **Pattern Matching**: `match`, `case`, `else` syntax highlighting and automatic block indentation
+- **Strings & Escapes**: Double-quoted `"..."` and single-quoted `'...'` strings with full escape sequence highlighting
+- **Numbers**: Integer and floating-point literals
+- **Keywords & Types**: All Corvus keywords (`set`, `const`, `mk`, `func`, `lmb`, `cls`, `givout`, `if`, `elsif`, `else`, `for`, `in`, `while`, `brk`, `con`, `try`, `error`, `final`, `pass`, `global`, `get`, `input`, `async`, `awt`) and primitive storage types (`int`, `flo`, `str`, `bool`, `lis`, `tup`, `dic`, `func`, `lmb`)
+- **Constants**: `true`, `fal`, `null`, `self`
+- **Built-in Functions**: Highlighting for `log`, `type`, `range`, `sum`, `min`, `max`, `abs`, `round`, `any`, `all`, `reversed`, `sorted`, `enumerate`, `input`
+- **Standard Modules**: Highlighting for `gui`, `http`, `process`, `math`, `system`, `random`, `time`, `file`, `json`, `os`, `sys`, `urllib`
+- **Editing & Code Folding**: Explicit `[ ... ]` code block folding, autoclosing pairs, surrounding pairs, and intelligent indentation
+- **18+ Rich Snippets**: Complete snippet library for functions, async functions, classes, pattern matching, pipelines, loops, try/error/final, GUI alerts, HTTP requests, and native user input
 
-## Install locally
+## Installation
 
-1. Open this folder in VS Code.
-2. Press `F5`.
-3. A new **Extension Development Host** window opens.
-4. Open `examples/test.crv`.
-5. The language mode should show **Corvus**.
+### From VSIX Package
+1. Open VS Code.
+2. Go to **Extensions** (`Ctrl+Shift+X`).
+3. Click the `...` menu at the top right of the Extensions panel.
+4. Select **Install from VSIX...**
+5. Select `corvus-language-support-0.2.0.vsix` located in `Editor-Extension/`.
 
-You can also package the extension with `vsce package` after installing the VS Code Extension Manager (`vsce`).
+### Local Extension Development
+1. Open `Editor-Extension/corvus-vscode-0.1.0` in VS Code.
+2. Press `F5` to open the **Extension Development Host**.
+3. Open any `.crv` file to test full language support!
 
-## Scope
-
-This first extension provides editor-side lexical highlighting. It does not replace the Corvus interpreter or `lexercorvus.py`.
-
-## Source basis
-
-The grammar follows the Corvus 0.1 V3 specification: `set`, `const`, `mk`, `tup`, `func`, `lmb`, `givout`, `if`, `elsif`, `else`, `for`, `in`, `while`, `brk`, `con`, `try`, `error`, `final`, `true`, `fal`, `null`, `and`, `or`, `not`, `xor`, `async`, `awt`, `cls`, `global`, `pass`, and `get`; explicit `[ ... ]` blocks; and `?{ ... }` comments.

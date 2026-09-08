@@ -25,6 +25,9 @@
       "include": "#operators"
     },
     {
+      "include": "#modules"
+    },
+    {
       "include": "#function-declarations"
     },
     {
@@ -52,6 +55,26 @@
           "endCaptures": {
             "0": {
               "name": "punctuation.definition.comment.end.corvus"
+            }
+          }
+        },
+        {
+          "name": "comment.line.double-slash.corvus",
+          "begin": "//",
+          "end": "$",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.corvus"
+            }
+          }
+        },
+        {
+          "name": "comment.line.number-sign.corvus",
+          "begin": "#",
+          "end": "$",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.corvus"
             }
           }
         }
@@ -124,6 +147,10 @@
         {
           "name": "constant.language.null.corvus",
           "match": "\\bnull\\b"
+        },
+        {
+          "name": "variable.language.special.self.corvus",
+          "match": "\\bself\\b"
         }
       ]
     },
@@ -131,9 +158,8 @@
       "patterns": [
         {
           "name": "keyword.control.corvus",
-          "match": "\\b(?:if|elsif|else|for|in|while|brk|con|try|error|final|givout|pass|input)\\b"
+          "match": "\\b(?:if|elsif|else|for|in|while|brk|con|try|error|final|givout|pass|input|match|case)\\b"
         },
-
         {
           "name": "keyword.declaration.corvus",
           "match": "\\b(?:set|const|mk|func|lmb|cls|global|get)\\b"
@@ -159,8 +185,36 @@
     "operators": {
       "patterns": [
         {
-          "name": "keyword.operator.corvus",
-          "match": "\\*\\*|==|!=|<=|>=|=>|\\+|-|\\*|/|%|<|>|="
+          "name": "keyword.operator.pipeline.corvus",
+          "match": "\\|>"
+        },
+        {
+          "name": "keyword.operator.arrow.corvus",
+          "match": "=>"
+        },
+        {
+          "name": "keyword.operator.safe-navigation.corvus",
+          "match": "\\?\\."
+        },
+        {
+          "name": "keyword.operator.null-coalescing.corvus",
+          "match": "\\?\\?"
+        },
+        {
+          "name": "keyword.operator.comparison.corvus",
+          "match": "==|!=|<=|>="
+        },
+        {
+          "name": "keyword.operator.arithmetic.corvus",
+          "match": "\\*\\*|\\+|-|\\*|/|%"
+        },
+        {
+          "name": "keyword.operator.relational.corvus",
+          "match": "<|>"
+        },
+        {
+          "name": "keyword.operator.assignment.corvus",
+          "match": "="
         },
         {
           "name": "punctuation.separator.statement.corvus",
@@ -177,6 +231,14 @@
         {
           "name": "punctuation.section.brackets.corvus",
           "match": "[\\[\\]\\(\\)\\{\\}]"
+        }
+      ]
+    },
+    "modules": {
+      "patterns": [
+        {
+          "name": "support.module.corvus",
+          "match": "\\b(?:math|system|random|time|file|json|gui|http|process|os|sys|urllib)\\b(?=\\.)"
         }
       ]
     },
@@ -201,12 +263,12 @@
     "function-calls": {
       "patterns": [
         {
-          "name": "entity.name.function.call.corvus",
-          "match": "\\b[A-Za-z_][A-Za-z0-9_]*(?=\\s*\\()"
+          "name": "support.function.builtin.corvus",
+          "match": "\\b(?:log|type|range|sum|min|max|abs|round|any|all|reversed|sorted|enumerate|input|str|tup|int|flo|bool|lis|dic)\\b(?=\\s*\\()"
         },
         {
-          "name": "support.function.builtin.corvus",
-          "match": "\\b(?:log|str|tup|int|flo|bool|lis|dic)\\b(?=\\s*\\()"
+          "name": "entity.name.function.call.corvus",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*(?=\\s*\\()"
         }
       ]
     },
