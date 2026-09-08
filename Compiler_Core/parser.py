@@ -111,10 +111,17 @@ class Parser:
         if not tok:
             return None
 
-        if tok.type == 'KEYWORD' and tok.value == 'set':
+        if (tok.type in ('KEYWORD', 'ID', 'TYPE') and tok.value == 'set') or (tok.type in ('KEYWORD', 'ID', 'TYPE') and tok.value == 'var'):
+            if tok.value == 'var':
+                self.advance()
+                name = self.expect('ID').value
+                val = None
+                if self.match('ASSIGN'):
+                    val = self.parse_expression()
+                return VarDeclNode(var_type='any', name=name, value=val)
             return self.parse_var_or_const_decl()
 
-        if tok.type == 'KEYWORD' and tok.value == 'mk':
+        if (tok.type in ('KEYWORD', 'ID', 'TYPE') and tok.value == 'mk') or (tok.type in ('KEYWORD', 'ID', 'TYPE') and tok.value == 'func'):
             return self.parse_func_decl()
 
         if tok.type == 'KEYWORD' and tok.value == 'givout':
@@ -251,18 +258,12 @@ class Parser:
         return VarDeclNode(var_type=var_type, name=name, value=val)
 
     def parse_func_decl(self):
-        self.expect('KEYWORD', 'mk')
-        tok = self.peek()
-        if tok and tok.value == 'func':
+        if self.match('KEYWORD', 'mk'):
+            tok = self.peek()
+            if tok and tok.value == 'func':
+                self.advance()
+        elif self.peek() and self.peek().value == 'func':
             self.advance()
-        else:
-            raise CorvusError(
-                error_type="Corvus SyntaxError",
-                message=f"Expected 'func' after 'mk', but got '{tok.value if tok else 'EOF'}'",
-                line=tok.line if tok else 1,
-                col=tok.column if tok else 1,
-                suggestion="Declare functions using syntax: mk func <name>(<params>) [ ... ]"
-            )
 
         name = self.expect('ID').value
         self.expect('LPAREN')
@@ -277,11 +278,15 @@ class Parser:
         return FuncDeclNode(name=name, params=params, body=body)
 
     def parse_block(self) -> BlockNode:
-        self.expect('LBRACKET')
+        if self.match('LBRACKET'):
+            close_tok = 'RBRACKET'
+        else:
+            self.expect('LBRACE')
+            close_tok = 'RBRACE'
         stmts = []
-        while self.peek() and self.peek().type != 'RBRACKET':
+        while self.peek() and self.peek().type != close_tok:
             stmts.append(self.parse_statement())
-        self.expect('RBRACKET')
+        self.expect(close_tok)
         return BlockNode(statements=stmts)
 
     def parse_if(self) -> IfNode:
@@ -549,14 +554,15 @@ class Parser:
                 self.expect('TUP_CLOSE')
             return TupleNode(elements=elements)
 
-        if self.match('LBRACE'):
+        if self.match('LBRACKET') or self.match('LBRACE'):
             elements = []
-            if not self.match('RBRACE'):
+            close_tok = 'RBRACKET' if self.tokens[self.pos - 1].type == 'LBRACKET' else 'RBRACE'
+            if not self.match(close_tok):
                 while True:
                     elements.append(self.parse_expression())
                     if not self.match('COMMA'):
                         break
-                self.expect('RBRACE')
+                self.expect(close_tok)
             return ListNode(elements=elements)
 
         if self.match('LPAREN'):

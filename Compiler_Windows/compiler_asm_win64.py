@@ -329,6 +329,11 @@ class AsmGeneratorWin64:
                     self.text_lines.append("    call printf")
                     self.text_lines.append("    add rsp, 32")
 
+            elif callee_name in ("str", "int", "flo", "bool"):
+                if node.args:
+                    self.generate(node.args[0])
+                else:
+                    self.text_lines.append("    mov rax, 0")
             elif callee_name == "type":
                 self.generate(node.args[0])
                 lbl = f"type_str_{self.string_count}"
@@ -477,6 +482,63 @@ class AsmGeneratorWin64:
                     self.text_lines.append("    sub rsp, 32")
                     self.text_lines.append("    call system")
                     self.text_lines.append("    add rsp, 32")
+            elif target_name == "mem":
+                if node.method_name == "alloc" and node.args:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    mov rcx, rax")
+                    self.text_lines.append("    sub rsp, 32")
+                    self.text_lines.append("    call malloc")
+                    self.text_lines.append("    add rsp, 32")
+                elif node.method_name == "free" and node.args:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    mov rcx, rax")
+                    self.text_lines.append("    sub rsp, 32")
+                    self.text_lines.append("    call free")
+                    self.text_lines.append("    add rsp, 32")
+                elif node.method_name in ("stats", "refcount"):
+                    self.text_lines.append("    mov rax, 1")
+            elif target_name == "ffi":
+                if node.method_name == "load" and node.args:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    mov rcx, rax")
+                    self.text_lines.append("    sub rsp, 32")
+                    self.text_lines.append("    call LoadLibraryA")
+                    self.text_lines.append("    add rsp, 32")
+                elif node.method_name == "bind" and len(node.args) >= 2:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    push rax")
+                    self.generate(node.args[1])
+                    self.text_lines.append("    mov rdx, rax")
+                    self.text_lines.append("    pop rcx")
+                    self.text_lines.append("    sub rsp, 32")
+                    self.text_lines.append("    call GetProcAddress")
+                    self.text_lines.append("    add rsp, 32")
+                elif node.method_name == "call" and node.args:
+                    self.generate(node.args[0])
+                    if len(node.args) > 1:
+                        self.text_lines.append("    push rax")
+                        self.generate(node.args[1])
+                        self.text_lines.append("    mov rcx, rax")
+                        self.text_lines.append("    pop rax")
+                    self.text_lines.append("    call rax")
+            elif target_name == "crow":
+                if node.method_name == "fly" and node.args:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    sub rsp, 32")
+                    self.text_lines.append("    mov rcx, 0")
+                    self.text_lines.append("    mov rdx, 0")
+                    self.text_lines.append("    mov r8, rax")
+                    self.text_lines.append("    mov r9, 0")
+                    self.text_lines.append("    call CreateThread")
+                    self.text_lines.append("    add rsp, 32")
+                elif node.method_name == "flock" and node.args:
+                    self.generate(node.args[0])
+                elif node.method_name == "channel":
+                    self.text_lines.append("    mov rcx, 64")
+                    self.text_lines.append("    sub rsp, 32")
+                    self.text_lines.append("    call malloc")
+                    self.text_lines.append("    add rsp, 32")
+
 
         elif node_type == "InputNode":
             if "    input_buffer resq 1" not in self.bss_lines:
@@ -584,6 +646,9 @@ class AsmGeneratorWin64:
         asm.append("extern pow")
         asm.append("extern sqrt")
         asm.append("extern system")
+        asm.append("extern LoadLibraryA")
+        asm.append("extern GetProcAddress")
+        asm.append("extern CreateThread")
         asm.append("extern exit\n")
 
         asm.append("; -- Constants & String Literals --")

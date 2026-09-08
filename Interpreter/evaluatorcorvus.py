@@ -8,6 +8,14 @@ import importlib
 from concurrent.futures import ThreadPoolExecutor, Future
 
 from errors import CorvusError
+try:
+    from std_memory import _global_mem_manager
+    from std_ffi import FFIEngine
+    from std_concurrency import _global_crow_engine
+except ImportError:
+    from .std_memory import _global_mem_manager
+    from .std_ffi import FFIEngine
+    from .std_concurrency import _global_crow_engine
 from astnodes import (
     ProgramNode, LiteralNode, IdentifierNode, ListNode, TupleNode, DictNode,
     BinOpNode, UnaryOpNode, SafeNavNode, IndexAccessNode, MethodCallNode,
@@ -190,6 +198,26 @@ class Evaluator:
         self.global_env.define("reversed", lambda lis: list(reversed(lis)), "func")
         self.global_env.define("sorted", lambda lis, rev=False: sorted(lis, reverse=rev), "func")
         self.global_env.define("enumerate", lambda lis: list(enumerate(lis)), "func")
+
+        # Corvus Enterprise Built-in Modules
+        self.global_env.define("mem", ModuleNamespace("mem", {
+            "alloc": lambda *args: _global_mem_manager.alloc(*args),
+            "free": lambda *args: _global_mem_manager.free(*args),
+            "stats": lambda *args: _global_mem_manager.stats(),
+            "refcount": lambda *args: _global_mem_manager.refcount(*args)
+        }), "any")
+
+        self.global_env.define("ffi", ModuleNamespace("ffi", {
+            "load": lambda *args: FFIEngine.load(*args),
+            "bind": lambda *args: FFIEngine.bind(*args),
+            "call": lambda *args: FFIEngine.call(*args)
+        }), "any")
+
+        self.global_env.define("crow", ModuleNamespace("crow", {
+            "fly": lambda *args: _global_crow_engine.fly(*args),
+            "flock": lambda *args: _global_crow_engine.flock(args[0] if args else []),
+            "channel": lambda *args: _global_crow_engine.channel()
+        }), "any")
 
 
     def evaluate(self, node):
@@ -383,12 +411,11 @@ class Evaluator:
         if isinstance(target, CorvusInstance):
             return target.call_method(self, method_name, args)
 
-        if isinstance(target, ModuleNamespace):
-            if hasattr(target, method_name):
-                fn = getattr(target, method_name)
-                if callable(fn):
-                    return fn(*args)
-                return fn
+        if hasattr(target, method_name):
+            fn = getattr(target, method_name)
+            if callable(fn):
+                return fn(*args)
+            return fn
 
         raise CorvusError(
             error_type="Corvus AttributeError",
@@ -525,19 +552,18 @@ class Evaluator:
         raise ReturnException(val)
 
     def visit_FuncDeclNode(self, node: FuncDeclNode):
+        closure_env = self.env
         def user_func(*args):
-            func_env = Environment(parent=self.env)
+            func_env = Environment(parent=closure_env)
             for param, arg in zip(node.params, args):
                 func_env.define(param, arg, "any")
 
-            prev_env = self.env
-            self.env = func_env
+            evaluator_thread = Evaluator(func_env)
+            evaluator_thread.executor = self.executor
             try:
-                self.visit(node.body)
+                evaluator_thread.visit(node.body)
             except ReturnException as ret:
                 return ret.value
-            finally:
-                self.env = prev_env
             return None
 
         if getattr(node, 'is_async', False):
@@ -553,18 +579,13 @@ class Evaluator:
             lmb_env = Environment(parent=closure_env)
             for param, arg in zip(node.params, args):
                 lmb_env.define(param, arg, "any")
-            prev_env = self.env
-            self.env = lmb_env
+
+            evaluator_thread = Evaluator(lmb_env)
+            evaluator_thread.executor = self.executor
             try:
-                if isinstance(node.body, BlockNode):
-                    return self.visit(node.body)
-                else:
-                    return self.visit(node.body)
+                return evaluator_thread.visit(node.body)
             except ReturnException as ret:
                 return ret.value
-            finally:
-                self.env = prev_env
-
         return lambda_func
 
     def visit_ClassDeclNode(self, node: ClassDeclNode):

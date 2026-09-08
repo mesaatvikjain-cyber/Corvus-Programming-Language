@@ -332,6 +332,11 @@ class AsmGeneratorMacOS:
                     self.text_lines.append("    mov rax, 0")
                     self.text_lines.append("    call _printf")
 
+            elif callee_name in ("str", "int", "flo", "bool"):
+                if node.args:
+                    self.generate(node.args[0])
+                else:
+                    self.text_lines.append("    mov rax, 0")
             elif callee_name == "type":
                 self.generate(node.args[0])
                 lbl = f"type_str_{self.string_count}"
@@ -480,6 +485,54 @@ class AsmGeneratorMacOS:
                     self.generate(node.args[0])
                     self.text_lines.append("    mov rdi, rax")
                     self.text_lines.append("    call _system")
+            elif target_name == "mem":
+                if node.method_name == "alloc" and node.args:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    mov rdi, rax")
+                    self.text_lines.append("    call _malloc")
+                elif node.method_name == "free" and node.args:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    mov rdi, rax")
+                    self.text_lines.append("    call _free")
+                elif node.method_name in ("stats", "refcount"):
+                    self.text_lines.append("    mov rax, 1")
+            elif target_name == "ffi":
+                if node.method_name == "load" and node.args:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    mov rdi, rax")
+                    self.text_lines.append("    mov rsi, 1")
+                    self.text_lines.append("    call _dlopen")
+                elif node.method_name == "bind" and len(node.args) >= 2:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    push rax")
+                    self.generate(node.args[1])
+                    self.text_lines.append("    mov rsi, rax")
+                    self.text_lines.append("    pop rdi")
+                    self.text_lines.append("    call _dlsym")
+                elif node.method_name == "call" and node.args:
+                    self.generate(node.args[0])
+                    if len(node.args) > 1:
+                        self.text_lines.append("    push rax")
+                        self.generate(node.args[1])
+                        self.text_lines.append("    mov rdi, rax")
+                        self.text_lines.append("    pop rax")
+                    self.text_lines.append("    call rax")
+            elif target_name == "crow":
+                if node.method_name == "fly" and node.args:
+                    self.generate(node.args[0])
+                    self.text_lines.append("    mov rdx, rax")
+                    self.text_lines.append("    sub rsp, 8")
+                    self.text_lines.append("    mov rdi, rsp")
+                    self.text_lines.append("    mov rsi, 0")
+                    self.text_lines.append("    mov rcx, 0")
+                    self.text_lines.append("    call _pthread_create")
+                    self.text_lines.append("    pop rax")
+                elif node.method_name == "flock" and node.args:
+                    self.generate(node.args[0])
+                elif node.method_name == "channel":
+                    self.text_lines.append("    mov rdi, 64")
+                    self.text_lines.append("    call _malloc")
+
 
         elif node_type == "InputNode":
             if "    _input_buffer resq 1" not in self.bss_lines:
@@ -581,6 +634,9 @@ class AsmGeneratorMacOS:
         asm.append("extern _pow")
         asm.append("extern _sqrt")
         asm.append("extern _system")
+        asm.append("extern _dlopen")
+        asm.append("extern _dlsym")
+        asm.append("extern _pthread_create")
         asm.append("extern _exit\n")
 
         asm.append("; -- Constants & String Literals --")
