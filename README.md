@@ -9,13 +9,35 @@
 </p>
 
 <p align="center">
-  <a href="Documentation/webpage_corvus/index.html"><b>🌐 Official Documentation Webpage</b></a> •
+  <a href="Documentation/webpage_corvus/index.html"><b>🌐 Documentation Webpage</b></a> •
+  <a href="Documentation/INSTALLATION_GUIDE.md"><b>🛠️ Automated Installers Guide</b></a> •
   <a href="#-hands-on-version-tutorials"><b>📚 Version Tutorials</b></a> •
   <a href="Documentation/HOSTING.md"><b>☁️ Hosting Guide</b></a> •
   <a href="#-repository-version-sitemap">Version Sitemap</a> •
-  <a href="#-the-story-behind-corvus">The Story</a> •
-  <a href="#-quickstart">Quickstart</a>
+  <a href="#-the-story-behind-corvus">The Story</a>
 </p>
+
+---
+
+## 🛠️ Automated Cross-Platform Installers (v1.1 - v4.1)
+
+Corvus includes self-contained automated installer scripts for **Windows** (PowerShell), **Linux** (Bash), and **macOS** (Zsh/Bash) for **every single version release**!
+
+### Quick One-Line Install Command
+* **Windows (PowerShell Master Installer)**:
+  ```powershell
+  .\install_windows.ps1
+  ```
+* **Linux (Master Installer)**:
+  ```bash
+  bash install_linux.sh
+  ```
+* **macOS (Master Installer)**:
+  ```bash
+  bash install_macos.sh
+  ```
+
+For detailed version-by-version installation steps, see [Documentation/INSTALLATION_GUIDE.md](Documentation/INSTALLATION_GUIDE.md).
 
 ---
 
@@ -48,14 +70,14 @@ Every version release of Corvus includes a dedicated Markdown hands-on tutorial 
 
 The Corvus codebase is structured into explicit, standalone version releases so users and developers can select, compare, or run any generation of the language:
 
-| Directory | Version | Core Features | Execution Engine | Tutorial Link |
+| Directory | Version | Core Features | Execution Engine | Installer Scripts |
 | :--- | :--- | :--- | :--- | :--- |
-| **[`Version_1.1/`](Version_1.1/)** | **v1.1** | Basic AST Interpreter, Lambdas, OOP, CPM Package Manager | Python AST Visitor Interpreter | [v1.1 Guide](Documentation/tutorials/01_v1.1_basics_and_interpreter_tutorial.md) |
-| **[`Version_2.0/`](Version_2.0/)** | **v2.0** | Multi-Platform Native Assembly Compiler (`--target windows\|linux\|macos`), Pattern Matching, Pipeline Operator (`\|>`), Built-in Libs | NASM x86_64 Win64, ELF64, Mach-O Compiler & Interpreter | [v2.0 Guide](Documentation/tutorials/02_v2.0_multiplatform_compiler_tutorial.md) |
-| **[`Version_3.0/`](Version_3.0/)** | **v3.0** | **Self-Hosted Compiler (`CorvusCompiler.crv`)**, **Three-Address Code (TAC) IR Optimizer**, **Ref-Counting GC**, **"Murder of Crows" 🐦 Concurrency Engine**, **Native C FFI** | Optimized TAC IR Compiler, Self-Hosted Corvus Compiler & Interpreter | [v3.0 Guide](Documentation/tutorials/03_v3.0_selfhosted_concurrency_ffi_tutorial.md) |
-| **[`Version_3.1/`](Version_3.1/)** | **v3.1** | **Enterprise Error Handling & Resilience Engine**: **Call Stack Tracebacks**, **Panic-Mode Parser Recovery**, **Assembly Runtime Panic Guards (`__corvus_panic_null`, `__corvus_panic_bounds`)** | Resilient Multi-Platform TAC IR Compiler & Enterprise Interpreter | [v3.1 Guide](Documentation/tutorials/04_v3.1_error_handling_resilience_tutorial.md) |
-| **[`Version_4.0/`](Version_4.0/)** | **v4.0** | **Native Corvus Standard Library Expansion (`math.crv`, `string.crv`, `file.crv`, `sys.crv`)**, **Advanced TAC IR Backend Optimizations**, **Interactive REPL Shell (`repl.py`)**, **VS Code Extension v0.3.0** | Full Enterprise TAC IR Compiler, Native Executable Compiler & Interactive REPL | [v4.0 Guide](Documentation/tutorials/05_v4.0_stdlib_repl_vscode_tutorial.md) |
-| **[`Version_4.1/`](Version_4.1/)** | **v4.1** | **Super High-Level Optimization Engine**: **Constant Propagation**, **Algebraic Strength Reduction (`x * 2^n -> x << n`, `x / 2^n -> x >> n`)**, **Constant Branch Folding (`if (1)`)**, **CFG Jump Threading**, **Assembly Peephole Optimization** | Super-Optimized TAC IR Compiler & Native Executable Generator | [v4.1 Guide](Documentation/tutorials/06_v4.1_super_optimization_engine_tutorial.md) |
+| **[`Version_1.1/`](Version_1.1/)** | **v1.1** | Basic AST Interpreter, Lambdas, OOP, CPM Package Manager | Python AST Visitor Interpreter | [`Win`](Version_1.1/install_windows.ps1) \| [`Linux`](Version_1.1/install_linux.sh) \| [`macOS`](Version_1.1/install_macos.sh) |
+| **[`Version_2.0/`](Version_2.0/)** | **v2.0** | Multi-Platform Native Assembly Compiler (`--target windows\|linux\|macos`), Pattern Matching, Pipeline Operator (`\|>`), Built-in Libs | NASM x86_64 Win64, ELF64, Mach-O Compiler & Interpreter | [`Win`](Version_2.0/install_windows.ps1) \| [`Linux`](Version_2.0/install_linux.sh) \| [`macOS`](Version_2.0/install_macos.sh) |
+| **[`Version_3.0/`](Version_3.0/)** | **v3.0** | **Self-Hosted Compiler (`CorvusCompiler.crv`)**, **Three-Address Code (TAC) IR Optimizer**, **Ref-Counting GC**, **"Murder of Crows" 🐦 Concurrency Engine**, **Native C FFI** | Optimized TAC IR Compiler, Self-Hosted Corvus Compiler & Interpreter | [`Win`](Version_3.0/install_windows.ps1) \| [`Linux`](Version_3.0/install_linux.sh) \| [`macOS`](Version_3.0/install_macos.sh) |
+| **[`Version_3.1/`](Version_3.1/)** | **v3.1** | **Enterprise Error Handling & Resilience Engine**: **Call Stack Tracebacks**, **Panic-Mode Parser Recovery**, **Assembly Runtime Panic Guards (`__corvus_panic_null`, `__corvus_panic_bounds`)** | Resilient Multi-Platform TAC IR Compiler & Enterprise Interpreter | [`Win`](Version_3.1/install_windows.ps1) \| [`Linux`](Version_3.1/install_linux.sh) \| [`macOS`](Version_3.1/install_macos.sh) |
+| **[`Version_4.0/`](Version_4.0/)** | **v4.0** | **Native Corvus Standard Library Expansion (`math.crv`, `string.crv`, `file.crv`, `sys.crv`)**, **Advanced TAC IR Backend Optimizations**, **Interactive REPL Shell (`repl.py`)**, **VS Code Extension v0.3.0** | Full Enterprise TAC IR Compiler, Native Executable Compiler & Interactive REPL | [`Win`](Version_4.0/install_windows.ps1) \| [`Linux`](Version_4.0/install_linux.sh) \| [`macOS`](Version_4.0/install_macos.sh) |
+| **[`Version_4.1/`](Version_4.1/)** | **v4.1** | **Super High-Level Optimization Engine**: **Constant Propagation**, **Algebraic Strength Reduction (`x * 2^n -> x << n`, `x / 2^n -> x >> n`)**, **Constant Branch Folding (`if (1)`)**, **CFG Jump Threading**, **Assembly Peephole Optimization** | Super-Optimized TAC IR Compiler & Native Executable Generator | [`Win`](Version_4.1/install_windows.ps1) \| [`Linux`](Version_4.1/install_linux.sh) \| [`macOS`](Version_4.1/install_macos.sh) |
 
 ---
 
