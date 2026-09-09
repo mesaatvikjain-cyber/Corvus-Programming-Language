@@ -32,6 +32,7 @@
                 <div class="sidebar-title">Getting Started</div>
                 <ul class="sidebar-nav">
                     <li><a href="#intro">1. Introduction & Story</a></li>
+                    <li><a href="#wasm-playground" style="color: var(--accent-green); font-weight: 600;">⚡ Wasm Interactive Playground</a></li>
                     <li><a href="#quickstart">2. Quickstart & Install</a></li>
                     <li><a href="#cheatsheet">Quick Cheat Sheet</a></li>
                 </ul>
@@ -82,6 +83,45 @@
                     <p><em>"I got inspired to build my own programming language after watching a video about a programmer who created G# and C#, and a video by AstroSam. Since I already knew Python, I decided to take on the challenge and build my very own programming language from scratch!"</em><br>— <strong>Saatvik Jain</strong> (Creator of Corvus)</p>
                 </div>
                 <p>Corvus introduces a distinctive syntax using <strong>square brackets <code>[ ... ]</code> for code blocks</strong> and reserving <strong>curly braces <code>{ ... }</code> for native lists</strong>. Over 6 major release iterations (v1.1 to v4.1), Corvus has evolved from an interpreted prototype into a multi-platform systems language featuring Three-Address Code (TAC) IR optimization, a self-hosted compiler, native C FFI, scope memory ref-counting, and a native assembly compiler generating 64-bit binaries for Windows, Linux, and macOS!</p>
+            </section>
+
+            <!-- Interactive WebAssembly (Wasm) Playground -->
+            <section id="wasm-playground" class="doc-section">
+                <h1>⚡ Interactive Corvus WebAssembly (Wasm) Playground</h1>
+                <p>Experience Corvus right in your browser! Powered by in-browser client-side WebAssembly, this interactive playground parses, interprets, and executes Corvus code live in your browser sandbox with zero installation.</p>
+
+                <div class="playground-container">
+                    <div class="playground-toolbar">
+                        <div class="toolbar-group">
+                            <label for="wasm-sample-select">Load Preset Sample:</label>
+                            <select id="wasm-sample-select" class="sample-dropdown">
+                                <option value="hello">Hello World &amp; Control Flow</option>
+                                <option value="factorial">Recursion &amp; Factorial</option>
+                                <option value="stdlib">Standard Library (Math &amp; String)</option>
+                                <option value="pipeline">Pipeline (|&gt;) &amp; Pattern Matching</option>
+                                <option value="optimizer">v4.1 Super Optimizer Constant Folding</option>
+                            </select>
+                        </div>
+                        <button id="run-wasm-btn" class="run-btn">▶ Run Code (Wasm)</button>
+                    </div>
+
+                    <div class="playground-grid">
+                        <div class="editor-pane">
+                            <div class="pane-header">
+                                <span>Corvus Source Code Editor</span>
+                                <span class="badge-lang">.crv</span>
+                            </div>
+                            <textarea id="wasm-code-editor" spellcheck="false" placeholder="Write Corvus code here..."></textarea>
+                        </div>
+                        <div class="terminal-pane">
+                            <div class="pane-header">
+                                <span>Terminal Console Output</span>
+                                <span id="wasm-status-badge" class="status-badge">Ready</span>
+                            </div>
+                            <pre id="wasm-terminal-output" class="terminal-output">Click "▶ Run Code (Wasm)" to initialize Wasm engine &amp; execute program...</pre>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- Quick Cheat Sheet -->
@@ -505,5 +545,7 @@ corvus> .exit    # Exit REPL</code></pre>
     </div>
 
     <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <script src="wasm_playground.js"></script>
 </body>
 </html>
