@@ -5,7 +5,7 @@ func hash_simple(data) {
     var h = 5381
     var length = data.len()
     var i = 0
-    while i < length {
+    while (i < length) {
         h = ((h * 33) + data[i]) % 2147483647
         i = i + 1
     }

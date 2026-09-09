@@ -3,7 +3,7 @@
 func stringify(val) {
     # Formats values into JSON representation
     if type(val) == "str" {
-        givout "\"" + val + "\""
+        givout '"' + val + '"'
     }
     givout val
 }

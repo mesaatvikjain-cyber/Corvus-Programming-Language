@@ -7,7 +7,7 @@ func parse_url(url_str) [
     var query = ""
 
     if (regex.match("https://", url_str)) [
-        set port = 443
+        port = 443
     ]
 
     givout { "domain": domain, "port": port, "path": path, "query": query }
