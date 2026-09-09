@@ -13,11 +13,15 @@ try:
     from std_ffi import FFIEngine
     from std_concurrency import _global_crow_engine
     from std_graphics import _global_graphics
+    from std_net import _global_net_engine
+    from std_json import _global_json_engine
 except ImportError:
     from .std_memory import _global_mem_manager
     from .std_ffi import FFIEngine
     from .std_concurrency import _global_crow_engine
     from .std_graphics import _global_graphics
+    from .std_net import _global_net_engine
+    from .std_json import _global_json_engine
 from astnodes import (
     ProgramNode, LiteralNode, IdentifierNode, ListNode, TupleNode, DictNode,
     BinOpNode, UnaryOpNode, SafeNavNode, IndexAccessNode, MethodCallNode,
@@ -245,6 +249,22 @@ class Evaluator:
             "sleep": lambda *args: _global_graphics.sleep(*args),
             "fps": lambda *args: _global_graphics.fps(*args),
             "close": lambda *args: _global_graphics.close()
+        }), "any")
+
+        # Corvus Native Networking Engine (v4.2)
+        self.global_env.define("net", ModuleNamespace("net", {
+            "http_get": lambda *args: _global_net_engine.http_get(*args),
+            "http_post": lambda *args: _global_net_engine.http_post(*args),
+            "tcp_connect": lambda *args: _global_net_engine.tcp_connect(*args),
+            "tcp_send": lambda *args: _global_net_engine.tcp_send(*args),
+            "tcp_recv": lambda *args: _global_net_engine.tcp_recv(*args),
+            "tcp_close": lambda *args: _global_net_engine.tcp_close(*args)
+        }), "any")
+
+        # Corvus Native JSON Serialization Engine (v4.2)
+        self.global_env.define("json", ModuleNamespace("json", {
+            "parse": lambda *args: _global_json_engine.parse(*args),
+            "stringify": lambda *args: _global_json_engine.stringify(*args)
         }), "any")
 
 

@@ -1,14 +1,9 @@
-# Corvus Standard Library: JSON Utilities (std_json.crv)
+# Corvus Standard JSON Module (v4.2)
 
-func stringify(val) {
-    # Formats values into JSON representation
-    if type(val) == "str" {
-        givout "\"" + val + "\""
-    }
-    givout val
-}
+func parse(json_str) [
+    givout json.parse(json_str)
+]
 
-func parse_simple(json_str) {
-    # Lightweight parser helper
-    givout json_str
-}
+func stringify(obj) [
+    givout json.stringify(obj)
+]

@@ -1,0 +1,41 @@
+name: Corvus Continuous Integration Matrix
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-matrix:
+    name: Build & Test Matrix (${{ matrix.os }}, Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+
+    steps:
+    - name: Checkout Code Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Verify Python Environment
+      run: |
+        python --version
+
+    - name: Run Corvus Syntax Linter Checks
+      run: |
+        python Interpreter/Corvus.py --check Examples-and-Tests/01_hello_and_input.crv
+        python Interpreter/Corvus.py --check Examples-and-Tests/01_snake_game.crv
+        python Interpreter/Corvus.py --check Examples-and-Tests/02_crow_particles.crv
+        python Interpreter/Corvus.py --check Examples-and-Tests/03_pong_game.crv
+
+    - name: Run Automated Matrix Regression Test Suite
+      run: |
+        python Examples-and-Tests/matrix_regression_suite.py
