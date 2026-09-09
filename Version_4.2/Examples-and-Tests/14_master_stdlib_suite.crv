@@ -1,0 +1,34 @@
+# Corvus Master Standard Library Test Suite (v4.2)
+
+log("--- Testing Core System & Data Modules ---")
+var json_str = '{"language": "Corvus", "release": 4.2}'
+var parsed_json = json.parse(json_str)
+log("JSON Parse Result: " + parsed_json["language"])
+
+var t_now = chrono.now()
+log("Epoch timestamp: " + str(t_now))
+log("Formatted Date: " + chrono.format_date(t_now))
+
+log("--- Testing Cryptography & Hashing ---")
+var hash_md5 = crypto.md5("Corvus Core")
+var hash_sha = crypto.sha256("Corvus Core")
+log("MD5: " + hash_md5)
+log("SHA-256: " + hash_sha)
+
+var enc_b64 = crypto.base64_encode("Hello Corvus")
+log("Base64 Encoded: " + enc_b64)
+log("Base64 Decoded: " + crypto.base64_decode(enc_b64))
+
+var cipher_txt = crypto.encrypt("Secret Corvus Message", "corvus123")
+log("Cipher Encrypted: " + cipher_txt)
+log("Cipher Decrypted: " + crypto.decrypt(cipher_txt, "corvus123"))
+
+log("--- Testing Regex & Pattern Matching ---")
+log("Is email test@corvus.org valid: " + str(regex.is_email("test@corvus.org")))
+log("Regex match 'Corvus' in string: " + str(regex.match("Corvus", "Welcome to Corvus")))
+
+log("--- Testing Process & OS Info ---")
+log("Platform: " + process.get_platform())
+log("Architecture: " + process.get_arch())
+
+log("[SUCCESS]: Corvus Master Standard Library Suite Executed Successfully!")

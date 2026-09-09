@@ -1,0 +1,13 @@
+# Corvus Standardized Structured Logging Module
+
+func info(msg) [
+    log("[INFO] [" + chrono.format_date(chrono.now()) + "]: " + str(msg))
+]
+
+func warn(msg) [
+    log("[WARN] [" + chrono.format_date(chrono.now()) + "]: " + str(msg))
+]
+
+func error(msg) [
+    log("[ERROR] [" + chrono.format_date(chrono.now()) + "]: " + str(msg))
+]

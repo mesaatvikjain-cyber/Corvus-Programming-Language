@@ -15,6 +15,10 @@ try:
     from std_graphics import _global_graphics
     from std_net import _global_net_engine
     from std_json import _global_json_engine
+    from std_chrono import _global_chrono_engine
+    from std_crypto import _global_crypto_engine
+    from std_regex import _global_regex_engine
+    from std_process import _global_process_engine
 except ImportError:
     from .std_memory import _global_mem_manager
     from .std_ffi import FFIEngine
@@ -22,6 +26,10 @@ except ImportError:
     from .std_graphics import _global_graphics
     from .std_net import _global_net_engine
     from .std_json import _global_json_engine
+    from .std_chrono import _global_chrono_engine
+    from .std_crypto import _global_crypto_engine
+    from .std_regex import _global_regex_engine
+    from .std_process import _global_process_engine
 from astnodes import (
     ProgramNode, LiteralNode, IdentifierNode, ListNode, TupleNode, DictNode,
     BinOpNode, UnaryOpNode, SafeNavNode, IndexAccessNode, MethodCallNode,
@@ -211,7 +219,11 @@ class Evaluator:
             "alloc": lambda *args: _global_mem_manager.alloc(*args),
             "free": lambda *args: _global_mem_manager.free(*args),
             "stats": lambda *args: _global_mem_manager.stats(),
-            "refcount": lambda *args: _global_mem_manager.refcount(*args)
+            "refcount": lambda *args: _global_mem_manager.refcount(*args),
+            "detect_cycles": lambda *args: _global_mem_manager.detect_cycles(),
+            "collect_cycles": lambda *args: _global_mem_manager.collect_cycles(),
+            "weak_ref": lambda *args: _global_mem_manager.weak_ref(*args),
+            "de_weak": lambda *args: _global_mem_manager.de_weak(*args)
         }), "any")
 
         self.global_env.define("ffi", ModuleNamespace("ffi", {
@@ -265,6 +277,41 @@ class Evaluator:
         self.global_env.define("json", ModuleNamespace("json", {
             "parse": lambda *args: _global_json_engine.parse(*args),
             "stringify": lambda *args: _global_json_engine.stringify(*args)
+        }), "any")
+
+        # Corvus Native Chrono Timing Engine (v4.2)
+        self.global_env.define("chrono", ModuleNamespace("chrono", {
+            "now": lambda *args: _global_chrono_engine.now(*args),
+            "sleep": lambda *args: _global_chrono_engine.sleep(*args),
+            "format_date": lambda *args: _global_chrono_engine.format_date(*args)
+        }), "any")
+
+        # Corvus Native Cryptography & Cipher Engine (v4.2)
+        self.global_env.define("crypto", ModuleNamespace("crypto", {
+            "md5": lambda *args: _global_crypto_engine.md5(*args),
+            "sha256": lambda *args: _global_crypto_engine.sha256(*args),
+            "base64_encode": lambda *args: _global_crypto_engine.base64_encode(*args),
+            "base64_decode": lambda *args: _global_crypto_engine.base64_decode(*args),
+            "encrypt": lambda *args: _global_crypto_engine.encrypt(*args),
+            "decrypt": lambda *args: _global_crypto_engine.decrypt(*args)
+        }), "any")
+
+        # Corvus Native Regular Expression Engine (v4.2)
+        self.global_env.define("regex", ModuleNamespace("regex", {
+            "match": lambda *args: _global_regex_engine.match(*args),
+            "findall": lambda *args: _global_regex_engine.findall(*args),
+            "replace": lambda *args: _global_regex_engine.replace(*args),
+            "is_email": lambda *args: _global_regex_engine.is_email(*args)
+        }), "any")
+
+        # Corvus Native Process & System Control Engine (v4.2)
+        self.global_env.define("process", ModuleNamespace("process", {
+            "run": lambda *args: _global_process_engine.run(*args),
+            "get_env": lambda *args: _global_process_engine.get_env(*args),
+            "set_env": lambda *args: _global_process_engine.set_env(*args),
+            "get_platform": lambda *args: _global_process_engine.get_platform(),
+            "get_arch": lambda *args: _global_process_engine.get_arch(),
+            "get_os_release": lambda *args: _global_process_engine.get_os_release()
         }), "any")
 
 
