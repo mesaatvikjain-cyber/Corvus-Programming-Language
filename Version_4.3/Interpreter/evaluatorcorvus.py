@@ -65,11 +65,18 @@ class Environment:
         self.constants = set() # Tracks immutable variables defined with `const`
         self.parent = parent   # Link to outer scope
 
+    def get_all_symbols(self):
+        syms = list(self.values.keys())
+        if self.parent:
+            syms.extend(self.parent.get_all_symbols())
+        return syms
+
     def define(self, name: str, value, var_type: str, is_const: bool = False):
         if name in self.values:
             if name in self.constants:
                 raise CorvusError(
                     error_type="Corvus TypeError",
+                    error_code="E0102",
                     message=f"Cannot reassign constant '{name}'.",
                     suggestion="Declare the identifier with 'set <type>;' if you need it to be mutable."
                 )
@@ -87,6 +94,7 @@ class Environment:
             if name in self.constants:
                 raise CorvusError(
                     error_type="Corvus TypeError",
+                    error_code="E0102",
                     message=f"Cannot reassign constant '{name}'.",
                     suggestion="Declare the identifier with 'set <type>;' if you need it to be mutable."
                 )
@@ -97,10 +105,15 @@ class Environment:
             self.parent.assign(name, value)
             return
 
+        from errors import find_closest_match
+        cand = find_closest_match(name, self.get_all_symbols())
+        suggestion = f"Did you mean '{cand}'?" if cand else f"Declare '{name}' using 'set <type>; {name} = ...' before assigning to it."
+
         raise CorvusError(
             error_type="Corvus NameError",
+            error_code="E0202",
             message=f"Cannot assign to undefined variable '{name}'.",
-            suggestion=f"Declare '{name}' using 'set <type>; {name} = ...' before assigning to it."
+            suggestion=suggestion
         )
 
     def get(self, name: str):
@@ -108,10 +121,24 @@ class Environment:
             return self.values[name]
         if self.parent:
             return self.parent.get(name)
+
+        # Smart Heuristics: check typo candidates & common language habits
+        from errors import find_closest_match, KEYWORD_TYPO_MAP
+        suggestion = None
+        if name.lower() in KEYWORD_TYPO_MAP:
+            suggestion = f"Did you mean '{KEYWORD_TYPO_MAP[name.lower()]}'?"
+        else:
+            cand = find_closest_match(name, self.get_all_symbols())
+            if cand:
+                suggestion = f"Did you mean '{cand}'?"
+            else:
+                suggestion = f"Verify that '{name}' is declared and spelled correctly in this scope."
+
         raise CorvusError(
             error_type="Corvus NameError",
+            error_code="E0201",
             message=f"Undefined variable '{name}'.",
-            suggestion=f"Verify that '{name}' is declared and spelled correctly in this scope."
+            suggestion=suggestion
         )
 
     def get_type(self, name: str):
@@ -433,6 +460,7 @@ class Evaluator:
 
             raise CorvusError(
                 error_type="Corvus TypeError",
+                error_code="E0101",
                 message=f"Type mismatch for variable '{var_name}': expected type '{expected_type}', but got '{actual_type}' ({repr(val)}).",
                 suggestion=f"Ensure the assigned value matches the declared type '{expected_type}'."
             )
@@ -477,6 +505,7 @@ class Evaluator:
             if right == 0:
                 raise CorvusError(
                     error_type="Corvus MathError",
+                    error_code="E0301",
                     message="Division by zero.",
                     suggestion="Ensure your denominator expression evaluates to a non-zero number."
                 )
@@ -509,18 +538,21 @@ class Evaluator:
         except IndexError:
             raise CorvusError(
                 error_type="Corvus IndexError",
+                error_code="E0401",
                 message=f"Index {index} is out of bounds for collection of length {len(target)}.",
                 suggestion="Verify the index bounds before accessing collection elements."
             )
         except KeyError:
             raise CorvusError(
                 error_type="Corvus KeyError",
+                error_code="E0402",
                 message=f"Key '{index}' not found in dictionary.",
                 suggestion="Check that the key exists in the dictionary before accessing."
             )
         except TypeError:
             raise CorvusError(
                 error_type="Corvus TypeError",
+                error_code="E0101",
                 message=f"Type '{type(target).__name__}' does not support indexing.",
                 suggestion="Index access is only valid on lists, tuples, dictionaries, and strings."
             )
@@ -582,10 +614,18 @@ class Evaluator:
                 return fn(*args)
             return fn
 
+        from errors import find_closest_match
+        available_attrs = dir(target) if hasattr(target, '__dir__') else []
+        if isinstance(target, ModuleNamespace):
+            available_attrs = list(target.symbols.keys())
+        cand = find_closest_match(method_name, [a for a in available_attrs if not a.startswith('__')])
+        suggestion = f"Did you mean '{cand}'?" if cand else f"Check that method '{method_name}' is supported on this data structure."
+
         raise CorvusError(
             error_type="Corvus AttributeError",
+            error_code="E0203",
             message=f"Type '{type(target).__name__}' has no method or attribute '{method_name}'.",
-            suggestion=f"Check that method '{method_name}' is supported on this data structure."
+            suggestion=suggestion
         )
 
     def visit_SafeNavNode(self, node: SafeNavNode):
