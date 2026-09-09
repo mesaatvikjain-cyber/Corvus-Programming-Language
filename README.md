@@ -161,6 +161,31 @@ python Interpreter/Corvus.py --explain E0101
 python Interpreter/Corvus.py myfile.crv --ai-fix
 ```
 
+#### 7. AST Optimization Engine & Modern Syntax
+```bash
+# Execute with AST constant folding, algebraic simplification, and dead branch pruning
+python Interpreter/Corvus.py myfile.crv --optimize
+
+# Modern F-Strings and Inline Ternaries:
+# set str; greeting = f"Hello {name}, score: {score * 2}"
+# set str; grade = score >= 90 ? "A" : "B"
+```
+
+#### 8. High-Precision Benchmarking & AST Profiler
+```bash
+# Microbenchmark script execution time, ops/sec, and peak memory:
+python Interpreter/Corvus.py bench myfile.crv 100
+
+# Profile AST node execution frequency and statement breakdown:
+python Interpreter/Corvus.py profile myfile.crv
+```
+
+#### 9. High-Performance C99 Native Transpiler (`-O3`)
+```bash
+# Transpile Corvus directly to portable C99 and compile to native optimized binary:
+python Compiler/CorvusC_c.py myfile.crv -o myfile.exe -O3 --run
+```
+
 ---
 
 ## 📜 License & Author

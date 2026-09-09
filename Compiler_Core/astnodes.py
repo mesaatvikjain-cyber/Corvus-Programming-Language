@@ -189,3 +189,30 @@ class TryErrorNode(ASTNode):
     error_var: Optional[str]
     error_block: Optional[BlockNode]
     final_block: Optional[BlockNode]
+
+@dataclass
+class PipelineNode(ASTNode):
+    left: ASTNode
+    right: ASTNode
+
+@dataclass
+class CaseNode(ASTNode):
+    pattern: ASTNode
+    body: ASTNode
+
+@dataclass
+class MatchNode(ASTNode):
+    target: ASTNode
+    cases: List[CaseNode]
+    default_branch: Optional[ASTNode] = None
+
+@dataclass
+class TernaryNode(ASTNode):
+    condition: ASTNode
+    true_expr: ASTNode
+    false_expr: ASTNode
+
+@dataclass
+class FStringNode(ASTNode):
+    parts: List[ASTNode]
+

@@ -27,7 +27,7 @@ def check_syntax(filepath: str):
         print(f"[Corvus Syntax Error]: {e}", file=sys.stderr)
         sys.exit(1)
 
-def run_file(filepath: str, ai_fix: bool = False):
+def run_file(filepath: str, ai_fix: bool = False, optimize: bool = True):
     if not filepath.endswith(".crv"):
         print(f"Error: File '{filepath}' must have a .crv extension.")
         sys.exit(1)
@@ -44,6 +44,10 @@ def run_file(filepath: str, ai_fix: bool = False):
         parser = Parser(tokens)
         ast = parser.parse()
 
+        if optimize:
+            from ast_optimizer import AstOptimizer
+            ast = AstOptimizer().optimize(ast)
+
         global_env = Environment()
         evaluator = Evaluator(global_env)
         evaluator.current_file_path = filepath
@@ -59,6 +63,7 @@ def run_file(filepath: str, ai_fix: bool = False):
 
 from formatter import format_file
 from typechecker import TypeChecker
+from benchmark import run_benchmark, run_profile
 
 def run_typecheck(filepath: str):
     if not os.path.exists(filepath):
@@ -115,6 +120,8 @@ def run_test_runner(directory: str = "."):
             tokens = tokenize(code)
             parser = Parser(tokens)
             ast = parser.parse()
+            from ast_optimizer import AstOptimizer
+            ast = AstOptimizer().optimize(ast)
             global_env = Environment()
             evaluator = Evaluator(global_env)
             evaluator.current_file_path = tf
@@ -182,6 +189,28 @@ def main():
         run_typecheck(sys.argv[2])
         return
 
+    # High-Precision Benchmarking (corvus bench)
+    if arg1 == "bench":
+        if len(sys.argv) < 3:
+            print("Usage: corvus bench <file.crv> [iterations] [--no-opt]")
+            sys.exit(1)
+        target = sys.argv[2]
+        iters = 50
+        no_opt = "--no-opt" in sys.argv
+        for a in sys.argv[3:]:
+            if a.isdigit():
+                iters = int(a)
+        run_benchmark(target, iterations=iters, optimize=not no_opt)
+        return
+
+    # Execution Profiler (corvus profile)
+    if arg1 == "profile":
+        if len(sys.argv) < 3:
+            print("Usage: corvus profile <file.crv>")
+            sys.exit(1)
+        run_profile(sys.argv[2])
+        return
+
     if arg1 in ("--repl", "-r"):
         start_repl()
     elif arg1 in ("--check", "-c"):
@@ -195,9 +224,12 @@ def main():
         print("  corvus                                   Launch interactive REPL")
         print("  corvus <file.crv>                        Execute Corvus source file")
         print("  corvus <file.crv> --ai-fix               Execute with AI-grade diagnostic solutions")
+        print("  corvus <file.crv> --no-opt               Disable AST optimization engine")
         print("  corvus --strict <file.crv>               Run static type analyzer & strict linter")
         print("  corvus fmt <file.crv> [--check]          Canonical code auto-formatter")
         print("  corvus test [dir]                        Auto-discover and run all test suites")
+        print("  corvus bench <file.crv> [iters]          High-precision nanosecond benchmark suite")
+        print("  corvus profile <file.crv>                Statement execution and AST node profiler")
         print("  corvus init                              Initialize a new Corvus project manifest")
         print("  corvus install [pkg]                     Install Corvus packages (local or global)")
         print("  corvus list                              List installed packages")

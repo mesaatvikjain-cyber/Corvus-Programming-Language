@@ -54,7 +54,7 @@ from astnodes import (
     VarDeclNode, ConstDeclNode, AssignmentNode, BlockNode, IfNode, WhileNode,
     ForNode, BreakNode, ContinueNode, PassNode, GivoutNode, FuncDeclNode,
     LambdaNode, FuncCallNode, ClassDeclNode, GlobalNode, GetNode, AwaitNode,
-    TryErrorNode, InputNode
+    TryErrorNode, InputNode, PipelineNode, MatchNode, CaseNode, TernaryNode, FStringNode
 )
 
 
@@ -90,20 +90,19 @@ class Environment:
             self.constants.add(name)
 
     def assign(self, name: str, value):
-        if name in self.values:
-            if name in self.constants:
-                raise CorvusError(
-                    error_type="Corvus TypeError",
-                    error_code="E0102",
-                    message=f"Cannot reassign constant '{name}'.",
-                    suggestion="Declare the identifier with 'set <type>;' if you need it to be mutable."
-                )
-            self.values[name] = value
-            return
-
-        if self.parent:
-            self.parent.assign(name, value)
-            return
+        curr = self
+        while curr is not None:
+            if name in curr.values:
+                if name in curr.constants:
+                    raise CorvusError(
+                        error_type="Corvus TypeError",
+                        error_code="E0102",
+                        message=f"Cannot reassign constant '{name}'.",
+                        suggestion="Declare the identifier with 'set <type>;' if you need it to be mutable."
+                    )
+                curr.values[name] = value
+                return
+            curr = curr.parent
 
         from errors import find_closest_match
         cand = find_closest_match(name, self.get_all_symbols())
@@ -119,8 +118,12 @@ class Environment:
     def get(self, name: str):
         if name in self.values:
             return self.values[name]
-        if self.parent:
-            return self.parent.get(name)
+
+        curr = self.parent
+        while curr is not None:
+            if name in curr.values:
+                return curr.values[name]
+            curr = curr.parent
 
         # Smart Heuristics: check typo candidates & common language habits
         from errors import find_closest_match, KEYWORD_TYPO_MAP
@@ -468,6 +471,40 @@ class Evaluator:
     def visit_LiteralNode(self, node: LiteralNode):
         return node.value
 
+    def visit_FStringNode(self, node: FStringNode):
+        rendered = []
+        for part in node.parts:
+            val = self.visit(part)
+            rendered.append(str(val) if val is not None else "null")
+        return "".join(rendered)
+
+    def visit_TernaryNode(self, node: TernaryNode):
+        cond = self.visit(node.condition)
+        if bool(cond):
+            return self.visit(node.true_expr)
+        return self.visit(node.false_expr)
+
+    def visit_PipelineNode(self, node: PipelineNode):
+        left_val = self.visit(node.left)
+        right_callable = self.visit(node.right)
+        if callable(right_callable):
+            return right_callable(left_val)
+        raise CorvusError(
+            error_type="Corvus TypeError",
+            message="Right operand of pipeline '|>' must be a callable function.",
+            suggestion="Ensure you pass a function on the right side: data |> process_fn"
+        )
+
+    def visit_MatchNode(self, node: MatchNode):
+        target_val = self.visit(node.target)
+        for case in node.cases:
+            pat_val = self.visit(case.pattern)
+            if target_val == pat_val:
+                return self.visit(case.body)
+        if node.default_branch:
+            return self.visit(node.default_branch)
+        return None
+
     def visit_IdentifierNode(self, node: IdentifierNode):
         return self.env.get(node.name)
 
@@ -509,6 +546,8 @@ class Evaluator:
                     message="Division by zero.",
                     suggestion="Ensure your denominator expression evaluates to a non-zero number."
                 )
+            if isinstance(left, int) and isinstance(right, int) and left % right == 0:
+                return left // right
             return left / right
         if op == '%':   return left % right
         if op == '**':  return left ** right

@@ -18,6 +18,7 @@ RULES = [
 
     # Literals
     ('NUMBER',     r'\d+(\.\d+)?'),
+    ('FSTRING',    r'f"[^"\n]*"|f\'[^\'\n]*\''),
     ('STRING',     r'"[^"\n]*"|\'[^\'\n]*\''),
 
     # Keywords
@@ -50,6 +51,7 @@ RULES = [
     ('AT',         r'@'),
     ('LT',         r'<'),
     ('GT',         r'>'),
+    ('QUESTION',   r'\?'),
     ('DOT',        r'\.'),
     ('COLON',      r':'),
     ('SEMI',       r';'),

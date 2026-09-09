@@ -171,3 +171,13 @@ class MatchNode(ASTNode):
     target: ASTNode
     cases: List[CaseNode]
     default_branch: Optional[ASTNode] = None
+
+@dataclass
+class TernaryNode(ASTNode):
+    condition: ASTNode
+    true_expr: ASTNode
+    false_expr: ASTNode
+
+@dataclass
+class FStringNode(ASTNode):
+    parts: List[ASTNode]

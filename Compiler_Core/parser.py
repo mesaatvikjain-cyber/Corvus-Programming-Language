@@ -7,7 +7,7 @@ try:
         VarDeclNode, ConstDeclNode, AssignmentNode, BlockNode, IfNode, WhileNode,
         ForNode, BreakNode, ContinueNode, PassNode, GivoutNode, FuncDeclNode,
         LambdaNode, FuncCallNode, ClassDeclNode, GlobalNode, GetNode, AwaitNode,
-        TryErrorNode, InputNode, PipelineNode, MatchNode, CaseNode
+        TryErrorNode, InputNode, PipelineNode, MatchNode, CaseNode, TernaryNode, FStringNode
     )
 except ImportError:
     try:
@@ -19,7 +19,7 @@ except ImportError:
             VarDeclNode, ConstDeclNode, AssignmentNode, BlockNode, IfNode, WhileNode,
             ForNode, BreakNode, ContinueNode, PassNode, GivoutNode, FuncDeclNode,
             LambdaNode, FuncCallNode, ClassDeclNode, GlobalNode, GetNode, AwaitNode,
-            TryErrorNode, InputNode, PipelineNode, MatchNode, CaseNode
+            TryErrorNode, InputNode, PipelineNode, MatchNode, CaseNode, TernaryNode, FStringNode
         )
     except ImportError:
         from Lexercompiler import Token, tokenize
@@ -30,7 +30,7 @@ except ImportError:
             VarDeclNode, ConstDeclNode, AssignmentNode, BlockNode, IfNode, WhileNode,
             ForNode, BreakNode, ContinueNode, PassNode, GivoutNode, FuncDeclNode,
             LambdaNode, FuncCallNode, ClassDeclNode, GlobalNode, GetNode, AwaitNode,
-            TryErrorNode, InputNode, PipelineNode, MatchNode, CaseNode
+            TryErrorNode, InputNode, PipelineNode, MatchNode, CaseNode, TernaryNode, FStringNode
         )
 
 
@@ -386,7 +386,16 @@ class Parser:
         return TryErrorNode(try_block=try_block, error_var=err_var, error_block=err_block, final_block=final_block)
 
     def parse_expression(self):
-        return self.parse_pipeline()
+        return self.parse_ternary()
+
+    def parse_ternary(self):
+        node = self.parse_pipeline()
+        if self.match('QUESTION'):
+            true_expr = self.parse_expression()
+            self.expect('COLON')
+            false_expr = self.parse_expression()
+            return TernaryNode(condition=node, true_expr=true_expr, false_expr=false_expr)
+        return node
 
     def parse_pipeline(self):
         node = self.parse_null_coalesce()
@@ -519,6 +528,67 @@ class Parser:
                     break
         return args
 
+    def _parse_fstring_parts(self, raw: str, line: int, col: int) -> list:
+        parts = []
+        i = 0
+        n = len(raw)
+        curr_text = []
+
+        while i < n:
+            if raw[i] == '{':
+                if i + 1 < n and raw[i + 1] == '{':
+                    curr_text.append('{')
+                    i += 2
+                    continue
+                if curr_text:
+                    parts.append(LiteralNode(value="".join(curr_text)))
+                    curr_text = []
+                
+                brace_count = 1
+                start = i + 1
+                j = start
+                while j < n and brace_count > 0:
+                    if raw[j] == '{':
+                        brace_count += 1
+                    elif raw[j] == '}':
+                        brace_count -= 1
+                    j += 1
+                if brace_count != 0:
+                    raise CorvusError(
+                        error_type="Corvus SyntaxError",
+                        message="Unclosed '{' in f-string interpolation.",
+                        line=line,
+                        col=col + i,
+                        suggestion="Ensure every '{' has a corresponding closing '}'."
+                    )
+                expr_str = raw[start:j-1].strip()
+                if expr_str:
+                    sub_tokens = tokenize(expr_str)
+                    sub_parser = Parser(sub_tokens)
+                    expr_ast = sub_parser.parse_expression()
+                    parts.append(expr_ast)
+                i = j
+            elif raw[i] == '}':
+                if i + 1 < n and raw[i + 1] == '}':
+                    curr_text.append('}')
+                    i += 2
+                    continue
+                raise CorvusError(
+                    error_type="Corvus SyntaxError",
+                    message="Single '}' encountered in f-string without matching '{'.",
+                    line=line,
+                    col=col + i,
+                    suggestion="Use '}}' to escape a literal closing brace."
+                )
+            else:
+                curr_text.append(raw[i])
+                i += 1
+
+        if curr_text:
+            parts.append(LiteralNode(value="".join(curr_text)))
+
+        return parts
+
     def parse_primary(self):
         tok = self.peek()
         if not tok:
@@ -532,6 +602,12 @@ class Parser:
             self.advance()
             val = float(tok.value) if '.' in tok.value else int(tok.value)
             return LiteralNode(value=val)
+
+        if tok.type == 'FSTRING':
+            self.advance()
+            raw = tok.value[2:-1]
+            parts = self._parse_fstring_parts(raw, tok.line, tok.column)
+            return FStringNode(parts=parts)
 
         if tok.type == 'STRING':
             self.advance()
