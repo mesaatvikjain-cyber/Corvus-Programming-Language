@@ -1,0 +1,19 @@
+# Corvus File Utility Module (Read Lines, Append, Checker)
+
+func read_lines(filepath) [
+    var content = file.read_all(filepath)
+    givout content
+]
+
+func write_append(filepath, text_block) [
+    var existing = ""
+    if (file.file_exists(filepath)) [
+        set existing = file.read_all(filepath)
+    ]
+    file.write_all(filepath, existing + text_block)
+    givout 1
+]
+
+func exists(filepath) [
+    givout file.file_exists(filepath)
+]

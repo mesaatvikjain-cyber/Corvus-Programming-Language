@@ -69,6 +69,7 @@ RULES = [
 
 
 def tokenize(code: str):
+    code = code.lstrip('\ufeff')
     master_regex = '|'.join(f'(?P<{name}>{pattern})' for name, pattern in RULES)
 
     tokens = []

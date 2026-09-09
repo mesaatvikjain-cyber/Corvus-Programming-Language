@@ -1,0 +1,25 @@
+# Corvus Pub/Sub Event Emitter Pattern Module
+
+cls EventEmitter() [
+    var listeners = {}
+
+    func on(event_name, callback) [
+        if (event_name in self.listeners) [
+            self.listeners[event_name] = self.listeners[event_name] + [callback]
+        ] else [
+            self.listeners[event_name] = [callback]
+        ]
+        givout self
+    ]
+
+    func emit(event_name, data) [
+        if (event_name in self.listeners) [
+            var cbs = self.listeners[event_name]
+            for (i in range(len(cbs))) [
+                var cb = cbs[i]
+                cb(data)
+            ]
+        ]
+        givout 1
+    ]
+]

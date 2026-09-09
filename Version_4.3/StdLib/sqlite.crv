@@ -1,0 +1,17 @@
+# Corvus Zero-Config Embedded SQLite Database Module
+
+func connect(db_path) [
+    givout sqlite.connect(db_path)
+]
+
+func execute(conn, query, params) [
+    givout sqlite.execute(conn, query, params)
+]
+
+func fetch_all(conn, query, params) [
+    givout sqlite.fetch_all(conn, query, params)
+]
+
+func close(conn) [
+    givout sqlite.close(conn)
+]

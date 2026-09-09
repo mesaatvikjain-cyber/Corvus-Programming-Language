@@ -22,6 +22,12 @@ try:
     from std_math_ext import _global_math_ext_engine
     from std_sqlite import _global_sqlite_engine
     from std_audio import _global_audio_engine
+    from std_tensorflow import _global_tf_engine
+    from std_torch import _global_torch_engine
+    from std_numpy import _global_numpy_engine
+    from std_pandas import _global_pandas_engine
+    from std_sklearn import _global_sklearn_engine
+    from std_transformers import _global_transformers_engine
 except ImportError:
     from .std_memory import _global_mem_manager
     from .std_ffi import FFIEngine
@@ -36,6 +42,12 @@ except ImportError:
     from .std_math_ext import _global_math_ext_engine
     from .std_sqlite import _global_sqlite_engine
     from .std_audio import _global_audio_engine
+    from .std_tensorflow import _global_tf_engine
+    from .std_torch import _global_torch_engine
+    from .std_numpy import _global_numpy_engine
+    from .std_pandas import _global_pandas_engine
+    from .std_sklearn import _global_sklearn_engine
+    from .std_transformers import _global_transformers_engine
 from astnodes import (
     ProgramNode, LiteralNode, IdentifierNode, ListNode, TupleNode, DictNode,
     BinOpNode, UnaryOpNode, SafeNavNode, IndexAccessNode, MethodCallNode,
@@ -197,6 +209,9 @@ class Evaluator:
         self.global_env.define("flo", lambda val: float(val), "func")
         self.global_env.define("bool", lambda val: bool(val), "func")
         self.global_env.define("len", lambda val: len(val), "func")
+        self.global_env.define("false", False, "bool")
+        self.global_env.define("true", True, "bool")
+        self.global_env.define("null", None, "any")
         
         # Expanded Python Built-in Utility Functions
         def corvus_type(val):
@@ -351,6 +366,22 @@ class Evaluator:
         self.global_env.define("audio", ModuleNamespace("audio", {
             "beep": lambda *args: _global_audio_engine.beep(*args)
         }), "any")
+        # AI/ML Engine Registrations
+        self.global_env.define("tf_engine", _global_tf_engine, "module")
+        self.global_env.define("torch_engine", _global_torch_engine, "module")
+        self.global_env.define("numpy_engine", _global_numpy_engine, "module")
+        self.global_env.define("pandas_engine", _global_pandas_engine, "module")
+        self.global_env.define("sklearn_engine", _global_sklearn_engine, "module")
+        self.global_env.define("transformers_engine", _global_transformers_engine, "module")
+
+        # Direct AI/ML Built-in Modules
+        self.global_env.define("tensorflow", _global_tf_engine, "module")
+        self.global_env.define("torch", _global_torch_engine, "module")
+        self.global_env.define("numpy", _global_numpy_engine, "module")
+        self.global_env.define("pandas", _global_pandas_engine, "module")
+        self.global_env.define("sklearn", _global_sklearn_engine, "module")
+        self.global_env.define("scikit_learn", _global_sklearn_engine, "module")
+        self.global_env.define("transformers", _global_transformers_engine, "module")
 
 
     def evaluate(self, node):
@@ -958,6 +989,7 @@ class Evaluator:
             os.path.join(cwd, "StdLib", f"{mod_name}.crv"),
             os.path.join(root_dir, "StdLib", f"{mod_name}.crv"),
             os.path.join(root_dir, "Version_4.2", "StdLib", f"{mod_name}.crv"),
+            os.path.join(root_dir, "Version_4.3", "StdLib", f"{mod_name}.crv"),
         ])
 
         for cand in single_file_candidates:

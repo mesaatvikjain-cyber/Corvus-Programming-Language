@@ -1,0 +1,25 @@
+# Corvus Standard Networking Module (v4.2)
+
+func http_get(url) [
+    givout net.http_get(url)
+]
+
+func http_post(url, body) [
+    givout net.http_post(url, body)
+]
+
+func tcp_connect(host, port) [
+    givout net.tcp_connect(host, port)
+]
+
+func tcp_send(sock, data) [
+    givout net.tcp_send(sock, data)
+]
+
+func tcp_recv(sock, bufsize) [
+    givout net.tcp_recv(sock, bufsize)
+]
+
+func tcp_close(sock) [
+    givout net.tcp_close(sock)
+]

@@ -286,7 +286,11 @@ class Parser:
         params = []
         if not self.match('RPAREN'):
             while True:
-                params.append(self.expect('ID').value)
+                tok = self.peek()
+                if tok and tok.type in ('ID', 'KEYWORD', 'TYPE'):
+                    params.append(self.advance().value)
+                else:
+                    params.append(self.expect('ID').value)
                 if not self.match('COMMA'):
                     break
             self.expect('RPAREN')

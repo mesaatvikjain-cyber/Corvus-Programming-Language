@@ -49,32 +49,6 @@ class AsmGeneratorMacOS:
         self.lambda_count = 0
         self.declared_funcs = set()
         self.loop_stack = []
-        self.scope_heap_vars = []  # Scope tracking for deterministic reference counting
-
-    def generate_from_ir(self, ir_program):
-        """Code-generate NASM Mach-O assembly directly from optimized Three-Address Code (TAC) IR"""
-        for instr in ir_program.instructions:
-            if instr.op == 'LABEL':
-                self.text_lines.append(f"\n_{instr.result}:")
-            elif instr.op == 'JMP':
-                self.text_lines.append(f"    jmp _{instr.result}")
-            elif instr.op == 'JMP_ZERO':
-                self.text_lines.append(f"    cmp rax, 0")
-                self.text_lines.append(f"    je _{instr.result}")
-            elif instr.op == 'ASSIGN':
-                if instr.arg1 and instr.arg1.isdigit():
-                    self.text_lines.append(f"    mov rax, {instr.arg1}")
-                elif instr.arg1:
-                    self.text_lines.append(f"    mov rax, [rel _{instr.arg1}]")
-                self.text_lines.append(f"    mov [rel _{instr.result}], rax")
-            elif instr.op == '+':
-                self.text_lines.append(f"    mov rax, [rel _{instr.arg1}]")
-                self.text_lines.append(f"    add rax, [rel _{instr.arg2}]")
-                self.text_lines.append(f"    mov [rel _{instr.result}], rax")
-            elif instr.op == 'RET':
-                self.text_lines.append("    mov rsp, rbp")
-                self.text_lines.append("    pop rbp")
-                self.text_lines.append("    ret")
 
     def generate(self, node):
         if node is None:
@@ -101,9 +75,6 @@ class AsmGeneratorMacOS:
                 self.text_lines.append("    mov rax, 0")
 
         elif node_type == "IdentifierNode":
-            bss_entry = f"    _{node.name} resq 1"
-            if bss_entry not in self.bss_lines:
-                self.bss_lines.append(bss_entry)
             self.text_lines.append(f"    mov rax, [rel _{node.name}]")
 
         elif node_type == "VarDeclNode":
@@ -347,7 +318,7 @@ class AsmGeneratorMacOS:
         elif node_type == "FuncCallNode":
             callee_name = getattr(node.callee, 'name', None)
 
-            if callee_name in ("log", "print"):
+            if callee_name == "log":
                 for arg in node.args:
                     self.generate(arg)
                     self.text_lines.append("    mov rsi, rax")
@@ -602,7 +573,29 @@ class AsmGeneratorMacOS:
             self.text_lines = old_text_lines
 
         elif node_type == "GetNode":
-            pass
+            mod_name = getattr(node, "module_name", None) or getattr(node, "name", "")
+            if not hasattr(self, "imported_modules"):
+                self.imported_modules = set()
+            if mod_name and mod_name not in self.imported_modules:
+                self.imported_modules.add(mod_name)
+                candidates = [
+                    f"{mod_name}.crv",
+                    os.path.join("StdLib", f"{mod_name}.crv"),
+                    os.path.join(os.path.dirname(__file__), "..", "StdLib", f"{mod_name}.crv"),
+                    os.path.join(os.path.dirname(__file__), "..", "Version_4.3", "StdLib", f"{mod_name}.crv"),
+                    os.path.join(os.path.dirname(__file__), "..", "Version_4.2", "StdLib", f"{mod_name}.crv"),
+                ]
+                for cand in candidates:
+                    if os.path.isfile(cand):
+                        try:
+                            with open(cand, "r", encoding="utf-8") as f:
+                                mod_code = f.read()
+                            mod_tokens = tokenize(mod_code)
+                            mod_ast = Parser(mod_tokens).parse()
+                            self.generate(mod_ast)
+                        except Exception:
+                            pass
+                        break
 
         elif node_type == "TryErrorNode":
             self.generate(node.try_block)
@@ -670,9 +663,6 @@ class AsmGeneratorMacOS:
 
         asm.append("; -- Constants & String Literals --")
         asm.append("section .data")
-        asm.append('    msg_err_null db "[Corvus Runtime Panic]: NullPointerError: Attempted to dereference null pointer.", 10, 0')
-        asm.append('    msg_err_bounds db "[Corvus Runtime Panic]: IndexError: Array index out of bounds.", 10, 0')
-        asm.append('    msg_err_divzero db "[Corvus Runtime Panic]: MathError: Division by zero.", 10, 0')
         asm.extend(self.data_lines)
         asm.append("\n")
 

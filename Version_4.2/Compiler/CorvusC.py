@@ -1,5 +1,6 @@
 import sys
 import os
+import shutil
 import argparse
 
 # Unified Multi-Platform Corvus Compiler Entry Point Driver
@@ -46,6 +47,15 @@ def main():
     print("Copyright (c) 2026 Saatvik Jain. All rights reserved.")
     print(f"Target OS: {args.target.upper()}")
     print("======================================================\n")
+
+    # Ensure StdLib is bundled alongside compiler output / current working directory
+    stdlib_src = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "StdLib"))
+    stdlib_dst = os.path.abspath(os.path.join(os.getcwd(), "StdLib"))
+    if os.path.isdir(stdlib_src) and not os.path.isdir(stdlib_dst):
+        try:
+            shutil.copytree(stdlib_src, stdlib_dst)
+        except Exception:
+            pass
 
     if args.target == "windows":
         compile_windows(source_path=source_path, output_path=args.output, run_after=args.run, keep_asm=args.keep_asm)

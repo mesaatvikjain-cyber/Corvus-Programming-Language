@@ -49,32 +49,12 @@ class AsmGeneratorWin64:
         self.lambda_count = 0
         self.declared_funcs = set()
         self.loop_stack = []
-        self.scope_heap_vars = []  # Scope tracking for deterministic reference counting
 
-    def generate_from_ir(self, ir_program):
-        """Code-generate NASM Win64 assembly directly from optimized Three-Address Code (TAC) IR"""
-        for instr in ir_program.instructions:
-            if instr.op == 'LABEL':
-                self.text_lines.append(f"\n{instr.result}:")
-            elif instr.op == 'JMP':
-                self.text_lines.append(f"    jmp {instr.result}")
-            elif instr.op == 'JMP_ZERO':
-                self.text_lines.append(f"    cmp rax, 0")
-                self.text_lines.append(f"    je {instr.result}")
-            elif instr.op == 'ASSIGN':
-                if instr.arg1 and instr.arg1.isdigit():
-                    self.text_lines.append(f"    mov rax, {instr.arg1}")
-                elif instr.arg1:
-                    self.text_lines.append(f"    mov rax, [{instr.arg1}]")
-                self.text_lines.append(f"    mov [{instr.result}], rax")
-            elif instr.op == '+':
-                self.text_lines.append(f"    mov rax, [{instr.arg1}]")
-                self.text_lines.append(f"    add rax, [{instr.arg2}]")
-                self.text_lines.append(f"    mov [{instr.result}], rax")
-            elif instr.op == 'RET':
-                self.text_lines.append("    mov rsp, rbp")
-                self.text_lines.append("    pop rbp")
-                self.text_lines.append("    ret")
+    def _mangle_fn_name(self, name: str) -> str:
+        reserved = {"abs", "add", "sub", "mul", "div", "not", "and", "or", "xor", "loop", "test", "in", "out", "ret", "call", "jmp", "mov", "lea", "push", "pop", "cmp", "int"}
+        if name.lower() in reserved:
+            return f"fn_{name}"
+        return name
 
     def generate(self, node):
         if node is None:
@@ -101,34 +81,27 @@ class AsmGeneratorWin64:
                 self.text_lines.append("    mov rax, 0")
 
         elif node_type == "IdentifierNode":
-            bss_entry = f"    var_{node.name} resq 1"
-            if bss_entry not in self.bss_lines:
-                self.bss_lines.append(bss_entry)
-            self.text_lines.append(f"    mov rax, qword [rel var_{node.name}]")
+            self.text_lines.append(f"    mov rax, [{node.name}]")
 
         elif node_type == "VarDeclNode":
-            bss_entry = f"    var_{node.name} resq 1"
+            bss_entry = f"    {node.name} resq 1"
             if bss_entry not in self.bss_lines:
                 self.bss_lines.append(bss_entry)
             if node.value is not None:
                 self.generate(node.value)
-                self.text_lines.append(f"    mov qword [rel var_{node.name}], rax")
+                self.text_lines.append(f"    mov [{node.name}], rax")
 
         elif node_type == "ConstDeclNode":
-            bss_entry = f"    var_{node.name} resq 1"
+            bss_entry = f"    {node.name} resq 1"
             if bss_entry not in self.bss_lines:
                 self.bss_lines.append(bss_entry)
             self.generate(node.value)
-            self.text_lines.append(f"    mov qword [rel var_{node.name}], rax")
+            self.text_lines.append(f"    mov [{node.name}], rax")
 
         elif node_type == "AssignmentNode":
             self.generate(node.value)
-            target_name = getattr(node.target, "name", str(node.target))
-            bss_entry = f"    var_{target_name} resq 1"
-            if bss_entry not in self.bss_lines:
-                self.bss_lines.append(bss_entry)
             if isinstance(node.target, IdentifierNode):
-                self.text_lines.append(f"    mov qword [rel var_{node.target.name}], rax")
+                self.text_lines.append(f"    mov [{node.target.name}], rax")
             elif isinstance(node.target, IndexAccessNode):
                 self.generate(node.target.target)
                 self.text_lines.append("    push rax")
@@ -138,7 +111,8 @@ class AsmGeneratorWin64:
                 self.generate(node.value)
                 self.text_lines.append("    mov [rbx + rcx * 8 + 8], rax")
             else:
-                self.text_lines.append(f"    mov qword [rel var_{target_name}], rax")
+                target_name = getattr(node.target, "name", str(node.target))
+                self.text_lines.append(f"    mov [{target_name}], rax")
 
         elif node_type == "BinOpNode":
             self.generate(node.left)
@@ -311,7 +285,9 @@ class AsmGeneratorWin64:
             self.text_lines.append(f"{lbl_null}:")
 
         elif node_type == "FuncDeclNode":
+            fn_label = self._mangle_fn_name(node.name)
             self.declared_funcs.add(node.name)
+            self.declared_funcs.add(fn_label)
             for param in node.params:
                 bss_entry = f"    {param} resq 1"
                 if bss_entry not in self.bss_lines:
@@ -320,7 +296,7 @@ class AsmGeneratorWin64:
             old_text_lines = self.text_lines
             self.text_lines = self.func_lines
 
-            self.text_lines.append(f"\n{node.name}:")
+            self.text_lines.append(f"\n{fn_label}:")
             self.text_lines.append("    push rbp")
             self.text_lines.append("    mov rbp, rsp")
 
@@ -346,7 +322,7 @@ class AsmGeneratorWin64:
         elif node_type == "FuncCallNode":
             callee_name = getattr(node.callee, 'name', None)
 
-            if callee_name in ("log", "print"):
+            if callee_name == "log":
                 for arg in node.args:
                     self.generate(arg)
                     self.text_lines.append("    mov rdx, rax")
@@ -424,8 +400,8 @@ class AsmGeneratorWin64:
                     self.generate(arg)
                     self.text_lines.append("    push rax")
 
-                if callee_name and callee_name in self.declared_funcs:
-                    self.text_lines.append(f"    call {callee_name}")
+                if callee_name and (callee_name in self.declared_funcs or self._mangle_fn_name(callee_name) in self.declared_funcs):
+                    self.text_lines.append(f"    call {self._mangle_fn_name(callee_name)}")
                 elif callee_name:
                     self.text_lines.append(f"    mov rax, [{callee_name}]")
                     self.text_lines.append("    call rax")
@@ -615,7 +591,29 @@ class AsmGeneratorWin64:
             self.text_lines = old_text_lines
 
         elif node_type == "GetNode":
-            pass
+            mod_name = getattr(node, "module_name", None) or getattr(node, "name", "")
+            if not hasattr(self, "imported_modules"):
+                self.imported_modules = set()
+            if mod_name and mod_name not in self.imported_modules:
+                self.imported_modules.add(mod_name)
+                candidates = [
+                    f"{mod_name}.crv",
+                    os.path.join("StdLib", f"{mod_name}.crv"),
+                    os.path.join(os.path.dirname(__file__), "..", "StdLib", f"{mod_name}.crv"),
+                    os.path.join(os.path.dirname(__file__), "..", "Version_4.3", "StdLib", f"{mod_name}.crv"),
+                    os.path.join(os.path.dirname(__file__), "..", "Version_4.2", "StdLib", f"{mod_name}.crv"),
+                ]
+                for cand in candidates:
+                    if os.path.isfile(cand):
+                        try:
+                            with open(cand, "r", encoding="utf-8") as f:
+                                mod_code = f.read()
+                            mod_tokens = tokenize(mod_code)
+                            mod_ast = Parser(mod_tokens).parse()
+                            self.generate(mod_ast)
+                        except Exception:
+                            pass
+                        break
 
         elif node_type == "TryErrorNode":
             self.generate(node.try_block)
@@ -660,40 +658,7 @@ class AsmGeneratorWin64:
             self.text_lines.append(f"{match_end}:")
             self.text_lines.append("    add rsp, 8")
 
-    def optimize_assembly(self, lines):
-        """v4.1 Assembly Peephole Optimization Pass"""
-        optimized = []
-        i = 0
-        n = len(lines)
-
-        while i < n:
-            line = lines[i].strip()
-            next_line = lines[i+1].strip() if i + 1 < n else ""
-
-            # Pattern 1: Redundant Store followed by Immediate Load
-            if (line.startswith("mov qword [rel ") and line.endswith("], rax") and
-                next_line == line.replace("mov qword [rel ", "mov rax, qword [rel ").replace("], rax", "]")):
-                optimized.append(lines[i])
-                i += 2
-                continue
-
-            # Pattern 2: Redundant Jump to Next Line Label
-            if line.startswith("jmp ") and next_line == f"{line[4:]}:":
-                i += 1
-                continue
-
-            # Pattern 3: Redundant Register Self Assignment
-            if line in ("mov rax, rax", "mov rbx, rbx", "mov rcx, rcx"):
-                i += 1
-                continue
-
-            optimized.append(lines[i])
-            i += 1
-
-        return optimized
-
     def build_full_asm(self):
-        self.text_lines = self.optimize_assembly(self.text_lines)
         asm = []
         asm.append("; ========================================")
         asm.append("; Corvus NASM 64-bit Assembly Output (Windows Win64 ABI)")
@@ -718,9 +683,6 @@ class AsmGeneratorWin64:
 
         asm.append("; -- Constants & String Literals --")
         asm.append("section .data")
-        asm.append('    msg_err_null db "[Corvus Runtime Panic]: NullPointerError: Attempted to dereference null pointer.", 10, 0')
-        asm.append('    msg_err_bounds db "[Corvus Runtime Panic]: IndexError: Array index out of bounds.", 10, 0')
-        asm.append('    msg_err_divzero db "[Corvus Runtime Panic]: MathError: Division by zero.", 10, 0')
         asm.extend(self.data_lines)
         asm.append("\n")
 
@@ -751,27 +713,5 @@ class AsmGeneratorWin64:
         if self.func_lines:
             asm.append("; -- User Functions & Lambdas --")
             asm.extend(self.func_lines)
-
-        asm.append("\n; -- Assembly Runtime Safety & Panic Routines (v3.1) --")
-        asm.append("__corvus_panic_null:")
-        asm.append('    lea rcx, [rel msg_err_null]')
-        asm.append("    sub rsp, 32")
-        asm.append("    call printf")
-        asm.append("    mov rcx, 1")
-        asm.append("    call exit")
-
-        asm.append("__corvus_panic_bounds:")
-        asm.append('    lea rcx, [rel msg_err_bounds]')
-        asm.append("    sub rsp, 32")
-        asm.append("    call printf")
-        asm.append("    mov rcx, 1")
-        asm.append("    call exit")
-
-        asm.append("__corvus_panic_divzero:")
-        asm.append('    lea rcx, [rel msg_err_divzero]')
-        asm.append("    sub rsp, 32")
-        asm.append("    call printf")
-        asm.append("    mov rcx, 1")
-        asm.append("    call exit")
 
         return "\n".join(asm)
