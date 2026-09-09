@@ -20,7 +20,7 @@
         </div>
         <div class="header-links">
             <a href="https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-" target="_blank" class="header-link">GitHub Repository</a>
-            <span class="version-badge">v4.1 Super Optimizer</span>
+            <span class="version-badge">v4.2 Graphics &amp; Crows</span>
         </div>
     </header>
 
@@ -40,15 +40,15 @@
             <div class="sidebar-group">
                 <div class="sidebar-title">Version Tutorials</div>
                 <ul class="sidebar-nav">
-                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v4.1)</a></li>
+                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v4.2)</a></li>
                 </ul>
             </div>
             <div class="sidebar-group">
                 <div class="sidebar-title">Language Fundamentals</div>
                 <ul class="sidebar-nav">
-                    <li><a href="#syntax">3. Syntax & Variables</a></li>
+                    <li><a href="#syntax">3. Syntax &amp; Variables</a></li>
                     <li><a href="#controlflow">4. Control Flow</a></li>
-                    <li><a href="#functions">5. Functions & Lambdas</a></li>
+                    <li><a href="#functions">5. Functions &amp; Lambdas</a></li>
                     <li><a href="#oop">6. Object-Oriented Corvus</a></li>
                     <li><a href="#functional">7. Functional Features</a></li>
                 </ul>
@@ -63,11 +63,12 @@
                 </ul>
             </div>
             <div class="sidebar-group">
-                <div class="sidebar-title">Compiler & Tooling</div>
+                <div class="sidebar-title">Compiler &amp; Tooling</div>
                 <ul class="sidebar-nav">
-                    <li><a href="#compiler">12. TAC IR & v4.1 Super Optimizer</a></li>
+                    <li><a href="#compiler">12. TAC IR &amp; v4.1 Super Optimizer</a></li>
                     <li><a href="#selfhosted">13. Self-Hosted Architecture</a></li>
-                    <li><a href="#tooling">14. VS Code & REPL Shell</a></li>
+                    <li><a href="#tooling">14. VS Code &amp; REPL Shell</a></li>
+                    <li><a href="#v42-graphics" style="color: var(--accent-orange); font-weight: 600;">15. v4.2 Graphics &amp; Crows Engine</a></li>
                 </ul>
             </div>
         </sidebar>
@@ -99,7 +100,9 @@
                                 <option value="factorial">Recursion &amp; Factorial</option>
                                 <option value="stdlib">Standard Library (Math &amp; String)</option>
                                 <option value="pipeline">Pipeline (|&gt;) &amp; Pattern Matching</option>
-                                <option value="optimizer">v4.1 Super Optimizer Constant Folding</option>
+                                <option value="optimizer">v4.1 Super Optimizer Demo</option>
+                                <option value="crows_v42">v4.2 Expanded "Murder of Crows" Concurrency</option>
+                                <option value="graphics_demo">v4.2 Zero-Config Desktop 2D Graphics</option>
                             </select>
                         </div>
                         <button id="run-wasm-btn" class="run-btn">▶ Run Code (Wasm)</button>
@@ -540,6 +543,88 @@ corvus> .exit    # Exit REPL</code></pre>
                 </div>
                 <h2>VS Code Extension v0.3.0</h2>
                 <p>Features real-time syntax checking/linter on file save, direct code execution commands, and integrated status bar launcher (<code>▶ Run Corvus</code>). Download the extension package: <a href="../../Editor-Extension/corvus-language-support-0.3.0.vsix">corvus-language-support-0.3.0.vsix</a>.</p>
+            </section>
+
+            <!-- 15. Version 4.2 Desktop Graphics & Murder of Crows Engine -->
+            <section id="v42-graphics" class="doc-section">
+                <h1>15. Version 4.2 Desktop 2D Graphics &amp; Expanded Concurrency</h1>
+                <p>Corvus Version 4.2 introduces two flagship <strong>Killer Features</strong> designed to empower developers to write lightweight 2D games and parallel systems applications with <strong>Zero Configuration</strong>!</p>
+
+                <div class="callout success">
+                    <div class="callout-title">Flagship v4.2 Feature Highlights</div>
+                    <p>
+                        1. <strong>Built-in Zero-Config 2D Desktop Graphics (<code>graphics.crv</code> &amp; <code>std_graphics.py</code>)</strong>: Create desktop windows, draw rectangles, circles, lines, polygons, and text with zero external pip dependencies! Full keyboard &amp; mouse input handling with custom frame-rate loop control (<code>graphics.fps(60)</code>).<br>
+                        2. <strong>Expanded "Murder of Crows" Concurrency (<code>std_concurrency.py</code>)</strong>: Includes high-throughput parallel mapping (<code>crow.parallel_map</code>), first-to-finish race conditions (<code>crow.race</code>), non-blocking multi-channel polling (<code>crow.select</code>), periodic event tickers (<code>crow.ticker</code>), and dedicated worker nests (<code>crow.nest</code>).
+                    </p>
+                </div>
+
+                <h2>Zero-Config Desktop Graphics API Reference</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Function Signature</th>
+                            <th>Description</th>
+                            <th>Example Usage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>graphics.init_window(title, w, h, bg)</code></td>
+                            <td>Creates cross-platform desktop window</td>
+                            <td><code>graphics.init_window("Snake Game", 800, 600, "#0f172a")</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>graphics.clear(color)</code></td>
+                            <td>Clears active canvas screen</td>
+                            <td><code>graphics.clear("#0b0f19")</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>graphics.draw_rect(x, y, w, h, color, fill)</code></td>
+                            <td>Draws rectangle or filled box</td>
+                            <td><code>graphics.draw_rect(100, 100, 50, 50, "#ef4444", 1)</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>graphics.draw_circle(x, y, radius, color, fill)</code></td>
+                            <td>Draws circle or disc</td>
+                            <td><code>graphics.draw_circle(400, 300, 15, "#4ade80", 1)</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>graphics.draw_text(text, x, y, size, color)</code></td>
+                            <td>Renders smooth text string</td>
+                            <td><code>graphics.draw_text("SCORE: " + str(score), 20, 20, 20, "#38bdf8")</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>graphics.is_key_pressed(key_name)</code></td>
+                            <td>Queries live key state</td>
+                            <td><code>if (graphics.is_key_pressed("Up")) [ ... ]</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>graphics.fps(target_fps)</code></td>
+                            <td>Regulates frame rate loop</td>
+                            <td><code>graphics.fps(60)</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Playable Showcase Desktop Games &amp; Demos</h2>
+                <ul>
+                    <li><code>Version_4.2/Examples-and-Tests/01_snake_game.crv</code>: Playable Snake desktop game with score counter and food generation.</li>
+                    <li><code>Version_4.2/Examples-and-Tests/02_crow_particles.crv</code>: Multi-threaded particle physics simulator powered by Murder of Crows parallel worker threads.</li>
+                    <li><code>Version_4.2/Examples-and-Tests/03_pong_game.crv</code>: 2-player desktop Pong game with collision bouncing and score tracking.</li>
+                </ul>
+
+                <h2>Version 4.2 Automated Installers</h2>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-card">
+                        <h3>Windows Installer (PowerShell)</h3>
+                        <pre><code>powershell -ExecutionPolicy Bypass -File Version_4.2/install_windows.ps1</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Linux &amp; macOS Installers</h3>
+                        <pre><code>bash Version_4.2/install_linux.sh
+bash Version_4.2/install_macos.sh</code></pre>
+                    </div>
+                </div>
             </section>
         </main>
     </div>

@@ -62,6 +62,47 @@ log("Super Optimizer Constant Folding Result: " + str(c))
 var x = 8
 var mult_4 = x * 4  # Reduced to SHL x, 2
 log("Strength Reduction (8 * 4): " + str(mult_4))
+`,
+    "crows_v42": `# Corvus v4.2 Expanded "Murder of Crows" Concurrency Showcase
+# Features parallel_map, channels, and worker nests
+
+func compute_square(x) [
+    givout x * x
+]
+
+var numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+log("Original array: " + str(numbers))
+
+log("Evaluating parallel_map across worker crows...")
+var squared = crow.parallel_map(compute_square, numbers)
+log("Parallel map results: " + str(squared))
+
+log("Creating thread-safe CrowChannel...")
+var ch = crow.channel()
+ch.send("Message from Crow Thread A")
+ch.send("Message from Crow Thread B")
+
+log("Channel recv 1: " + str(ch.recv()))
+log("Channel recv 2: " + str(ch.recv()))
+`,
+    "graphics_demo": `# Corvus v4.2 Zero-Config Graphics & Game Engine Preview
+# Initializing 2D Desktop Graphics Window
+
+log("Initializing Corvus Desktop Window (800x600)...")
+graphics.init_window("Corvus v4.2 Graphics Demo", 800, 600, "#0f172a")
+
+log("Drawing shapes, text, and player entities...")
+graphics.clear("#0f172a")
+
+# Draw player paddle & ball
+graphics.draw_rect(20, 200, 16, 100, "#38bdf8", 1)
+graphics.draw_rect(764, 200, 16, 100, "#fb923c", 1)
+graphics.draw_circle(400, 250, 12, "#4ade80", 1)
+
+graphics.draw_text("Corvus v4.2 Desktop Graphics Active!", 220, 30, 20, "#38bdf8")
+graphics.draw_text("Playable Snake, Pong & Multi-Threaded Particles Included!", 140, 70, 16, "#94a3b8")
+
+log("[Graphics Engine]: Canvas rendered successfully.")
 `
 };
 
@@ -360,15 +401,64 @@ class Evaluator:
             @staticmethod
             def sqrt_approx(n): return float(int(n)**0.5)
         
-        # Native String StdLib namespace
-        class StringLib:
+        # Native Crow Concurrency Engine Wasm Shim
+        class CrowChannelShim:
+            def __init__(self): self.q = []
+            def send(self, val): self.q.append(val)
+            def recv(self): return self.q.pop(0) if self.q else None
+            def poll(self): return self.q.pop(0) if self.q else None
+
+        class CrowLib:
             @staticmethod
-            def is_empty(s): return len(str(s)) == 0
+            def fly(fn, *args): return fn(*args)
             @staticmethod
-            def repeat_str(s, c): return str(s) * int(c)
+            def flock(crows): return list(crows)
+            @staticmethod
+            def channel(): return CrowChannelShim()
+            @staticmethod
+            def race(crows): return crows[0] if crows else None
+            @staticmethod
+            def select(channels):
+                for i, c in enumerate(channels):
+                    v = c.poll()
+                    if v is not None: return [i, v]
+                return [0, None]
+            @staticmethod
+            def parallel_map(fn, items): return [fn(x) for x in items]
+
+        # Native Graphics Engine Wasm Sandbox Shim
+        class GraphicsLib:
+            @staticmethod
+            def init_window(title, w, h, bg): print(f"[GraphicsEngine Wasm]: Desktop window initialized ({w}x{h}, bg='{bg}') - title: '{title}'")
+            @staticmethod
+            def clear(bg): pass
+            @staticmethod
+            def draw_rect(x, y, w, h, c, f=1): print(f"[Canvas Draw]: Rectangle at ({x}, {y}) size ({w}x{h}), color='{c}'")
+            @staticmethod
+            def draw_circle(x, y, r, c, f=1): print(f"[Canvas Draw]: Circle at ({x}, {y}) radius={r}, color='{c}'")
+            @staticmethod
+            def draw_line(x1, y1, x2, y2, c, t=2): print(f"[Canvas Draw]: Line from ({x1},{y1}) to ({x2},{y2}), color='{c}'")
+            @staticmethod
+            def draw_text(txt, x, y, size=16, c="white"): print(f"[Canvas Text]: '{txt}' at ({x},{y})")
+            @staticmethod
+            def is_open(): return False
+            @staticmethod
+            def poll_events(): return False
+            @staticmethod
+            def update(): pass
+            @staticmethod
+            def is_key_pressed(k): return False
+            @staticmethod
+            def sleep(s): pass
+            @staticmethod
+            def fps(f): pass
+            @staticmethod
+            def close(): pass
 
         self.env.define("math", MathLib)
         self.env.define("string", StringLib)
+        self.env.define("crow", CrowLib)
+        self.env.define("graphics", GraphicsLib)
 
     def evaluate(self, node):
         if node is None: return None

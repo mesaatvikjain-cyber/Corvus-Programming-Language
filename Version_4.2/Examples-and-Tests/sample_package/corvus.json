@@ -1,0 +1,7 @@
+{
+    "name": "sample_package",
+    "version": "1.0.0",
+    "description": "Sample Corvus library for CPM testing",
+    "main": "main.crv",
+    "author": "Saatvik Jain"
+}

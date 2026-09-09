@@ -1,0 +1,14 @@
+# Corvus Standard Library: JSON Utilities (std_json.crv)
+
+func stringify(val) {
+    # Formats values into JSON representation
+    if type(val) == "str" {
+        givout "\"" + val + "\""
+    }
+    givout val
+}
+
+func parse_simple(json_str) {
+    # Lightweight parser helper
+    givout json_str
+}

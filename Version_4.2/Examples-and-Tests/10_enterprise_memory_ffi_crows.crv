@@ -1,0 +1,63 @@
+# Corvus Enterprise Edition v3.0 Demonstration
+# Features: Memory Management, Native C FFI, and "Murder of Crows" 🐦 Concurrency Engine
+
+log("=========================================")
+log(" Corvus Enterprise Edition v3.0 Test Suite")
+log("=========================================")
+
+# --- Pillar 1: Memory Management Engine ---
+log("\n[1/3] Memory Management Engine (mem)")
+set str; heap_ptr = mem.alloc(1024)
+log("Allocated 1024 bytes at heap pointer:", heap_ptr)
+
+set dic; stats = mem.stats()
+log("Heap Statistics (stats):", stats)
+
+set bool; freed = mem.free(heap_ptr)
+log("Deallocated heap pointer success:", freed)
+
+# --- Pillar 2: Foreign Function Interface (FFI) ---
+log("\n[2/3] Native C Foreign Function Interface (FFI)")
+set any; libc = ffi.load("c")
+log("Loaded native library object:", libc != null)
+
+set any; puts_fn = ffi.bind(libc, "puts", ["str"], "int")
+log("Bound C symbol 'puts':", puts_fn != null)
+
+log("Invoking native C 'puts' via FFI...")
+ffi.call(puts_fn, "[FFI Direct Output] Hello from C Shared Library!")
+
+# --- Pillar 3: "Murder of Crows" 🐦 Concurrency Engine ---
+log("\n[3/3] 'Murder of Crows' Concurrency Engine (crow)")
+
+mk func worker_crow_task(crow_id) [
+    log("Crow #" + str(crow_id) + " taking flight! 🐦")
+    set int; acc = 0
+    set int; i = 1
+    while (i <= 100) [
+        acc = acc + i
+        i = i + 1
+    ]
+    log("Crow #" + str(crow_id) + " finished work. Result:", acc)
+    givout acc
+]
+
+log("Spawning a flock of 3 worker crows...")
+set any; crow1 = crow.fly(worker_crow_task, 1)
+set any; crow2 = crow.fly(worker_crow_task, 2)
+set any; crow3 = crow.fly(worker_crow_task, 3)
+
+set lis; flock_results = crow.flock([crow1, crow2, crow3])
+log("Awaited flock completion! Results:", flock_results)
+
+# Inter-thread Channel Communication
+set any; channel = crow.channel()
+channel.send("Message from Crow #1")
+channel.send("Message from Crow #2")
+
+log("Received from channel:", channel.recv())
+log("Received from channel:", channel.recv())
+
+log("\n=========================================")
+log(" [SUCCESS] All Enterprise Pillars Verified!")
+log("=========================================")

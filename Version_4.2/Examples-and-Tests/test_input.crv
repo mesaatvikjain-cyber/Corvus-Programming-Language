@@ -1,0 +1,12 @@
+?{ =================================================
+   Corvus v0.1.1 Feature Test: Interactive Input
+   ================================================= }
+
+log("=== Testing Corvus v0.1.1 input() keyword ===")
+
+set str; name = input("Enter your name: ")
+log("Hello,", name, "! Welcome to Corvus v0.1.1.")
+
+set str; age_str = input("Enter your age: ")
+set int; age = int(age_str)
+log("Next year you will be:", age + 1)
