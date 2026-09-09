@@ -1,6 +1,6 @@
-# Corvus v4.2 Automated Windows Installer (Desktop 2D Graphics & Murder of Crows Concurrency)
+# Corvus v4.3 Automated Windows Installer (AI/ML Suite, 30+ StdLib Modules & Rust Diagnostics)
 Write-Host "================================================" -ForegroundColor Cyan
-Write-Host "   Installing Corvus Programming Language v4.2  " -ForegroundColor Cyan
+Write-Host "   Installing Corvus Programming Language v4.3  " -ForegroundColor Cyan
 Write-Host "================================================" -ForegroundColor Cyan
 
 $pythonPath = Get-Command python -ErrorAction SilentlyContinue
@@ -25,5 +25,5 @@ if ($userPath -notlike "*$scriptDir*") {
     Write-Host "[SUCCESS] Added '$scriptDir' to User PATH." -ForegroundColor Green
 }
 
-Write-Host "`n[INSTALL COMPLETE] Corvus v4.2 installed!" -ForegroundColor Green
+Write-Host "`n[INSTALL COMPLETE] Corvus v4.3 installed!" -ForegroundColor Green
 Write-Host "Commands: 'corvus <file.crv>', 'corvus --repl', or 'corvusc <file.crv>'" -ForegroundColor Cyan

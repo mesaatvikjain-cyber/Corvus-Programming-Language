@@ -20,7 +20,7 @@
         </div>
         <div class="header-links">
             <a href="https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-" target="_blank" class="header-link">GitHub Repository</a>
-            <span class="version-badge">v4.2 Graphics &amp; Crows</span>
+            <span class="version-badge">v4.3 AI/ML &amp; Diagnostics</span>
         </div>
     </header>
 
@@ -69,6 +69,7 @@
                     <li><a href="#selfhosted">13. Self-Hosted Architecture</a></li>
                     <li><a href="#tooling">14. VS Code &amp; REPL Shell</a></li>
                     <li><a href="#v42-graphics" style="color: var(--accent-orange); font-weight: 600;">15. v4.2 Graphics &amp; Crows Engine</a></li>
+                    <li><a href="#v43-ai-ml" style="color: var(--accent-green); font-weight: 600;">16. v4.3 AI/ML Suite &amp; Diagnostics</a></li>
                 </ul>
             </div>
         </sidebar>
@@ -173,6 +174,8 @@ var double = lambda(x) -> x*2</code></pre>
                     <button class="tab-btn" data-tab="tab-v31">Version 3.1</button>
                     <button class="tab-btn" data-tab="tab-v40">Version 4.0</button>
                     <button class="tab-btn" data-tab="tab-v41">Version 4.1</button>
+                    <button class="tab-btn" data-tab="tab-v42">Version 4.2</button>
+                    <button class="tab-btn" data-tab="tab-v43">Version 4.3</button>
                 </div>
 
                 <!-- Tab v1.1 -->
@@ -282,6 +285,43 @@ var div_by_2 = x / 2   # Reduced to SHR x, 1 (4)
 # Algebraic Identities
 var val = x + 0       # Simplified to x
 var zero = x * 0      # Simplified to 0</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.2 -->
+                <div id="tab-v42" class="tab-content">
+                    <h2>v4.2 Tutorial: Desktop 2D Graphics & Murder of Crows Concurrency</h2>
+                    <p>Build 2D desktop games and multi-threaded parallel programs with zero external pip dependencies.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Desktop 2D Canvas & 60 FPS Event Loop
+get graphics
+graphics.init_window("Snake Game", 800, 600, "#0f172a")
+
+while (graphics.is_open()) [
+    graphics.clear("#0b0f19")
+    if (graphics.is_key_pressed("Right")) [ ... ]
+    graphics.draw_rect(100, 100, 20, 20, "#38bdf8", 1)
+    graphics.fps(60)
+]</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.3 -->
+                <div id="tab-v43" class="tab-content">
+                    <h2>v4.3 Tutorial: AI/ML Suite, 30+ StdLib Modules & Rust-Style Diagnostics</h2>
+                    <p>Harness deep learning tensors, 30 standard library modules, Rust-style error catalog with <code>--explain</code>, and AI-fix assistant.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Machine Learning & AI Tensors
+get numpy
+get torch
+
+set any; mat = np.array([[1, 2], [3, 4]])
+set any; t = torch.tensor([-1.0, 0.0, 3.0])
+set any; activated = torch.relu(t)
+log("PyTorch ReLU:", activated)
+
+# Terminal Error Explanation
+# python Version_4.3/Interpreter/Corvus.py --explain E0101</code></pre>
                     </div>
                 </div>
             </section>
@@ -623,6 +663,52 @@ corvus> .exit    # Exit REPL</code></pre>
                         <h3>Linux &amp; macOS Installers</h3>
                         <pre><code>bash Version_4.2/install_linux.sh
 bash Version_4.2/install_macos.sh</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 16. Version 4.3 AI/ML Suite & Diagnostics -->
+            <section id="v43-ai-ml" class="doc-section">
+                <h1>16. Version 4.3 AI/ML Suite, 30+ StdLib Modules &amp; Rust Diagnostics</h1>
+                <p>Version 4.3 is Corvus's flagship ecosystem release: complete compiler-interpreter feature parity, first-class Machine Learning stacks, 30+ Standard Library modules, and an actionable Rust-style diagnostic engine.</p>
+
+                <div class="callout success">
+                    <div class="callout-title">Flagship v4.3 Capabilities</div>
+                    <p>
+                        1. <strong>Native AI &amp; Deep Learning Engines</strong>: Full bindings for <code>tensorflow</code>, <code>torch</code>, <code>numpy</code>, <code>pandas</code>, <code>scikit_learn</code>, and <code>transformers</code>.<br>
+                        2. <strong>30+ Standard Library Modules</strong>: Spans cryptography (<code>crypto_hash</code>, <code>cipher</code>), networking (<code>http</code>, <code>net</code>, <code>url</code>), system control (<code>process</code>, <code>env</code>), and data formats (<code>json</code>, <code>csv</code>, <code>sqlite</code>, <code>yaml</code>, <code>toml</code>).<br>
+                        3. <strong>Rust-Style Diagnostic Catalog (<code>--explain &lt;CODE&gt;</code>)</strong>: Over 18 cataloged error codes with root-cause diagnostics and verified fixes.<br>
+                        4. <strong>Levenshtein Typo Matching &amp; AI-Fix (<code>--ai-fix</code>)</strong>: Suggests native Corvus keywords for habit typos and prints actionable solutions.
+                    </p>
+                </div>
+
+                <h2>Interactive Code Example: Machine Learning in Corvus</h2>
+                <div class="code-wrapper">
+                    <pre><code>get numpy
+get torch
+
+# NumPy Matrix Operations
+set any; a = np.array([[1, 2], [3, 4]])
+set any; b = np.array([[5, 6], [7, 8]])
+set any; dot_res = np.dot(a, b)
+log("Matrix Product:", dot_res)
+
+# PyTorch Deep Learning Tensors
+set any; weights = torch.randn([2, 2])
+set any; relu_out = torch.relu(weights)
+log("Activated Tensors:", relu_out)</code></pre>
+                </div>
+
+                <h2>Version 4.3 Automated Installers</h2>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-card">
+                        <h3>Windows Master / Direct Installer</h3>
+                        <pre><code>powershell -ExecutionPolicy Bypass -File Version_4.3/install_windows.ps1</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Linux &amp; macOS Installers</h3>
+                        <pre><code>bash Version_4.3/install_linux.sh
+bash Version_4.3/install_macos.sh</code></pre>
                     </div>
                 </div>
             </section>

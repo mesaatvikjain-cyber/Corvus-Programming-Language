@@ -137,8 +137,13 @@ class Parser:
                 return VarDeclNode(var_type='any', name=name, value=val)
             return self.parse_var_or_const_decl()
 
+        if tok.type == 'KEYWORD' and tok.value == 'async':
+            nxt = self.tokens[self.pos + 1] if self.pos + 1 < len(self.tokens) else None
+            if nxt and nxt.value in ('mk', 'func'):
+                return self.parse_func_decl(is_async=True)
+
         if (tok.type in ('KEYWORD', 'ID', 'TYPE') and tok.value == 'mk') or (tok.type in ('KEYWORD', 'ID', 'TYPE') and tok.value == 'func'):
-            return self.parse_func_decl()
+            return self.parse_func_decl(is_async=False)
 
         if tok.type == 'KEYWORD' and tok.value == 'givout':
             self.advance()
@@ -273,7 +278,10 @@ class Parser:
             val = self.parse_expression()
         return VarDeclNode(var_type=var_type, name=name, value=val)
 
-    def parse_func_decl(self):
+    def parse_func_decl(self, is_async: bool = False):
+        if is_async:
+            self.expect('KEYWORD', 'async')
+
         if self.match('KEYWORD', 'mk'):
             tok = self.peek()
             if tok and tok.value == 'func':
@@ -295,7 +303,7 @@ class Parser:
                     break
             self.expect('RPAREN')
         body = self.parse_block()
-        return FuncDeclNode(name=name, params=params, body=body)
+        return FuncDeclNode(name=name, params=params, body=body, is_async=is_async)
 
     def parse_block(self) -> BlockNode:
         if self.match('LBRACKET'):
@@ -574,15 +582,47 @@ class Parser:
                 self.expect('TUP_CLOSE')
             return TupleNode(elements=elements)
 
-        if self.match('LBRACKET') or self.match('LBRACE'):
+        if self.match('LBRACE'):
+            depth = 0
+            has_colon = False
+            for i in range(self.pos, min(len(self.tokens), self.pos + 30)):
+                t = self.tokens[i]
+                if t.type == 'LBRACE': depth += 1
+                elif t.type == 'RBRACE': depth -= 1
+                elif t.type == 'COLON' and depth == 0:
+                    has_colon = True
+                    break
+                elif t.type in ('COMMA', 'RBRACE') and depth == 0:
+                    break
+
+            if has_colon:
+                keys = []
+                values = []
+                while not self.match('RBRACE'):
+                    k = self.parse_expression()
+                    self.expect('COLON')
+                    v = self.parse_expression()
+                    keys.append(k)
+                    values.append(v)
+                    self.match('COMMA')
+                return DictNode(keys=keys, values=values)
+            else:
+                elements = []
+                while not self.match('RBRACE'):
+                    elements.append(self.parse_expression())
+                    if not self.match('COMMA'):
+                        break
+                self.expect('RBRACE')
+                return ListNode(elements=elements)
+
+        if self.match('LBRACKET'):
             elements = []
-            close_tok = 'RBRACKET' if self.tokens[self.pos - 1].type == 'LBRACKET' else 'RBRACE'
-            if not self.match(close_tok):
+            if not self.match('RBRACKET'):
                 while True:
                     elements.append(self.parse_expression())
                     if not self.match('COMMA'):
                         break
-                self.expect(close_tok)
+                self.expect('RBRACKET')
             return ListNode(elements=elements)
 
         if self.match('LPAREN'):

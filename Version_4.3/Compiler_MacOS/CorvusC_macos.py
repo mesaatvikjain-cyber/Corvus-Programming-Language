@@ -3,8 +3,9 @@ import os
 import shutil
 import subprocess
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Compiler_Core")))
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if base_dir not in sys.path:
+    sys.path.insert(0, base_dir)
 
 try:
     from Compiler_Core.Lexercompiler import tokenize
@@ -26,11 +27,11 @@ def find_tool(names):
 
 def compile_macos(source_path, output_path=None, run_after=False, keep_asm=False):
     base_name = os.path.splitext(source_path)[0]
-    asm_file = f"{base_name}_macho.asm"
-    obj_file = f"{base_name}_macho.o"
-    exe_file = output_path if output_path else f"{base_name}_mac"
+    asm_file = f"{base_name}.asm"
+    obj_file = f"{base_name}.o"
+    exe_file = output_path if output_path else base_name
 
-    print(f"[macOS Target] Compiling '{source_path}' -> Assembly (Mach-O 64)...")
+    print(f"[macOS Target] Compiling '{source_path}' -> Assembly (Mach-O)...")
     with open(source_path, "r", encoding="utf-8") as f:
         code = f.read()
 
@@ -44,12 +45,22 @@ def compile_macos(source_path, output_path=None, run_after=False, keep_asm=False
         out.write(generator.build_full_asm())
 
     print(f"  --> Generated assembly: {asm_file}")
+
+    # Check if host platform is macOS
+    is_macos_host = (sys.platform == "darwin")
+
+    if not is_macos_host:
+        print("\n[INFO] Target Mach-O Assembly (.asm) generated successfully!")
+        print("To assemble and link on a macOS host, run:")
+        print(f"  nasm -f macho64 {asm_file} -o {obj_file} && clang {obj_file} -o {exe_file} -lSystem\n")
+        return asm_file
+
     nasm_path = find_tool(["nasm"])
-    linker_path = find_tool(["clang", "gcc"])
+    linker_path = find_tool(["clang", "gcc", "xcrun"])
 
     if not nasm_path or not linker_path:
         print("\n[INFO] macOS Assembly (.asm) generated successfully!")
-        print("To build native Mach-O binaries on macOS, install NASM via Homebrew:\n  - brew install nasm\n")
+        print("To build native macOS Mach-O binaries, install nasm & Xcode command line tools:\n  - brew install nasm\n  - xcode-select --install\n")
         return asm_file
 
     print(f"[2/3] Assembling with NASM -> '{obj_file}'...")
@@ -78,14 +89,3 @@ def compile_macos(source_path, output_path=None, run_after=False, keep_asm=False
         subprocess.run([f"./{exe_file}"], shell=True)
 
     return exe_file
-
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python CorvusC_macos.py <source.crv> [output_binary]")
-        sys.exit(1)
-    src = sys.argv[1]
-    out = sys.argv[2] if len(sys.argv) > 2 else None
-    compile_macos(src, output_path=out, keep_asm=True)
-
-if __name__ == "__main__":
-    main()

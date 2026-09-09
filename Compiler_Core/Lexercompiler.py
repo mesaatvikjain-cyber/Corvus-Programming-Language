@@ -18,7 +18,7 @@ RULES = [
 
     # Literals
     ('NUMBER',     r'\d+(\.\d+)?'),
-    ('STRING',     r'"[^"\n]*"'),
+    ('STRING',     r'"[^"\n]*"|\'[^\'\n]*\''),
 
     # Keywords
     ('KEYWORD',    r'\b(set|const|mk|givout|if|elsif|else|for|in|while|brk|con|try|error|final|true|fal|null|and|or|not|xor|async|awt|cls|global|pass|get|input|match|case)\b'),

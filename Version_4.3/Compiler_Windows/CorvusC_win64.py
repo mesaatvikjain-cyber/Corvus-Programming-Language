@@ -4,8 +4,9 @@ import shutil
 import subprocess
 import argparse
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "Compiler_Core")))
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if base_dir not in sys.path:
+    sys.path.insert(0, base_dir)
 
 try:
     from Compiler_Core.Lexercompiler import tokenize
@@ -101,14 +102,3 @@ def compile_windows(source_path, output_path=None, run_after=False, keep_asm=Fal
         subprocess.run([exe_file])
 
     return exe_file
-
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python CorvusC_win64.py <source.crv> [output.exe]")
-        sys.exit(1)
-    src = sys.argv[1]
-    out = sys.argv[2] if len(sys.argv) > 2 else None
-    compile_windows(src, output_path=out, keep_asm=True)
-
-if __name__ == "__main__":
-    main()

@@ -79,7 +79,7 @@ class ConstDeclNode(ASTNode):
 
 @dataclass
 class AssignmentNode(ASTNode):
-    target: str
+    target: Any
     value: ASTNode
 
 # --- 5. Control Flow Statements ---
@@ -145,6 +145,7 @@ class FuncDeclNode(ASTNode):
     name: str
     params: List[str]
     body: BlockNode
+    is_async: bool = False
 
 @dataclass
 class LambdaNode(ASTNode):

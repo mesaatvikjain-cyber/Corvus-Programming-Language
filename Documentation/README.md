@@ -31,11 +31,13 @@
 
 * **📦 Explicit Scope Delimiters**: Code blocks use brackets `[ ... ]` for clean, unambiguous scope boundaries.
 * **🏷️ Explicit Type Declarations**: `set <type>; name = value` for typed variables and `set const; NAME = value` for immutable constants.
-* **🎯 Actionable Error Diagnostics**: Custom diagnostic engine that points to the exact line/column with caret pointers (`^`) and actionable fix suggestions.
+* **🎯 Rust-Style Error Diagnostics**: Catalog with `--explain <CODE>`, Levenshtein typo heuristics, and `--ai-fix` console assistant.
+* **🧠 Machine Learning & AI Suite**: Integrated `tensorflow`, `torch`, `numpy`, `pandas`, `scikit_learn`, and `transformers`.
+* **🎨 Zero-Config Desktop 2D Graphics**: Cross-platform canvas windows, shapes, and 60 FPS event loop via `graphics.crv`.
 * **⚡ First-Class Lambdas**: Inline and block lambdas (`lmb[x] => x * 2`) with functional list transformations (`.map()`, `.filter()`).
 * **🧬 Object-Oriented Programming**: Complete support for classes (`cls Person() [ ... ]`) with `init` constructors and `self` instance dispatch.
 * **🛡️ Structured Exception Recovery**: `try [ ... ] error(e) [ ... ] final [ ... ]` blocks.
-* **📚 Native Standard Modules**: Built-in modules including `get math` (`math.pi`, `math.sqrt`) and `get system`.
+* **📚 30+ Native Standard Modules**: Deep standard library spanning AI, networking, crypto, system control, data formats, and math.
 
 ---
 

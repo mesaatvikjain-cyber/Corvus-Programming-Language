@@ -19,7 +19,7 @@
 
 ---
 
-## 🛠️ Automated Cross-Platform Installers (v1.1 - v4.1)
+## 🛠️ Automated Cross-Platform Installers (v1.1 - v4.3)
 
 Corvus includes self-contained automated installer scripts for **Windows** (PowerShell), **Linux** (Bash), and **macOS** (Zsh/Bash) for **every single version release**!
 
@@ -46,9 +46,9 @@ For detailed version-by-version installation steps, see [Documentation/INSTALLAT
 Corvus features a complete, interactive, self-contained **Master Documentation Website** located inside [`Documentation/webpage_corvus/`](Documentation/webpage_corvus/index.html) (and mirrored in [`docs/`](docs/index.html) for GitHub Pages).
 
 ### 🚀 Highlights of the Documentation Webpage
-- **Interactive Version Tutorials (v1.1 - v4.1)**: Hands-on code walkthroughs with interactive tab selectors.
+- **Interactive Version Tutorials (v1.1 - v4.3)**: Hands-on code walkthroughs with interactive tab selectors.
 - **Language Syntax Quick Cheat Sheet**: Rapid reference cards for variables, control flow, functions, and OOP.
-- **14 Exhaustive Chapters**: Covers Language Story, Syntax, Control Flow, Lambdas, OOP, Functional Pipelines, Ref-Counting Memory GC, "Murder of Crows" Concurrency, Native C FFI, Standard Library, TAC IR Compiler, v4.1 Super Optimizer, Self-Hosted Architecture, and VS Code Tooling.
+- **16 Exhaustive Chapters**: Covers Language Story, Syntax, Control Flow, Lambdas, OOP, Functional Pipelines, Ref-Counting Memory GC, "Murder of Crows" Concurrency, Native C FFI, 30+ Standard Libraries, TAC IR Compiler, v4.1 Super Optimizer, Desktop 2D Graphics, AI/ML Suite, Rust-Style Diagnostics, and VS Code Tooling.
 - **Free Online Hosting Support**: Easily host on **GitHub Pages**, **Vercel**, **Netlify**, or **Cloudflare Pages**. See [Documentation/HOSTING.md](Documentation/HOSTING.md) for step-by-step instructions.
 
 ---
@@ -63,6 +63,8 @@ Every version release of Corvus includes a dedicated Markdown hands-on tutorial 
 * **[Version 3.1 Tutorial](Documentation/tutorials/04_v3.1_error_handling_resilience_tutorial.md)**: Visual Stack Tracebacks, Panic-Mode Parser Recovery (`synchronize()`), Assembly Safety Guards.
 * **[Version 4.0 Tutorial](Documentation/tutorials/05_v4.0_stdlib_repl_vscode_tutorial.md)**: Native Standard Library (`math.crv`, `string.crv`, `file.crv`, `sys.crv`), Interactive REPL Shell Directives, VS Code Extension v0.3.0.
 * **[Version 4.1 Tutorial](Documentation/tutorials/06_v4.1_super_optimization_engine_tutorial.md)**: Super High-Level IR Optimization Engine (Constant Propagation, Strength Reduction `x * 4 -> SHL`, Branch Folding, Peephole Assembly Pass).
+* **[Version 4.2 Tutorial](Documentation/tutorials/07_v4.2_desktop_graphics_and_concurrency_tutorial.md)**: Zero-Config Desktop 2D Graphics Canvas (`graphics.crv`), Keyboard/Mouse Event Loop, and Expanded "Murder of Crows" Concurrency.
+* **[Version 4.3 Tutorial](Documentation/tutorials/08_v4.3_ai_ml_suite_and_diagnostics_tutorial.md)**: AI & Deep Learning Stack (`tensorflow`, `torch`, `numpy`, `pandas`, `scikit_learn`, `transformers`), 30+ Standard Library Modules, and Rust-Style Diagnostic Knowledge Base (`--explain`, `--ai-fix`).
 
 ---
 
@@ -78,6 +80,8 @@ The Corvus codebase is structured into explicit, standalone version releases so 
 | **[`Version_3.1/`](Version_3.1/)** | **v3.1** | **Enterprise Error Handling & Resilience Engine**: **Call Stack Tracebacks**, **Panic-Mode Parser Recovery**, **Assembly Runtime Panic Guards (`__corvus_panic_null`, `__corvus_panic_bounds`)** | Resilient Multi-Platform TAC IR Compiler & Enterprise Interpreter | [`Win`](Version_3.1/install_windows.ps1) \| [`Linux`](Version_3.1/install_linux.sh) \| [`macOS`](Version_3.1/install_macos.sh) |
 | **[`Version_4.0/`](Version_4.0/)** | **v4.0** | **Native Corvus Standard Library Expansion (`math.crv`, `string.crv`, `file.crv`, `sys.crv`)**, **Advanced TAC IR Backend Optimizations**, **Interactive REPL Shell (`repl.py`)**, **VS Code Extension v0.3.0** | Full Enterprise TAC IR Compiler, Native Executable Compiler & Interactive REPL | [`Win`](Version_4.0/install_windows.ps1) \| [`Linux`](Version_4.0/install_linux.sh) \| [`macOS`](Version_4.0/install_macos.sh) |
 | **[`Version_4.1/`](Version_4.1/)** | **v4.1** | **Super High-Level Optimization Engine**: **Constant Propagation**, **Algebraic Strength Reduction (`x * 2^n -> x << n`, `x / 2^n -> x >> n`)**, **Constant Branch Folding (`if (1)`)**, **CFG Jump Threading**, **Assembly Peephole Optimization** | Super-Optimized TAC IR Compiler & Native Executable Generator | [`Win`](Version_4.1/install_windows.ps1) \| [`Linux`](Version_4.1/install_linux.sh) \| [`macOS`](Version_4.1/install_macos.sh) |
+| **[`Version_4.2/`](Version_4.2/)** | **v4.2** | **Desktop 2D Graphics Canvas (`graphics.crv`)**, Zero-Config Window/Shape/Event Rendering Loop (`graphics.fps(60)`), Playable Snake/Pong Games, Expanded "Murder of Crows" Concurrency (`crow.parallel_map`, `crow.race`, `crow.nest`) | Real-time Desktop Canvas Engine, Parallel Crows Concurrency, Super-Optimized Compiler | [`Win`](Version_4.2/install_windows.ps1) \| [`Linux`](Version_4.2/install_linux.sh) \| [`macOS`](Version_4.2/install_macos.sh) |
+| **[`Version_4.3/`](Version_4.3/)** | **v4.3** | **Machine Learning & AI Stack (`tensorflow`, `torch`, `numpy`, `pandas`, `scikit_learn`, `transformers`)**, **30+ Standard Library Modules**, **Rust-Style Diagnostic Catalog (`--explain <CODE>`)**, **Levenshtein Typo Matching**, **AI-Fix Assistant (`--ai-fix`)**, **Full Compiler-Interpreter Parity** | Enterprise AI/ML Interpreter, Super-Optimized Native Compiler, Diagnostic Knowledge Base | [`Win`](Version_4.3/install_windows.ps1) \| [`Linux`](Version_4.3/install_linux.sh) \| [`macOS`](Version_4.3/install_macos.sh) |
 
 ---
 
@@ -106,18 +110,24 @@ It has grown from an interpreted prototype into a **self-hosted, IR-optimized sy
 
 ### Executing Across Corvus Versions
 
-#### Launching the Interactive REPL Shell (v4.1)
+#### Launching the Interactive REPL Shell (v4.3)
 ```bash
-python Version_4.1/Interpreter/Corvus.py --repl
+python Version_4.3/Interpreter/Corvus.py --repl
 ```
 
-#### Running Version 4.1 Super Optimization Test Suite
+#### Running the Version 4.3 Machine Learning Test Suite
 ```bash
-# Interpreter
-python Version_4.1/Interpreter/Corvus.py Version_4.1/Examples-and-Tests/13_super_optimization_suite.crv
+# Interpreter (AI/ML Stack Verification)
+python Version_4.3/Interpreter/Corvus.py Version_4.3/Examples-and-Tests/16_machine_learning_suite.crv
 
 # Native Windows Executable Compiler
-python Version_4.1/Compiler_Windows/CorvusC_win64.py Version_4.1/Examples-and-Tests/13_super_optimization_suite.crv
+python Version_4.3/Compiler_Windows/CorvusC_win64.py Version_4.3/Examples-and-Tests/13_super_optimization_suite.crv
+```
+
+#### Diagnostic Explanations & Error Fixing
+```bash
+# Explain specific error code with verified fix examples
+python Version_4.3/Interpreter/Corvus.py --explain E0101
 ```
 
 ---

@@ -4,6 +4,10 @@ import shutil
 import subprocess
 import argparse
 
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if base_dir not in sys.path:
+    sys.path.insert(0, base_dir)
+
 try:
     from Compiler_Core.Lexercompiler import tokenize
     from Compiler_Core.parser import Parser
