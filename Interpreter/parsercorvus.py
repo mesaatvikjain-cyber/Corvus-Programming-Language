@@ -278,7 +278,11 @@ class Parser:
         elif self.peek() and self.peek().value == 'func':
             self.advance()
 
-        name = self.expect('ID').value
+        tok = self.peek()
+        if tok and tok.type in ('ID', 'KEYWORD', 'TYPE'):
+            name = self.advance().value
+        else:
+            name = self.expect('ID').value
         self.expect('LPAREN')
         params = []
         if not self.match('RPAREN'):
@@ -402,7 +406,7 @@ class Parser:
     def parse_comparison(self):
         node = self.parse_additive()
         comp_types = ('EQ', 'NEQ', 'LT', 'GT', 'LTE', 'GTE')
-        while self.peek() and self.peek().type in comp_types:
+        while self.peek() and (self.peek().type in comp_types or (self.peek().type == 'KEYWORD' and self.peek().value == 'in')):
             op = self.advance().value
             right = self.parse_additive()
             node = BinOpNode(left=node, op=op, right=right)
@@ -574,15 +578,49 @@ class Parser:
                 self.expect('TUP_CLOSE')
             return TupleNode(elements=elements)
 
-        if self.match('LBRACKET') or self.match('LBRACE'):
+        if self.match('LBRACE'):
+            if self.match('RBRACE'):
+                return DictNode(keys=[], values=[])
+            has_colon = False
+            depth = 0
+            for i in range(self.pos, min(len(self.tokens), self.pos + 30)):
+                t = self.tokens[i]
+                if t.type == 'LBRACE': depth += 1
+                elif t.type == 'RBRACE': depth -= 1
+                elif t.type == 'COLON' and depth == 0:
+                    has_colon = True
+                    break
+                elif t.type in ('COMMA', 'RBRACE') and depth == 0:
+                    break
+
+            if has_colon:
+                keys = []
+                values = []
+                while not self.match('RBRACE'):
+                    k = self.parse_expression()
+                    self.expect('COLON')
+                    v = self.parse_expression()
+                    keys.append(k)
+                    values.append(v)
+                    self.match('COMMA')
+                return DictNode(keys=keys, values=values)
+            else:
+                elements = []
+                while not self.match('RBRACE'):
+                    elements.append(self.parse_expression())
+                    if not self.match('COMMA'):
+                        break
+                self.expect('RBRACE')
+                return ListNode(elements=elements)
+
+        if self.match('LBRACKET'):
             elements = []
-            close_tok = 'RBRACKET' if self.tokens[self.pos - 1].type == 'LBRACKET' else 'RBRACE'
-            if not self.match(close_tok):
+            if not self.match('RBRACKET'):
                 while True:
                     elements.append(self.parse_expression())
                     if not self.match('COMMA'):
                         break
-                self.expect(close_tok)
+                self.expect('RBRACKET')
             return ListNode(elements=elements)
 
         if self.match('LPAREN'):

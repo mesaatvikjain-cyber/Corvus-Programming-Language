@@ -19,6 +19,9 @@ try:
     from std_crypto import _global_crypto_engine
     from std_regex import _global_regex_engine
     from std_process import _global_process_engine
+    from std_math_ext import _global_math_ext_engine
+    from std_sqlite import _global_sqlite_engine
+    from std_audio import _global_audio_engine
 except ImportError:
     from .std_memory import _global_mem_manager
     from .std_ffi import FFIEngine
@@ -30,6 +33,9 @@ except ImportError:
     from .std_crypto import _global_crypto_engine
     from .std_regex import _global_regex_engine
     from .std_process import _global_process_engine
+    from .std_math_ext import _global_math_ext_engine
+    from .std_sqlite import _global_sqlite_engine
+    from .std_audio import _global_audio_engine
 from astnodes import (
     ProgramNode, LiteralNode, IdentifierNode, ListNode, TupleNode, DictNode,
     BinOpNode, UnaryOpNode, SafeNavNode, IndexAccessNode, MethodCallNode,
@@ -49,11 +55,15 @@ class Environment:
 
     def define(self, name: str, value, var_type: str, is_const: bool = False):
         if name in self.values:
-            raise CorvusError(
-                error_type="Corvus NameError",
-                message=f"Variable '{name}' is already declared in this scope.",
-                suggestion="Use a different variable name or assign to the existing variable without re-declaring."
-            )
+            if name in self.constants:
+                raise CorvusError(
+                    error_type="Corvus TypeError",
+                    message=f"Cannot reassign constant '{name}'.",
+                    suggestion="Declare the identifier with 'set <type>;' if you need it to be mutable."
+                )
+            self.values[name] = value
+            self.types[name] = var_type
+            return
 
         self.values[name] = value
         self.types[name] = var_type
@@ -314,6 +324,34 @@ class Evaluator:
             "get_os_release": lambda *args: _global_process_engine.get_os_release()
         }), "any")
 
+        # Corvus Native Math Extension & Statistics Engine (v4.2)
+        self.global_env.define("math_ext", ModuleNamespace("math_ext", {
+            "sqrt": lambda *args: _global_math_ext_engine.sqrt(*args),
+            "sin": lambda *args: _global_math_ext_engine.sin(*args),
+            "cos": lambda *args: _global_math_ext_engine.cos(*args),
+            "tan": lambda *args: _global_math_ext_engine.tan(*args),
+            "atan2": lambda *args: _global_math_ext_engine.atan2(*args),
+            "radians": lambda *args: _global_math_ext_engine.radians(*args),
+            "degrees": lambda *args: _global_math_ext_engine.degrees(*args),
+            "mean": lambda *args: _global_math_ext_engine.mean(*args),
+            "median": lambda *args: _global_math_ext_engine.median(*args),
+            "variance": lambda *args: _global_math_ext_engine.variance(*args),
+            "std_dev": lambda *args: _global_math_ext_engine.std_dev(*args)
+        }), "any")
+
+        # Corvus Native SQLite Embedded Database Engine (v4.2)
+        self.global_env.define("sqlite", ModuleNamespace("sqlite", {
+            "connect": lambda *args: _global_sqlite_engine.connect(*args),
+            "execute": lambda *args: _global_sqlite_engine.execute(*args),
+            "fetch_all": lambda *args: _global_sqlite_engine.fetch_all(*args),
+            "close": lambda *args: _global_sqlite_engine.close(*args)
+        }), "any")
+
+        # Corvus Native Audio Synth Engine (v4.2)
+        self.global_env.define("audio", ModuleNamespace("audio", {
+            "beep": lambda *args: _global_audio_engine.beep(*args)
+        }), "any")
+
 
     def evaluate(self, node):
         return self.visit(node)
@@ -423,6 +461,7 @@ class Evaluator:
         if op == 'and': return left and right
         if op == 'or':  return left or right
         if op == 'xor': return bool(left) ^ bool(right)
+        if op == 'in':  return left in right
         if op == '??':  return left if left is not None else right
 
         raise CorvusError(
@@ -898,42 +937,67 @@ class Evaluator:
                 )
 
     def _try_load_corvus_package(self, mod_name: str) -> bool:
-        search_dirs = [
-            os.path.join(os.getcwd(), "corvus_modules", mod_name),
-            os.path.expanduser(os.path.join("~", ".corvus", "packages", mod_name))
-        ]
+        entry_file = None
 
+        # 1. Check for direct .crv file in script dir, cwd, or StdLib dirs
+        single_file_candidates = []
         current_script = getattr(self, "current_file_path", None)
         if current_script:
             script_dir = os.path.dirname(os.path.abspath(current_script))
-            search_dirs.insert(0, os.path.join(script_dir, "corvus_modules", mod_name))
+            single_file_candidates.extend([
+                os.path.join(script_dir, f"{mod_name}.crv"),
+                os.path.join(script_dir, "StdLib", f"{mod_name}.crv"),
+            ])
+        
+        cwd = os.getcwd()
+        interpreter_dir = os.path.dirname(os.path.abspath(__file__))
+        root_dir = os.path.abspath(os.path.join(interpreter_dir, ".."))
 
-        package_dir = None
-        for s_dir in search_dirs:
-            if os.path.isdir(s_dir):
-                package_dir = s_dir
+        single_file_candidates.extend([
+            os.path.join(cwd, f"{mod_name}.crv"),
+            os.path.join(cwd, "StdLib", f"{mod_name}.crv"),
+            os.path.join(root_dir, "StdLib", f"{mod_name}.crv"),
+            os.path.join(root_dir, "Version_4.2", "StdLib", f"{mod_name}.crv"),
+        ])
+
+        for cand in single_file_candidates:
+            if os.path.isfile(cand):
+                entry_file = cand
                 break
 
-        if not package_dir:
-            return False
+        if not entry_file:
+            search_dirs = [
+                os.path.join(os.getcwd(), "corvus_modules", mod_name),
+                os.path.expanduser(os.path.join("~", ".corvus", "packages", mod_name))
+            ]
 
-        entry_file = None
-        manifest_path = os.path.join(package_dir, "corvus.json")
-        if os.path.exists(manifest_path):
-            try:
-                with open(manifest_path, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    main_rel = data.get("main", "main.crv")
-                    entry_file = os.path.join(package_dir, main_rel)
-            except Exception:
-                pass
+            if current_script:
+                script_dir = os.path.dirname(os.path.abspath(current_script))
+                search_dirs.insert(0, os.path.join(script_dir, "corvus_modules", mod_name))
 
-        if not entry_file or not os.path.exists(entry_file):
-            for candidate in ["main.crv", f"{mod_name}.crv", "index.crv"]:
-                cand_path = os.path.join(package_dir, candidate)
-                if os.path.exists(cand_path):
-                    entry_file = cand_path
+            package_dir = None
+            for s_dir in search_dirs:
+                if os.path.isdir(s_dir):
+                    package_dir = s_dir
                     break
+
+            if package_dir:
+                manifest_path = os.path.join(package_dir, "corvus.json")
+                if os.path.exists(manifest_path):
+                    try:
+                        with open(manifest_path, "r", encoding="utf-8") as f:
+                            data = json.load(f)
+                            main_rel = data.get("main", "main.crv")
+                            entry_file = os.path.join(package_dir, main_rel)
+                    except Exception:
+                        pass
+
+                if not entry_file or not os.path.exists(entry_file):
+                    for candidate in ["main.crv", f"{mod_name}.crv", "index.crv"]:
+                        cand_path = os.path.join(package_dir, candidate)
+                        if os.path.exists(cand_path):
+                            entry_file = cand_path
+                            break
 
         if not entry_file or not os.path.exists(entry_file):
             return False

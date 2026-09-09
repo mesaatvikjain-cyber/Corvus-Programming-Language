@@ -1,0 +1,58 @@
+# Corvus Advanced Collections & Data Structures Module
+
+cls Stack() [
+    var items = []
+
+    func push(item) [
+        self.items = self.items + [item]
+        givout self
+    ]
+
+    func pop() [
+        if (len(self.items) == 0) [ givout null ]
+        var last_idx = len(self.items) - 1
+        var val = self.items[last_idx]
+        givout val
+    ]
+
+    func peek() [
+        if (len(self.items) == 0) [ givout null ]
+        givout self.items[len(self.items) - 1]
+    ]
+
+    func is_empty() [
+        givout len(self.items) == 0
+    ]
+
+    func size() [
+        givout len(self.items)
+    ]
+]
+
+cls Queue() [
+    var items = []
+
+    func enqueue(item) [
+        self.items = self.items + [item]
+        givout self
+    ]
+
+    func dequeue() [
+        if (len(self.items) == 0) [ givout null ]
+        var val = self.items[0]
+        givout val
+    ]
+
+    func peek() [
+        if (len(self.items) == 0) [ givout null ]
+        givout self.items[0]
+    ]
+
+    func is_empty() [
+        givout len(self.items) == 0
+    ]
+
+    func size() [
+        givout len(self.items)
+    ]
+]
