@@ -13,7 +13,7 @@ class PyTorchEngine:
     @staticmethod
     def tensor(data, requires_grad=False):
         if HAS_NATIVE_TORCH:
-            t = torch.tensor(data, dtype=torch.float32, requires_grad=requires_grad)
+            t = torch.tensor(data, dtype=torch.float32, requires_grad=bool(requires_grad))
             return t.detach().numpy().tolist()
         return data
 

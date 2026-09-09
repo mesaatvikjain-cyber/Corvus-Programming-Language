@@ -522,6 +522,55 @@ class Evaluator:
         if op == 'or':  return left or right
         if op == 'xor': return bool(left) ^ bool(right)
         if op == 'in':  return left in right
+        if op == '@':
+            # Matrix multiplication dispatch
+            if hasattr(left, '__matmul__'):
+                try:
+                    return left @ right
+                except Exception:
+                    pass
+            # Check for numpy array
+            try:
+                import numpy as _np
+                if isinstance(left, _np.ndarray) or isinstance(right, _np.ndarray):
+                    return _np.dot(left, right)
+            except Exception:
+                pass
+            # Check for torch / tf tensors
+            if hasattr(left, 'matmul') and callable(getattr(left, 'matmul')):
+                return left.matmul(right)
+            if hasattr(left, 'mm') and callable(getattr(left, 'mm')):
+                return left.mm(right)
+            # Pure 2D list fallback matrix multiplication
+            if isinstance(left, list) and isinstance(right, list):
+                if left and isinstance(left[0], list) and right and isinstance(right[0], list):
+                    # Standard 2D matrix multiplication
+                    r_a = len(left)
+                    c_a = len(left[0])
+                    r_b = len(right)
+                    c_b = len(right[0])
+                    if c_a != r_b:
+                        raise CorvusError(
+                            error_type="Corvus MathError",
+                            error_code="E0302",
+                            message=f"Matrix dimension mismatch for '@': ({r_a}x{c_a}) @ ({r_b}x{c_b}).",
+                            suggestion="For matrix multiplication A @ B, the number of columns in A must match the number of rows in B."
+                        )
+                    res = [[0 for _ in range(c_b)] for _ in range(r_a)]
+                    for i in range(r_a):
+                        for j in range(c_b):
+                            s = 0
+                            for k in range(c_a):
+                                s += left[i][k] * right[k][j]
+                            res[i][j] = s
+                    return res
+            raise CorvusError(
+                error_type="Corvus TypeError",
+                error_code="E0101",
+                message=f"Matrix multiplication '@' not supported between '{type(left).__name__}' and '{type(right).__name__}'.",
+                suggestion="Use '@' between 2D lists, NumPy arrays, or PyTorch/TensorFlow tensors."
+            )
+
         if op == '??':  return left if left is not None else right
 
         raise CorvusError(
@@ -760,10 +809,12 @@ class Evaluator:
         closure_env = self.env
         def user_func(*args):
             func_env = Environment(parent=closure_env)
-            for param, arg in zip(node.params, args):
+            for i, param in enumerate(node.params):
+                arg = args[i] if i < len(args) else None
                 func_env.define(param, arg, "any")
 
             evaluator_thread = Evaluator(func_env)
+            evaluator_thread.global_env = self.global_env
             evaluator_thread.executor = self.executor
             try:
                 evaluator_thread.visit(node.body)
@@ -782,7 +833,8 @@ class Evaluator:
         closure_env = self.env
         def lambda_func(*args):
             lmb_env = Environment(parent=closure_env)
-            for param, arg in zip(node.params, args):
+            for i, param in enumerate(node.params):
+                arg = args[i] if i < len(args) else None
                 lmb_env.define(param, arg, "any")
 
             evaluator_thread = Evaluator(lmb_env)

@@ -170,6 +170,12 @@ class AsmGeneratorWin64:
                 self.text_lines.append(f"    jne {lbl_done}")
                 self.text_lines.append("    mov rax, rbx")
                 self.text_lines.append(f"{lbl_done}:")
+            elif node.op == '@':
+                # Matrix multiplication placeholder / call native matmul runtime stub
+                self.text_lines.append("    ; Corvus native matrix multiplication @")
+                self.text_lines.append("    mov rcx, rax")
+                self.text_lines.append("    mov rdx, rbx")
+                self.text_lines.append("    call __corvus_matmul")
 
         elif node_type == "UnaryOpNode":
             self.generate(node.operand)

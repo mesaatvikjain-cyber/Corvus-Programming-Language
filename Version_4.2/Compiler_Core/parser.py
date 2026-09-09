@@ -51,6 +51,10 @@ class Parser:
 
     def match(self, token_type: str, value: str = None) -> bool:
         tok = self.peek()
+        if tok and tok.type == 'TUP_OPEN' and token_type == 'LPAREN':
+            tok.type = 'LPAREN'
+            tok.value = '('
+            self.tokens.insert(self.pos + 1, Token(type='LBRACKET', value='[', line=tok.line, column=tok.column + 1))
         if tok and tok.type == 'TUP_CLOSE' and token_type == 'RBRACKET':
             tok.type = 'RBRACKET'
             tok.value = ']'
@@ -63,6 +67,10 @@ class Parser:
 
     def expect(self, token_type: str, value: str = None) -> Token:
         tok = self.peek()
+        if tok and tok.type == 'TUP_OPEN' and token_type == 'LPAREN':
+            tok.type = 'LPAREN'
+            tok.value = '('
+            self.tokens.insert(self.pos + 1, Token(type='LBRACKET', value='[', line=tok.line, column=tok.column + 1))
         if tok and tok.type == 'TUP_CLOSE' and token_type == 'RBRACKET':
             tok.type = 'RBRACKET'
             tok.value = ']'
@@ -429,7 +437,7 @@ class Parser:
 
     def parse_multiplicative(self):
         node = self.parse_power()
-        while self.peek() and self.peek().type in ('STAR', 'SLASH', 'MOD'):
+        while self.peek() and self.peek().type in ('STAR', 'SLASH', 'MOD', 'AT'):
             op = self.advance().value
             right = self.parse_power()
             node = BinOpNode(left=node, op=op, right=right)

@@ -81,7 +81,7 @@ The Corvus codebase is structured into explicit, standalone version releases so 
 | **[`Version_4.0/`](Version_4.0/)** | **v4.0** | **Native Corvus Standard Library Expansion (`math.crv`, `string.crv`, `file.crv`, `sys.crv`)**, **Advanced TAC IR Backend Optimizations**, **Interactive REPL Shell (`repl.py`)**, **VS Code Extension v0.3.0** | Full Enterprise TAC IR Compiler, Native Executable Compiler & Interactive REPL | [`Win`](Version_4.0/install_windows.ps1) \| [`Linux`](Version_4.0/install_linux.sh) \| [`macOS`](Version_4.0/install_macos.sh) |
 | **[`Version_4.1/`](Version_4.1/)** | **v4.1** | **Super High-Level Optimization Engine**: **Constant Propagation**, **Algebraic Strength Reduction (`x * 2^n -> x << n`, `x / 2^n -> x >> n`)**, **Constant Branch Folding (`if (1)`)**, **CFG Jump Threading**, **Assembly Peephole Optimization** | Super-Optimized TAC IR Compiler & Native Executable Generator | [`Win`](Version_4.1/install_windows.ps1) \| [`Linux`](Version_4.1/install_linux.sh) \| [`macOS`](Version_4.1/install_macos.sh) |
 | **[`Version_4.2/`](Version_4.2/)** | **v4.2** | **Desktop 2D Graphics Canvas (`graphics.crv`)**, Zero-Config Window/Shape/Event Rendering Loop (`graphics.fps(60)`), Playable Snake/Pong Games, Expanded "Murder of Crows" Concurrency (`crow.parallel_map`, `crow.race`, `crow.nest`) | Real-time Desktop Canvas Engine, Parallel Crows Concurrency, Super-Optimized Compiler | [`Win`](Version_4.2/install_windows.ps1) \| [`Linux`](Version_4.2/install_linux.sh) \| [`macOS`](Version_4.2/install_macos.sh) |
-| **[`Version_4.3/`](Version_4.3/)** | **v4.3** | **Machine Learning & AI Stack (`tensorflow`, `torch`, `numpy`, `pandas`, `scikit_learn`, `transformers`)**, **30+ Standard Library Modules**, **Rust-Style Diagnostic Catalog (`--explain <CODE>`)**, **Levenshtein Typo Matching**, **AI-Fix Assistant (`--ai-fix`)**, **Full Compiler-Interpreter Parity** | Enterprise AI/ML Interpreter, Super-Optimized Native Compiler, Diagnostic Knowledge Base | [`Win`](Version_4.3/install_windows.ps1) \| [`Linux`](Version_4.3/install_linux.sh) \| [`macOS`](Version_4.3/install_macos.sh) |
+| **[`Version_4.3/`](Version_4.3/)** | **v4.3** | **AI Matrix Operator (`@`) & Tooling Suite**: **`@` Matrix Multiplication Operator (Lists, NumPy, PyTorch, TF)**, **Strict Static Type Checker (`corvus --strict`)**, **Canonical Code Auto-Formatter (`corvus fmt`)**, **Auto-Discovery Test Runner (`corvus test`)**, **Integrated CPM Package Manager CLI (`corvus init/install/list/remove`)**, **Rust-Style Diagnostic Catalog (`--explain <CODE>`)**, **Levenshtein Typo Matching**, **AI-Fix Assistant (`--ai-fix`)**, **Full Compiler-Interpreter Parity** | Enterprise AI/ML Interpreter, Super-Optimized Native Compiler, Diagnostic Knowledge Base & Complete Toolchain | [`Win`](Version_4.3/install_windows.ps1) \| [`Linux`](Version_4.3/install_linux.sh) \| [`macOS`](Version_4.3/install_macos.sh) |
 
 ---
 
@@ -96,7 +96,7 @@ It has grown from an interpreted prototype into a **self-hosted, IR-optimized sy
 
 ---
 
-## 🚀 Quickstart
+## 🚀 Quickstart & Master CLI Toolchain
 
 ### Prerequisites
 * **Python 3.8+**
@@ -108,26 +108,57 @@ It has grown from an interpreted prototype into a **self-hosted, IR-optimized sy
 
 ---
 
-### Executing Across Corvus Versions
+### Master CLI Toolchain (`corvus` / `Corvus.py`)
 
-#### Launching the Interactive REPL Shell (v4.3)
+#### 1. Running Programs & AI Matrix Multiplication (`@` Operator)
 ```bash
-python Version_4.3/Interpreter/Corvus.py --repl
+# Execute Corvus file
+python Interpreter/Corvus.py Examples-and-Tests/17_matrix_matmul_suite.crv
+
+# Native 2D lists, NumPy, PyTorch matrix multiplication using @:
+# set lis; A = [[1, 2], [3, 4]]
+# set lis; B = [[5, 6], [7, 8]]
+# set any; C = A @ B  # -> [[19, 22], [43, 50]]
 ```
 
-#### Running the Version 4.3 Machine Learning Test Suite
+#### 2. Canonical Code Auto-Formatter (`corvus fmt`)
 ```bash
-# Interpreter (AI/ML Stack Verification)
-python Version_4.3/Interpreter/Corvus.py Version_4.3/Examples-and-Tests/16_machine_learning_suite.crv
+# Format a Corvus file in-place
+python Interpreter/Corvus.py fmt myfile.crv
 
-# Native Windows Executable Compiler
-python Version_4.3/Compiler_Windows/CorvusC_win64.py Version_4.3/Examples-and-Tests/13_super_optimization_suite.crv
+# CI/CD check mode (returns non-zero exit code if diff detected)
+python Interpreter/Corvus.py fmt myfile.crv --check
 ```
 
-#### Diagnostic Explanations & Error Fixing
+#### 3. Test Runner Auto-Discovery (`corvus test`)
+```bash
+# Auto-discover and run all test suites (*test*.crv / *suite*.crv)
+python Interpreter/Corvus.py test
+```
+
+#### 4. Strict Static Type Checker (`corvus --strict`)
+```bash
+# Validate types, undeclared variables, and function arity prior to execution
+python Interpreter/Corvus.py --strict myfile.crv
+```
+
+#### 5. Integrated Package Management (`cpm`)
+```bash
+# Initialize a new project manifest
+python Interpreter/Corvus.py init
+
+# Install or list packages
+python Interpreter/Corvus.py install math_utils
+python Interpreter/Corvus.py list
+```
+
+#### 6. Diagnostic Explanations & Error Fixing
 ```bash
 # Explain specific error code with verified fix examples
-python Version_4.3/Interpreter/Corvus.py --explain E0101
+python Interpreter/Corvus.py --explain E0101
+
+# Execute with AI diagnostic solutions
+python Interpreter/Corvus.py myfile.crv --ai-fix
 ```
 
 ---
