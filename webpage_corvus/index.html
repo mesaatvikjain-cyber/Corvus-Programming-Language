@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corvus Programming Language - Official Master Documentation</title>
+    <title>Corvus Programming Language - Official Master Documentation & Tutorials</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,12 +11,12 @@
     <!-- Header Navbar -->
     <header>
         <a href="#" class="logo-area">
-            <img src="../corvus_logo.png" alt="Corvus Logo">
-            <span>Corvus Core Docs</span>
+            <img src="corvus_logo.png" alt="Corvus Logo">
+            <span>Corvus Core Docs & Tutorials</span>
         </a>
         <div class="search-box">
             <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            <input type="text" id="doc-search" placeholder="Search Corvus documentation (e.g. crow, ffi, v4.1, optimizer)...">
+            <input type="text" id="doc-search" placeholder="Search Corvus documentation & tutorials...">
         </div>
         <div class="header-links">
             <a href="https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-" target="_blank" class="header-link">GitHub Repository</a>
@@ -33,6 +33,13 @@
                 <ul class="sidebar-nav">
                     <li><a href="#intro">1. Introduction & Story</a></li>
                     <li><a href="#quickstart">2. Quickstart & Install</a></li>
+                    <li><a href="#cheatsheet">Quick Cheat Sheet</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-group">
+                <div class="sidebar-title">Version Tutorials</div>
+                <ul class="sidebar-nav">
+                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v4.1)</a></li>
                 </ul>
             </div>
             <div class="sidebar-group">
@@ -69,12 +76,171 @@
             <!-- 1. Introduction & Story -->
             <section id="intro" class="doc-section">
                 <h1>1. Introduction & The Story of Corvus</h1>
-                <p>Welcome to the official master documentation for the <strong>Corvus Programming Language</strong>!</p>
+                <p>Welcome to the official master documentation and interactive tutorial hub for the <strong>Corvus Programming Language</strong>!</p>
                 <div class="callout info">
                     <div class="callout-title">The Story Behind Corvus</div>
                     <p><em>"I got inspired to build my own programming language after watching a video about a programmer who created G# and C#, and a video by AstroSam. Since I already knew Python, I decided to take on the challenge and build my very own programming language from scratch!"</em><br>— <strong>Saatvik Jain</strong> (Creator of Corvus)</p>
                 </div>
-                <p>Corvus introduces a distinctive syntax using <strong>square brackets <code>[ ... ]</code> for code blocks</strong> and reserving <strong>curly braces <code>{ ... }</code> for native lists</strong>. Over 6 major release iterations (v1.1 to v4.1), Corvus has evolved from an interpreted scripting language into a multi-platform systems language featuring Three-Address Code (TAC) IR optimization, a self-hosted compiler, native C FFI, scope memory ref-counting, and a native assembly compiler generating 64-bit binaries for Windows, Linux, and macOS!</p>
+                <p>Corvus introduces a distinctive syntax using <strong>square brackets <code>[ ... ]</code> for code blocks</strong> and reserving <strong>curly braces <code>{ ... }</code> for native lists</strong>. Over 6 major release iterations (v1.1 to v4.1), Corvus has evolved from an interpreted prototype into a multi-platform systems language featuring Three-Address Code (TAC) IR optimization, a self-hosted compiler, native C FFI, scope memory ref-counting, and a native assembly compiler generating 64-bit binaries for Windows, Linux, and macOS!</p>
+            </section>
+
+            <!-- Quick Cheat Sheet -->
+            <section id="cheatsheet" class="doc-section">
+                <h1>Language Quick Cheat Sheet</h1>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-card">
+                        <h3>Variables & Types</h3>
+                        <pre><code>var x = 10        # Mutable
+const PI = 3.14   # Constant
+set x = x + 1     # Reassign</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Lists & Collections</h3>
+                        <pre><code>var list = {1, 2, 3} # List
+var tuple = ("A", 42) # Tuple
+var map = {"k": "v"} # Dict</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Control Flow Blocks</h3>
+                        <pre><code>if (val > 10) [
+    log("Greater")
+] else [
+    log("Smaller")
+]</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Functions & Lambdas</h3>
+                        <pre><code>func add(a, b) [
+    givout a + b
+]
+var double = lambda(x) -> x*2</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Version Tutorials Section -->
+            <section id="version-tutorials" class="doc-section">
+                <h1>Interactive Version Tutorials (v1.1 - v4.1)</h1>
+                <p>Select a version release to view hands-on code walkthroughs and architectural evolution guides:</p>
+                
+                <div class="tutorial-tabs">
+                    <button class="tab-btn active" data-tab="tab-v11">Version 1.1</button>
+                    <button class="tab-btn" data-tab="tab-v20">Version 2.0</button>
+                    <button class="tab-btn" data-tab="tab-v30">Version 3.0</button>
+                    <button class="tab-btn" data-tab="tab-v31">Version 3.1</button>
+                    <button class="tab-btn" data-tab="tab-v40">Version 4.0</button>
+                    <button class="tab-btn" data-tab="tab-v41">Version 4.1</button>
+                </div>
+
+                <!-- Tab v1.1 -->
+                <div id="tab-v11" class="tab-content active">
+                    <h2>v1.1 Tutorial: AST Visitor Interpreter & Basics</h2>
+                    <p>Learn core syntax, recursion, lambdas, and class object instantiation in the reference AST Visitor Interpreter.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Class Definition in v1.1
+class Calculator [
+    func init(brand) [
+        set self.brand = brand
+    ]
+
+    func square(x) [
+        givout x * x
+    ]
+]
+
+var calc = Calculator("Corvus-v1.1")
+log("Square of 7: " + str(calc.square(7)))  # 49</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v2.0 -->
+                <div id="tab-v20" class="tab-content">
+                    <h2>v2.0 Tutorial: Native Multi-Platform Compilation</h2>
+                    <p>Compile scripts to native x86_64 binaries for Windows, Linux, and macOS using pattern matching and functional pipelines.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Pipeline Operator (|>) & Pattern Matching
+func double(x) [ givout x * 2 ]
+func add_ten(x) [ givout x + 10 ]
+
+var res = 5 |> double |> add_ten
+
+match (res) [
+    case 20: log("Matched 20!")
+    else: log("Other result")
+]
+
+# Build Native Binary
+# python Version_2.0/Compiler/CorvusC.py script.crv --target windows -r</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v3.0 -->
+                <div id="tab-v30" class="tab-content">
+                    <h2>v3.0 Tutorial: Concurrency, C FFI & Self-Hosted Compiler</h2>
+                    <p>Explore multi-threaded worker pools ("Murder of Crows" 🐦), native C FFI, and pure Corvus compiler self-hosting.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Concurrent Thread Pools with crow
+func worker_task() [
+    log("Task running on worker thread")
+    givout 100
+]
+
+var handle = crow.fly(worker_task, {})
+var res = crow.flock({handle})
+
+# C FFI Library Binding
+var user32 = ffi.load("user32.dll")
+var msg = ffi.bind(user32, "MessageBoxA", "int", {"int", "str", "str", "int"})
+ffi.call(msg, {0, "Hello C FFI!", "Corvus", 0})</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v3.1 -->
+                <div id="tab-v31" class="tab-content">
+                    <h2>v3.1 Tutorial: Visual Tracebacks & Assembly Runtime Panic Guards</h2>
+                    <p>Learn how panic-mode statement recovery (`synchronize()`) and visual tracebacks eliminate cryptic crashes.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Visual Call Stack Traceback Preview
+======================================================
+[Corvus NameError]
+--> Location: File 'app.crv', Line 14, Column 5:
+    14 |     set score = score + undefined_variable
+       |                         ^^^^^^^^^^^^^^^^^^
+Details: Undefined variable 'undefined_variable'.
+======================================================</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.0 -->
+                <div id="tab-v40" class="tab-content">
+                    <h2>v4.0 Tutorial: Native StdLib, Interactive REPL & VS Code Extension</h2>
+                    <p>Leverage standard modules (`math.crv`, `string.crv`, `file.crv`), interactive REPL commands, and VS Code extension v0.3.0.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Native Math & String StdLib Modules
+var fact = math.factorial(5)  # 120
+var padded = string.pad_left("Corvus", 10, " ")
+
+# Interactive REPL Command
+# python Version_4.0/Interpreter/Corvus.py --repl
+# corvus> .vars</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.1 -->
+                <div id="tab-v41" class="tab-content">
+                    <h2>v4.1 Tutorial: Super High-Level Optimization Engine</h2>
+                    <p>Deep dive into Constant Propagation, Strength Reduction (`x * 4 -> SHL`), Constant Branch Folding, and Assembly Peephole Optimization.</p>
+                    <div class="code-wrapper">
+                        <pre><code># v4.1 Strength Reduction & Bitwise Shifts
+var x = 8
+var mult_by_4 = x * 4  # Reduced to SHL x, 2 (32)
+var div_by_2 = x / 2   # Reduced to SHR x, 1 (4)
+
+# Algebraic Identities
+var val = x + 0       # Simplified to x
+var zero = x * 0      # Simplified to 0</code></pre>
+                    </div>
+                </div>
             </section>
 
             <!-- 2. Quickstart & Install -->

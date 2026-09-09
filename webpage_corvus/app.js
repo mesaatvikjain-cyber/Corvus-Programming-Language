@@ -27,7 +27,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 2. Real-time Documentation Search
+    // 2. Interactive Version Tutorial Tabs
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const targetTab = btn.getAttribute('data-tab');
+
+            tabBtns.forEach((b) => b.classList.remove('active'));
+            tabContents.forEach((c) => c.classList.remove('active'));
+
+            btn.classList.add('active');
+            const activeContent = document.getElementById(targetTab);
+            if (activeContent) {
+                activeContent.classList.add('active');
+            }
+        });
+    });
+
+    // 3. Real-time Documentation Search
     const searchInput = document.getElementById('doc-search');
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
@@ -45,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Active Sidebar Link Tracking on Scroll
+    // 4. Active Sidebar Link Tracking on Scroll
     const observerOptions = {
         root: null,
         rootMargin: '-20% 0px -70% 0px',
