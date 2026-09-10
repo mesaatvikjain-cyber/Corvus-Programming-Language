@@ -1,0 +1,22 @@
+// 09_pipeline_and_pattern_matching.crv
+// Demonstrating Pipeline Operator (|>) & Pattern Matching (match/case)
+
+// 1. Pipeline Operator (|>) Data Chaining
+set int; val = 10
+set lmb; double_fn = lmb[x] => x * 2
+set lmb; add_ten = lmb[x] => x + 10
+
+set int; chained_res = val |> double_fn |> add_ten
+log("Chained result (10 * 2 + 10):")
+log(chained_res)
+
+// 2. Structural Pattern Matching
+set int; status_code = 404
+
+log("Pattern matching status code:")
+match status_code [
+    case 200 => log("Status 200: OK Success")
+    case 404 => log("Status 404: Resource Not Found")
+    case 500 => log("Status 500: Server Error")
+    else => log("Status Unknown")
+]

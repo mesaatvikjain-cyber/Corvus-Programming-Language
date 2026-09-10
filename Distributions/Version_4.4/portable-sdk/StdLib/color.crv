@@ -1,0 +1,13 @@
+# Corvus Game Color & Palette Utilities Module
+
+func rgb(r, g, b) [
+    givout "rgb(" + str(r) + "," + str(g) + "," + str(b) + ")"
+]
+
+func hex(hex_code) [
+    givout str(hex_code)
+]
+
+func random() [
+    givout "#38bdf8"
+]

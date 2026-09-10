@@ -12,6 +12,7 @@ dist/
 # Binary & Assembly Build Outputs
 *.obj
 *.exe
+!Distributions/**/*.exe
 *.asm
 
 # IDE files

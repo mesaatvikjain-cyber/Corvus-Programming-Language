@@ -19,25 +19,38 @@
 
 ---
 
-## 🛠️ Automated Cross-Platform Installers (v1.1 - v4.3)
+## 📦 Zero-Dependency Standalone Distributions & Portable SDK (v4.4)
+
+Corvus now ships with **100% zero-dependency, standalone native executables** and a **portable SDK bundle** inside [`Distributions/Version_4.4/`](Distributions/Version_4.4/README.md). **No Python installation is required!**
+
+* **🌟 Tier 1: Standalone Single-File Executables (`standalone/`)**:
+  - `corvus.exe` — Self-contained Corvus Interpreter, REPL, Linter, Formatter, and Profiler.
+  - `corvusc.exe` — Self-contained C99 Native Compiler driver with `-O3` pipeline optimization.
+  - One-click installer: Run `.\Distributions\Version_4.4\install_standalone_windows.ps1` (or `bash install_standalone_linux.sh` / `bash install_standalone_macos.sh`).
+* **🧰 Tier 2: All-in-One Portable SDK (`portable-sdk/`)**:
+  - Includes `bin/corvus.bat`, `bin/corvusc.bat`, standard library (`StdLib/`), examples, and zero-config embedded runtime bootstrap.
+
+---
+
+## 🛠️ Automated Cross-Platform Installers (v1.1 - v4.4)
 
 Corvus includes self-contained automated installer scripts for **Windows** (PowerShell), **Linux** (Bash), and **macOS** (Zsh/Bash) for **every single version release**!
 
 ### Quick One-Line Install Command
-* **Windows (PowerShell Master Installer)**:
+* **Windows (PowerShell Master Installer — includes Option [0] Standalone Native Binaries)**:
   ```powershell
   .\install_windows.ps1
   ```
-* **Linux (Master Installer)**:
+* **Linux (Master Installer — includes Option [0] Standalone Binaries)**:
   ```bash
   bash install_linux.sh
   ```
-* **macOS (Master Installer)**:
+* **macOS (Master Installer — includes Option [0] Standalone Binaries)**:
   ```bash
   bash install_macos.sh
   ```
 
-For detailed version-by-version installation steps, see [Documentation/INSTALLATION_GUIDE.md](Documentation/INSTALLATION_GUIDE.md).
+For detailed version-by-version installation steps, see [Documentation/INSTALLATION_GUIDE.md](Documentation/INSTALLATION_GUIDE.md) and [Distributions/Version_4.4/README.md](Distributions/Version_4.4/README.md).
 
 ---
 

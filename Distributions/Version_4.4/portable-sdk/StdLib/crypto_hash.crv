@@ -1,0 +1,9 @@
+# Corvus Cryptographic Hash Module (MD5 & SHA-256)
+
+func md5(data) [
+    givout crypto.md5(data)
+]
+
+func sha256(data) [
+    givout crypto.sha256(data)
+]

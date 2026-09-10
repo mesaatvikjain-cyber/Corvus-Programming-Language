@@ -1,0 +1,12 @@
+# Corvus Command-Line Argument & Flag Parser Module
+
+func parse_args(args_list) [
+    var flags = {}
+    for i in range(len(args_list)) [
+        var item = args_list[i]
+        if (regex.match("^--", item)) [
+            flags[item] = 1
+        ]
+    ]
+    givout flags
+]

@@ -1,49 +1,58 @@
-﻿# Corvus Master Windows Installer (Multi-Version Selector)
-Write-Host ========================================================== -ForegroundColor Cyan
-Write-Host  Corvus Programming Language Master Windows Installer  -ForegroundColor Cyan
-Write-Host ========================================================== -ForegroundColor Cyan
+# Corvus Master Windows Installer (Multi-Version Selector)
+Write-Host "==========================================================" -ForegroundColor Cyan
+Write-Host "   Corvus Programming Language Master Windows Installer     " -ForegroundColor Cyan
+Write-Host "==========================================================" -ForegroundColor Cyan
 
- = Get-Command python -ErrorAction SilentlyContinue
-if (-not ) {
-    Write-Host [ERROR] Python 3 is required but was not found in PATH. -ForegroundColor Red
-    Write-Host Please install Python 3.8+ from https://www.python.org/ or 'winget install Python.Python.3.11' -ForegroundColor Yellow
+$pythonCmd = Get-Command python -ErrorAction SilentlyContinue
+
+Write-Host "`nSelect Corvus Installation Package:" -ForegroundColor Yellow
+Write-Host "  [0] Standalone Native Binaries v4.4 (Zero Python Required) [RECOMMENDED]" -ForegroundColor Green
+Write-Host "  [1] Version 4.4 (Universal Dual Syntax & Smart Type Inference) [DEFAULT]"
+Write-Host "  [2] Version 4.3 (AI/ML Stack, 30+ StdLib Modules & Rust Diagnostics)"
+Write-Host "  [3] Version 4.2 (Desktop 2D Graphics & Murder of Crows Concurrency)"
+Write-Host "  [4] Version 4.1 (Super Optimizer Engine & Assembly Peephole)"
+Write-Host "  [5] Version 4.0 (Native StdLib Expansion & REPL)"
+Write-Host "  [6] Version 3.1 (Enterprise Error Resilience)"
+Write-Host "  [7] Version 3.0 (Self-Hosted Compiler & Concurrency)"
+Write-Host "  [8] Version 2.0 (Multi-Platform Native Assembly)"
+Write-Host "  [9] Version 1.1 (AST Visitor Interpreter)"
+
+$choice = Read-Host "`nEnter selection (0-9) [Default: 0]"
+if ([string]::IsNullOrWhiteSpace($choice)) { $choice = "0" }
+
+if ($choice -eq "0") {
+    $installer = Join-Path $PSScriptRoot "Distributions\Version_4.4\install_standalone_windows.ps1"
+    if (Test-Path $installer) {
+        Write-Host "`n[EXECUTING] Launching Standalone Native Binaries Installer..." -ForegroundColor Green
+        & $installer
+        Exit 0
+    }
+}
+
+if (-not $pythonCmd) {
+    Write-Host "[ERROR] Python 3 is required for source installations but was not found in PATH." -ForegroundColor Red
+    Write-Host "Tip: Choose option [0] to install Standalone Native Binaries with zero Python required!" -ForegroundColor Yellow
     Exit 1
 }
 
-Write-Host 
-Select Corvus Version to Install: -ForegroundColor Yellow
-Write-Host  [1] Version 4.3 (Latest AI/ML Stack, 30+ StdLib Modules & Rust Diagnostics) [DEFAULT]
-Write-Host  [2] Version 4.2 (Desktop 2D Graphics & Murder of Crows Concurrency)
-Write-Host  [3] Version 4.1 (Super Optimizer Engine & Assembly Peephole)
-Write-Host  [4] Version 4.0 (Native StdLib Expansion & REPL)
-Write-Host  [5] Version 3.1 (Enterprise Error Resilience)
-Write-Host  [6] Version 3.0 (Self-Hosted Compiler & Concurrency)
-Write-Host  [7] Version 2.0 (Multi-Platform Native Assembly)
-Write-Host  [8] Version 1.1 (AST Visitor Interpreter)
-
- = Read-Host 
-Enter selection (1-8) [Default: 1]
-if ([string]::IsNullOrWhiteSpace()) {  = 1 }
-
- = switch () {
-    1 { Version_4.3 }
-    2 { Version_4.2 }
-    3 { Version_4.1 }
-    4 { Version_4.0 }
-    5 { Version_3.1 }
-    6 { Version_3.0 }
-    7 { Version_2.0 }
-    8 { Version_1.1 }
-    default { Version_4.3 }
+$verFolder = switch ($choice) {
+    "1" { "Version_4.4" }
+    "2" { "Version_4.3" }
+    "3" { "Version_4.2" }
+    "4" { "Version_4.1" }
+    "5" { "Version_4.0" }
+    "6" { "Version_3.1" }
+    "7" { "Version_3.0" }
+    "8" { "Version_2.0" }
+    "9" { "Version_1.1" }
+    default { "Version_4.4" }
 }
 
- = 
- = Join-Path  \install_windows.ps1
+$targetInstaller = Join-Path $PSScriptRoot "$verFolder\install_windows.ps1"
 
-if (Test-Path ) {
-    Write-Host 
-[EXECUTING] Launching installer for ... -ForegroundColor Green
-    & 
+if (Test-Path $targetInstaller) {
+    Write-Host "`n[EXECUTING] Launching installer for $verFolder..." -ForegroundColor Green
+    & $targetInstaller
 } else {
-    Write-Host [ERROR] Could not locate installer script at  -ForegroundColor Red
+    Write-Host "[ERROR] Could not locate installer script at $targetInstaller" -ForegroundColor Red
 }
