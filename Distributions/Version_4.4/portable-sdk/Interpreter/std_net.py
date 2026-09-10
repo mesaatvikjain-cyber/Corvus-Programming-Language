@@ -2,8 +2,30 @@ import urllib.request
 import urllib.parse
 import socket
 import json
+import re
 
 # Corvus Native Network Standard Library Engine (v4.2)
+
+def build_validated_url(base_url: str) -> str:
+    try:
+        # Minimal path validation
+        if "/../" in base_url or re.search(r"/%2e%2e/", base_url, re.IGNORECASE):
+            raise ValueError("Invalid path")
+        
+        parsed = urllib.parse.urlparse(base_url)
+        
+        # Protocol + host checks
+        if parsed.scheme not in ("http", "https"):
+            raise ValueError("Invalid protocol")
+        if not parsed.hostname:
+            raise ValueError("Invalid host")
+        allowed_domains = ["example.com"]  # add your allowed domains here
+        if parsed.hostname.lower() not in allowed_domains:
+            raise ValueError("Invalid host")
+        
+        return urllib.parse.urlunparse(parsed)
+    except Exception:
+        raise ValueError("Invalid URL")
 
 class NetworkEngine:
     @staticmethod
@@ -24,6 +46,7 @@ class NetworkEngine:
 
     @staticmethod
     def http_post(url, body="", headers=None):
+        validated_url = build_validated_url(url)
         headers = headers or {}
         if isinstance(body, dict):
             body_bytes = json.dumps(body).encode('utf-8')
@@ -33,7 +56,7 @@ class NetworkEngine:
         else:
             body_bytes = str(body).encode('utf-8')
 
-        req = urllib.request.Request(url, data=body_bytes, headers=headers, method='POST')
+        req = urllib.request.Request(validated_url, data=body_bytes, headers=headers, method='POST')
         try:
             with urllib.request.urlopen(req, timeout=10) as response:
                 res_body = response.read().decode('utf-8', errors='replace')
