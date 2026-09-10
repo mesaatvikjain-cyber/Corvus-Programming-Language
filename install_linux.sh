@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 # Corvus Master Linux Installer (Multi-Version Selector)
 
 echo "=========================================================="
@@ -53,7 +53,7 @@ case $CHOICE in
     *) VER_FOLDER="Version_4.5" ;;
 esac
 
-TARGET_INSTALLER="$SCRIPT_DIR/$VER_FOLDER/install_linux.sh"
+TARGET_INSTALLER="$SCRIPT_DIR/versions/$VER_FOLDER/install_linux.sh"
 
 if [ -f "$TARGET_INSTALLER" ]; then
     echo "[EXECUTING] Launching installer for $VER_FOLDER..."

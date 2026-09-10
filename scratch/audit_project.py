@@ -55,7 +55,15 @@ for crv_file in crv_files:
     interpreter_to_use = os.path.join(project_root, "Interpreter", "Corvus.py")
     
     parts = rel_path.split(os.sep)
-    if parts[0].startswith("Version_"):
+    if parts[0] == "versions" and len(parts) > 1 and parts[1].startswith("Version_"):
+        v_dir = os.path.join(project_root, "versions", parts[1])
+        cand1 = os.path.join(v_dir, "Interpreter", "Corvus.py")
+        cand2 = os.path.join(v_dir, "Corvus.py")
+        if os.path.exists(cand1):
+            interpreter_to_use = cand1
+        elif os.path.exists(cand2):
+            interpreter_to_use = cand2
+    elif parts[0].startswith("Version_"):
         v_dir = os.path.join(project_root, parts[0])
         cand1 = os.path.join(v_dir, "Interpreter", "Corvus.py")
         cand2 = os.path.join(v_dir, "Corvus.py")

@@ -1,4 +1,4 @@
-﻿# Corvus Master Windows Installer (Multi-Version Selector)
+# Corvus Master Windows Installer (Multi-Version Selector)
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host "   Corvus Programming Language Master Windows Installer     " -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor Cyan
@@ -50,7 +50,7 @@ $verFolder = switch ($choice) {
     default { "Version_4.5" }
 }
 
-$targetInstaller = Join-Path $PSScriptRoot "$verFolder\install_windows.ps1"
+$targetInstaller = Join-Path $PSScriptRoot "versions\$verFolder\install_windows.ps1"
 
 if (Test-Path $targetInstaller) {
     Write-Host "`n[EXECUTING] Launching installer for $verFolder..." -ForegroundColor Green

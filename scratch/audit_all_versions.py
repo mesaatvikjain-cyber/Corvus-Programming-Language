@@ -80,7 +80,9 @@ for crv in all_crv_files:
     parts = rel_p.split(os.sep)
     
     version_dir = project_root
-    if parts[0].startswith("Version_"):
+    if parts[0] == "versions" and len(parts) > 1 and parts[1].startswith("Version_"):
+        version_dir = os.path.join(project_root, "versions", parts[1])
+    elif parts[0].startswith("Version_"):
         version_dir = os.path.join(project_root, parts[0])
 
     lexer_mod, parser_mod = load_version_lexer_parser(version_dir)

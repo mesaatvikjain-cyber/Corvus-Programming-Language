@@ -1,4 +1,4 @@
-﻿# 🧭 Corvus Repository Architecture & Directory Guide
+# 🧭 Corvus Repository Architecture & Directory Guide
 
 Welcome to the Corvus codebase! This guide is designed to help contributors, users, and language researchers easily navigate the directory layout and understand how the various components and execution engines interact.
 
@@ -27,7 +27,17 @@ Corvus/
 ├── Examples-and-Tests/   # 🧪 Test suites and real-world example programs
 ├── Editor-Extension/     # 💻 Visual Studio Code syntax & language diagnostics extension
 ├── bin/                  # 🚀 Command-line wrapper scripts (corvus, corvusc)
-├── Version_1.1/ to 4.5/  # 📜 Self-contained historical release snapshots
+├── versions/             # 📜 Historical release snapshots (v1.1 through v4.5)
+│   ├── Version_1.1/      # Reference AST visitor interpreter & OOP
+│   ├── Version_2.0/      # Multi-platform NASM assembly compiler
+│   ├── Version_3.0/      # Self-hosted compiler & "Murder of Crows" concurrency
+│   ├── Version_3.1/      # Visual stack tracebacks & panic-mode recovery
+│   ├── Version_4.0/      # Native standard library expansion & REPL
+│   ├── Version_4.1/      # Super high-level IR optimization engine
+│   ├── Version_4.2/      # Desktop 2D graphics canvas & event loop
+│   ├── Version_4.3/      # AI/ML suite, 30+ stdlib modules & diagnostics
+│   ├── Version_4.4/      # Modern dual bracket syntax & smart type inference
+│   └── Version_4.5/      # Corvus Bytecode VM & .crvc binary compiler
 ├── install_windows.ps1   # 🪟 Interactive master Windows installer (all versions)
 ├── install_linux.sh      # 🐧 Interactive master Linux installer (all versions)
 ├── install_macos.sh      # 🍏 Interactive master macOS installer (all versions)
@@ -86,8 +96,8 @@ Pre-packaged standalone bundles for end users who do not have Python installed:
 * `Documentation/webpage_corvus/`: Canonical HTML/CSS/JS source of the master interactive documentation website.
 * `docs/`: Deployment target for GitHub Pages hosting.
 
-### 6. `Version_1.1/` through `Version_4.5/`
-Stand-alone snapshots preserving each evolutionary generation of Corvus. Each directory has its own dedicated interpreter, compiler, test suite, and platform installers for reproducibility and regression testing.
+### 6. `versions/` (`Version_1.1/` through `Version_4.5/`)
+Dedicated directory grouping all 10 historical release snapshots of Corvus. Each version snapshot is fully isolated with its own dedicated interpreter, compiler, test suite, and platform installers for reproducibility, educational reference, and regression testing.
 
 ---
 

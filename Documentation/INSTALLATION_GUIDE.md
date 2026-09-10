@@ -1,4 +1,4 @@
-﻿# 🛠️ Corvus Automated Installation Guide (Windows, Linux, macOS)
+# 🛠️ Corvus Automated Installation Guide (Windows, Linux, macOS)
 
 Corvus provides automated, self-contained cross-platform installers for **every single version release** (v1.1, v2.0, v3.0, v3.1, v4.0, v4.1, v4.2, v4.3, v4.4, and v4.5) as well as **zero-dependency standalone native binaries**.
 
@@ -55,13 +55,13 @@ This presents an interactive menu where you can choose:
 To install a specific version directly and register CLI wrappers (`corvus`, `corvusc`) in your user PATH:
 ```powershell
 # Install Version 4.5 (Latest: Bytecode VM, .crvc Compiler & Disassembler)
-.\Version_4.5\install_windows.ps1
+.\versions\Version_4.5\install_windows.ps1
 
 # Install Version 4.4 (Modern Ergonomics, Dual Brackets & Inference)
-.\Version_4.4\install_windows.ps1
+.\versions\Version_4.4\install_windows.ps1
 
 # Install Version 4.3 (AI/ML Suite, Parity & Diagnostics)
-.\Version_4.3\install_windows.ps1
+.\versions\Version_4.3\install_windows.ps1
 ```
 
 ---
@@ -77,13 +77,13 @@ bash install_linux.sh
 ### Version-Specific Direct Installers
 ```bash
 # Install Version 4.5 (Latest)
-bash Version_4.5/install_linux.sh
+bash versions/Version_4.5/install_linux.sh
 
 # Install Version 4.4
-bash Version_4.4/install_linux.sh
+bash versions/Version_4.4/install_linux.sh
 
 # Install Version 4.3
-bash Version_4.3/install_linux.sh
+bash versions/Version_4.3/install_linux.sh
 ```
 
 ---
@@ -99,11 +99,11 @@ bash install_macos.sh
 ### Version-Specific Direct Installers
 ```bash
 # Install Version 4.5 (Latest)
-bash Version_4.5/install_macos.sh
+bash versions/Version_4.5/install_macos.sh
 
 # Install Version 4.4
-bash Version_4.4/install_macos.sh
+bash versions/Version_4.4/install_macos.sh
 
 # Install Version 4.3
-bash Version_4.3/install_macos.sh
+bash versions/Version_4.3/install_macos.sh
 ```

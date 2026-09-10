@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +32,7 @@
                 <div class="sidebar-title">Getting Started</div>
                 <ul class="sidebar-nav">
                     <li><a href="#intro">1. Introduction & Story</a></li>
-                    <li><a href="#wasm-playground" style="color: var(--accent-green); font-weight: 600;">⚡ Wasm Interactive Playground</a></li>
+                    <li><a href="#wasm-playground" style="color: var(--accent-green); font-weight: 600;">âš¡ Wasm Interactive Playground</a></li>
                     <li><a href="#quickstart">2. Quickstart & Install</a></li>
                     <li><a href="#cheatsheet">Quick Cheat Sheet</a></li>
                 </ul>
@@ -82,14 +82,14 @@
                 <p>Welcome to the official master documentation and interactive tutorial hub for the <strong>Corvus Programming Language</strong>!</p>
                 <div class="callout info">
                     <div class="callout-title">The Story Behind Corvus</div>
-                    <p><em>"I got inspired to build my own programming language after watching a video about a programmer who created G# and C#, and a video by AstroSam. Since I already knew Python, I decided to take on the challenge and build my very own programming language from scratch!"</em><br>— <strong>Saatvik Jain</strong> (Creator of Corvus)</p>
+                    <p><em>"I got inspired to build my own programming language after watching a video about a programmer who created G# and C#, and a video by AstroSam. Since I already knew Python, I decided to take on the challenge and build my very own programming language from scratch!"</em><br>â€” <strong>Saatvik Jain</strong> (Creator of Corvus)</p>
                 </div>
                 <p>Corvus introduces a distinctive syntax using <strong>square brackets <code>[ ... ]</code> for code blocks</strong> and reserving <strong>curly braces <code>{ ... }</code> for native lists</strong>. Over 6 major release iterations (v1.1 to v4.1), Corvus has evolved from an interpreted prototype into a multi-platform systems language featuring Three-Address Code (TAC) IR optimization, a self-hosted compiler, native C FFI, scope memory ref-counting, and a native assembly compiler generating 64-bit binaries for Windows, Linux, and macOS!</p>
             </section>
 
             <!-- Interactive WebAssembly (Wasm) Playground -->
             <section id="wasm-playground" class="doc-section">
-                <h1>⚡ Interactive Corvus WebAssembly (Wasm) Playground</h1>
+                <h1>âš¡ Interactive Corvus WebAssembly (Wasm) Playground</h1>
                 <p>Experience Corvus right in your browser! Powered by in-browser client-side WebAssembly, this interactive playground parses, interprets, and executes Corvus code live in your browser sandbox with zero installation.</p>
 
                 <div class="playground-container">
@@ -106,7 +106,7 @@
                                 <option value="graphics_demo">v4.2 Zero-Config Desktop 2D Graphics</option>
                             </select>
                         </div>
-                        <button id="run-wasm-btn" class="run-btn">▶ Run Code (Wasm)</button>
+                        <button id="run-wasm-btn" class="run-btn">â–¶ Run Code (Wasm)</button>
                     </div>
 
                     <div class="playground-grid">
@@ -122,7 +122,7 @@
                                 <span>Terminal Console Output</span>
                                 <span id="wasm-status-badge" class="status-badge">Ready</span>
                             </div>
-                            <pre id="wasm-terminal-output" class="terminal-output">Click "▶ Run Code (Wasm)" to initialize Wasm engine &amp; execute program...</pre>
+                            <pre id="wasm-terminal-output" class="terminal-output">Click "â–¶ Run Code (Wasm)" to initialize Wasm engine &amp; execute program...</pre>
                         </div>
                     </div>
                 </div>
@@ -218,14 +218,14 @@ match (res) [
 ]
 
 # Build Native Binary
-# python Version_2.0/Compiler/CorvusC.py script.crv --target windows -r</code></pre>
+# python versions/Version_2.0/Compiler/CorvusC.py script.crv --target windows -r</code></pre>
                     </div>
                 </div>
 
                 <!-- Tab v3.0 -->
                 <div id="tab-v30" class="tab-content">
                     <h2>v3.0 Tutorial: Concurrency, C FFI & Self-Hosted Compiler</h2>
-                    <p>Explore multi-threaded worker pools ("Murder of Crows" 🐦), native C FFI, and pure Corvus compiler self-hosting.</p>
+                    <p>Explore multi-threaded worker pools ("Murder of Crows" ðŸ¦), native C FFI, and pure Corvus compiler self-hosting.</p>
                     <div class="code-wrapper">
                         <pre><code># Concurrent Thread Pools with crow
 func worker_task() [
@@ -269,7 +269,7 @@ var fact = math.factorial(5)  # 120
 var padded = string.pad_left("Corvus", 10, " ")
 
 # Interactive REPL Command
-# python Version_4.0/Interpreter/Corvus.py --repl
+# python versions/Version_4.0/Interpreter/Corvus.py --repl
 # corvus> .vars</code></pre>
                     </div>
                 </div>
@@ -323,7 +323,7 @@ set any; activated = torch.relu(t)
 log("PyTorch ReLU:", activated)
 
 # Terminal Error Explanation
-# python Version_4.3/Interpreter/Corvus.py --explain E0101</code></pre>
+# python versions/Version_4.3/Interpreter/Corvus.py --explain E0101</code></pre>
                     </div>
                 </div>
 
@@ -387,13 +387,13 @@ match count {
                 <h2>Running Corvus Commands</h2>
                 <div class="code-wrapper">
                     <pre><code># Launch Interactive REPL Shell (v4.1)
-python Version_4.1/Interpreter/Corvus.py --repl
+python versions/Version_4.1/Interpreter/Corvus.py --repl
 
 # Run a Corvus script with the Interpreter
-python Version_4.1/Interpreter/Corvus.py Version_4.1/Examples-and-Tests/13_super_optimization_suite.crv
+python versions/Version_4.1/Interpreter/Corvus.py versions/Version_4.1/Examples-and-Tests/13_super_optimization_suite.crv
 
 # Compile script to Standalone 64-bit Windows Executable (.exe)
-python Version_4.1/Compiler_Windows/CorvusC_win64.py Version_4.1/Examples-and-Tests/13_super_optimization_suite.crv</code></pre>
+python versions/Version_4.1/Compiler_Windows/CorvusC_win64.py versions/Version_4.1/Examples-and-Tests/13_super_optimization_suite.crv</code></pre>
                 </div>
             </section>
 
@@ -530,7 +530,7 @@ log("Allocated Bytes: " + str(stats.allocated))</code></pre>
 
             <!-- 9. "Murder of Crows" Concurrency Engine -->
             <section id="concurrency" class="doc-section">
-                <h1>9. "Murder of Crows" 🐦 Concurrency Engine</h1>
+                <h1>9. "Murder of Crows" ðŸ¦ Concurrency Engine</h1>
                 <p>Corvus includes a built-in multi-threaded concurrency engine called <strong>"Murder of Crows"</strong> (<code>crow</code> module) with asynchronous task spawning (<code>crow.fly</code>), synchronization (<code>crow.flock</code>), and message channels (<code>crow.channel</code>).</p>
                 <div class="code-wrapper">
                     <pre><code># Spawn concurrent worker tasks
@@ -626,7 +626,7 @@ ffi.call(MessageBox, {0, "Hello from Native Corvus C FFI!", "Corvus FFI", 0})</c
                 <p>Developer tooling for Corvus includes a dedicated VS Code extension (v0.3.0) and an interactive REPL shell.</p>
                 <h2>Interactive REPL Shell Directives</h2>
                 <div class="code-wrapper">
-                    <pre><code>python Version_4.1/Interpreter/Corvus.py --repl
+                    <pre><code>python versions/Version_4.1/Interpreter/Corvus.py --repl
 
 corvus> .help    # Show REPL directives
 corvus> .vars    # Display active variables & values
@@ -636,7 +636,7 @@ corvus> .reset   # Reset environment state
 corvus> .exit    # Exit REPL</code></pre>
                 </div>
                 <h2>VS Code Extension v0.3.0</h2>
-                <p>Features real-time syntax checking/linter on file save, direct code execution commands, and integrated status bar launcher (<code>▶ Run Corvus</code>). Download the extension package: <a href="../../Editor-Extension/corvus-language-support-0.3.0.vsix">corvus-language-support-0.3.0.vsix</a>.</p>
+                <p>Features real-time syntax checking/linter on file save, direct code execution commands, and integrated status bar launcher (<code>â–¶ Run Corvus</code>). Download the extension package: <a href="../../Editor-Extension/corvus-language-support-0.3.0.vsix">corvus-language-support-0.3.0.vsix</a>.</p>
             </section>
 
             <!-- 15. Version 4.2 Desktop Graphics & Murder of Crows Engine -->
@@ -702,21 +702,21 @@ corvus> .exit    # Exit REPL</code></pre>
 
                 <h2>Playable Showcase Desktop Games &amp; Demos</h2>
                 <ul>
-                    <li><code>Version_4.2/Examples-and-Tests/01_snake_game.crv</code>: Playable Snake desktop game with score counter and food generation.</li>
-                    <li><code>Version_4.2/Examples-and-Tests/02_crow_particles.crv</code>: Multi-threaded particle physics simulator powered by Murder of Crows parallel worker threads.</li>
-                    <li><code>Version_4.2/Examples-and-Tests/03_pong_game.crv</code>: 2-player desktop Pong game with collision bouncing and score tracking.</li>
+                    <li><code>versions/Version_4.2/Examples-and-Tests/01_snake_game.crv</code>: Playable Snake desktop game with score counter and food generation.</li>
+                    <li><code>versions/Version_4.2/Examples-and-Tests/02_crow_particles.crv</code>: Multi-threaded particle physics simulator powered by Murder of Crows parallel worker threads.</li>
+                    <li><code>versions/Version_4.2/Examples-and-Tests/03_pong_game.crv</code>: 2-player desktop Pong game with collision bouncing and score tracking.</li>
                 </ul>
 
                 <h2>Version 4.2 Automated Installers</h2>
                 <div class="cheatsheet-grid">
                     <div class="cheat-card">
                         <h3>Windows Installer (PowerShell)</h3>
-                        <pre><code>powershell -ExecutionPolicy Bypass -File Version_4.2/install_windows.ps1</code></pre>
+                        <pre><code>powershell -ExecutionPolicy Bypass -File versions/Version_4.2/install_windows.ps1</code></pre>
                     </div>
                     <div class="cheat-card">
                         <h3>Linux &amp; macOS Installers</h3>
-                        <pre><code>bash Version_4.2/install_linux.sh
-bash Version_4.2/install_macos.sh</code></pre>
+                        <pre><code>bash versions/Version_4.2/install_linux.sh
+bash versions/Version_4.2/install_macos.sh</code></pre>
                     </div>
                 </div>
             </section>
@@ -761,12 +761,12 @@ log("Activated Tensors:", relu_out)</code></pre>
                 <div class="cheatsheet-grid">
                     <div class="cheat-card">
                         <h3>Windows Master / Direct Installer</h3>
-                        <pre><code>powershell -ExecutionPolicy Bypass -File Version_4.3/install_windows.ps1</code></pre>
+                        <pre><code>powershell -ExecutionPolicy Bypass -File versions/Version_4.3/install_windows.ps1</code></pre>
                     </div>
                     <div class="cheat-card">
                         <h3>Linux &amp; macOS Installers</h3>
-                        <pre><code>bash Version_4.3/install_linux.sh
-bash Version_4.3/install_macos.sh</code></pre>
+                        <pre><code>bash versions/Version_4.3/install_linux.sh
+bash versions/Version_4.3/install_macos.sh</code></pre>
                     </div>
                 </div>
             </section>
@@ -778,3 +778,4 @@ bash Version_4.3/install_macos.sh</code></pre>
     <script src="wasm_playground.js"></script>
 </body>
 </html>
+
