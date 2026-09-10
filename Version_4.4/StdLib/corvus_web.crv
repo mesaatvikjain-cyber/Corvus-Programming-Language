@@ -1,0 +1,20 @@
+# Corvus Micro Web Server Framework
+
+cls App() [
+    var routes = {}
+
+    func get(path, handler) [
+        self.routes["GET:" + path] = handler
+        givout self
+    ]
+
+    func post(path, handler) [
+        self.routes["POST:" + path] = handler
+        givout self
+    ]
+
+    func listen(port) [
+        log("Corvus Micro Web Application running on http://127.0.0.1:" + str(port))
+        givout 1
+    ]
+]

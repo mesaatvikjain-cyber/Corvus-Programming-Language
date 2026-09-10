@@ -1,0 +1,9 @@
+# Corvus Standard JSON Module (v4.2)
+
+func parse(json_str) [
+    givout json.parse(json_str)
+]
+
+func stringify(obj) [
+    givout json.stringify(obj)
+]

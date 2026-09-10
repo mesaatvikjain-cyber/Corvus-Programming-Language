@@ -29,9 +29,11 @@
 
 ## 🌟 Key Features
 
+* **🔄 Universal Dual Syntax (v4.4)**: Seamlessly supports mainstream `{ ... }` blocks and `[ ... ]` lists as well as classic `[ ... ]` blocks and `{ ... }` lists — zero breaking changes!
+* **🧠 Smart Type Inference (v4.4)**: Declare variables cleanly with `set name = value` or `const PI = 3.14159` without boilerplate type tokens or mandatory semicolons.
 * **⚡ 100% Compiler-Interpreter Feature Parity**: Run scripts dynamically via the Interpreter or compile to standalone `-O3` native C99/assembly executables with identical execution semantics.
-* **📦 Explicit Scope Delimiters**: Code blocks use brackets `[ ... ]` for clean, unambiguous scope boundaries.
-* **🏷️ Explicit Type Declarations**: `set <type>; name = value` for typed variables and `set const; NAME = value` for immutable constants.
+* **📦 Explicit Scope Delimiters**: Code blocks can use `{ ... }` or `[ ... ]` for clean, unambiguous scope boundaries.
+* **🏷️ Flexible & Explicit Type Declarations**: Inferred `set name = value`, modern `set int count = 42`, or classic `set <type>; name = value`.
 * **🚀 AST Optimization Engine**: Constant folding, algebraic simplification ($x \times 0 \to 0, x \times 1 \to x$), and dead branch pruning (`--optimize`).
 * **✨ Modern Syntax**: Formatted string interpolation (`f"Hello {name}, score: {val * 2}"`) and inline ternary expressions (`cond ? tru_val : fal_val`).
 * **🎯 Rust-Style Error Diagnostics**: Catalog with `--explain <CODE>`, Levenshtein typo heuristics, and `--ai-fix` console assistant.
@@ -40,7 +42,7 @@
 * **🎨 Zero-Config Desktop 2D Graphics**: Cross-platform canvas windows, shapes, and 60 FPS event loop via `graphics.crv`.
 * **⚡ First-Class Lambdas**: Inline and block lambdas (`\x, y -> x * y`) with functional pipelines (`|>`).
 * **🧬 Object-Oriented Programming & Dictionaries**: Classes, instance dispatch, and dynamic key-value dictionaries `{"key": "val"}` with index access.
-* **🛡️ Structured Exception Recovery**: `try [ ... ] error(e) [ ... ] final [ ... ]` blocks.
+* **🛡️ Structured Exception Recovery**: `try { ... } error(e) { ... } final { ... }` or `try [ ... ] error(e) [ ... ] final [ ... ]`.
 * **📚 30+ Native Standard Modules**: Deep standard library spanning AI, networking, crypto, system control, data formats, and math.
 
 ---

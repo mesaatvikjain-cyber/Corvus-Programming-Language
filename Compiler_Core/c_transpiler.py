@@ -602,7 +602,8 @@ class CTranspiler:
                 tgt = self.transpile_expr(stmt.target.target)
                 idx = self.transpile_expr(stmt.target.index)
                 return f"if ({tgt}.type == VAL_DICT) corvus_dict_set(&{tgt}, {idx}, {val_code}); else if ({tgt}.type == VAL_LIST) {tgt}.l.items[{idx}.i] = {val_code};"
-            return f"{stmt.target} = {val_code};"
+            target_name = stmt.target.name if isinstance(stmt.target, IdentifierNode) else str(stmt.target)
+            return f"{target_name} = {val_code};"
 
         elif isinstance(stmt, FuncCallNode):
             return f"{self.transpile_expr(stmt)};"
@@ -691,13 +692,19 @@ class CTranspiler:
                 prefix = "if" if idx == 0 else "else if"
                 lines.append(f"  {prefix} (!_m_matched && corvus_is_true(corvus_eq(_m_tgt, {p_code}))) {{")
                 lines.append("    _m_matched = true;")
-                for s in case.body.statements:
-                    lines.append(f"    {self.transpile_statement(s)}")
+                if isinstance(case.body, BlockNode):
+                    for s in case.body.statements:
+                        lines.append(f"    {self.transpile_statement(s)}")
+                else:
+                    lines.append(f"    {self.transpile_statement(case.body)}")
                 lines.append("  }")
             if stmt.default_branch:
                 lines.append("  if (!_m_matched) {")
-                for s in stmt.default_branch.statements:
-                    lines.append(f"    {self.transpile_statement(s)}")
+                if isinstance(stmt.default_branch, BlockNode):
+                    for s in stmt.default_branch.statements:
+                        lines.append(f"    {self.transpile_statement(s)}")
+                else:
+                    lines.append(f"    {self.transpile_statement(stmt.default_branch)}")
                 lines.append("  }")
             lines.append("}")
             return "\n    ".join(lines)

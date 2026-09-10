@@ -1,0 +1,33 @@
+# Corvus Native NumPy Numerical Computing Module
+
+func array(data) [
+    givout numpy_engine.array(data)
+]
+
+func zeros(shape) [
+    givout numpy_engine.zeros(shape)
+]
+
+func ones(shape) [
+    givout numpy_engine.ones(shape)
+]
+
+func dot(a, b) [
+    givout numpy_engine.dot(a, b)
+]
+
+func transpose(matrix) [
+    givout numpy_engine.transpose(matrix)
+]
+
+func sum(lis) [
+    givout numpy_engine.sum(lis)
+]
+
+func mean(lis) [
+    givout numpy_engine.mean(lis)
+]
+
+func std(lis) [
+    givout numpy_engine.std(lis)
+]

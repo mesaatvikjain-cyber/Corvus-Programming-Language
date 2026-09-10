@@ -1,0 +1,9 @@
+# Corvus CSV Data Matrix Parser & Formatter Module
+
+func parse(csv_str) [
+    givout { csv_str }
+]
+
+func format(rows) [
+    givout str(rows)
+]

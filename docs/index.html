@@ -176,6 +176,7 @@ var double = lambda(x) -> x*2</code></pre>
                     <button class="tab-btn" data-tab="tab-v41">Version 4.1</button>
                     <button class="tab-btn" data-tab="tab-v42">Version 4.2</button>
                     <button class="tab-btn" data-tab="tab-v43">Version 4.3</button>
+                    <button class="tab-btn" data-tab="tab-v44">Version 4.4</button>
                 </div>
 
                 <!-- Tab v1.1 -->
@@ -322,6 +323,35 @@ log("PyTorch ReLU:", activated)
 
 # Terminal Error Explanation
 # python Version_4.3/Interpreter/Corvus.py --explain E0101</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.4 -->
+                <div id="tab-v44" class="tab-content">
+                    <h2>v4.4 Tutorial: Modern Syntax Ergonomics, Universal Dual Brackets & Smart Type Inference</h2>
+                    <p>Experience mainstream developer ergonomics with universal dual syntax: use standard <code>{ ... }</code> blocks and <code>[ ... ]</code> lists or classic syntax, smart type inference (<code>set x = 10</code>), and top-level <code>const</code>.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Smart Type Inference & Constants
+set language = "Corvus"
+const VERSION = 4.4
+set count = 100
+
+# Universal Dual Brackets: standard curly braces for code blocks
+if count == 100 {
+    log("Modern block scoping with curly braces!")
+}
+
+# Universal Dual Brackets: standard square brackets for lists
+set items = [10, 20, 30]
+log("List item:", items[0])
+
+# Modern Pattern Matching with curly braces
+match count {
+    case 100 => {
+        log("Count is exactly 100")
+    }
+    else => log("Other value")
+}</code></pre>
                     </div>
                 </div>
             </section>
