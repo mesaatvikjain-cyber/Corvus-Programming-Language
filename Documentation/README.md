@@ -29,13 +29,17 @@
 
 ## 🌟 Key Features
 
+* **⚡ 100% Compiler-Interpreter Feature Parity**: Run scripts dynamically via the Interpreter or compile to standalone `-O3` native C99/assembly executables with identical execution semantics.
 * **📦 Explicit Scope Delimiters**: Code blocks use brackets `[ ... ]` for clean, unambiguous scope boundaries.
 * **🏷️ Explicit Type Declarations**: `set <type>; name = value` for typed variables and `set const; NAME = value` for immutable constants.
+* **🚀 AST Optimization Engine**: Constant folding, algebraic simplification ($x \times 0 \to 0, x \times 1 \to x$), and dead branch pruning (`--optimize`).
+* **✨ Modern Syntax**: Formatted string interpolation (`f"Hello {name}, score: {val * 2}"`) and inline ternary expressions (`cond ? tru_val : fal_val`).
 * **🎯 Rust-Style Error Diagnostics**: Catalog with `--explain <CODE>`, Levenshtein typo heuristics, and `--ai-fix` console assistant.
-* **🧠 Machine Learning & AI Suite**: Integrated `tensorflow`, `torch`, `numpy`, `pandas`, `scikit_learn`, and `transformers`.
+* **🧠 Machine Learning & Matrix Operator (`@`)**: Native 2D matrix multiplication (`@`), plus integrated `tensorflow`, `torch`, `numpy`, `pandas`, `scikit_learn`, and `transformers`.
+* **⏱️ Microbenchmark & Profiler CLI**: Accurate nanosecond execution timing, ops/sec throughput, peak RAM tracking, and AST node execution breakdown (`corvus bench`, `corvus profile`).
 * **🎨 Zero-Config Desktop 2D Graphics**: Cross-platform canvas windows, shapes, and 60 FPS event loop via `graphics.crv`.
-* **⚡ First-Class Lambdas**: Inline and block lambdas (`lmb[x] => x * 2`) with functional list transformations (`.map()`, `.filter()`).
-* **🧬 Object-Oriented Programming**: Complete support for classes (`cls Person() [ ... ]`) with `init` constructors and `self` instance dispatch.
+* **⚡ First-Class Lambdas**: Inline and block lambdas (`\x, y -> x * y`) with functional pipelines (`|>`).
+* **🧬 Object-Oriented Programming & Dictionaries**: Classes, instance dispatch, and dynamic key-value dictionaries `{"key": "val"}` with index access.
 * **🛡️ Structured Exception Recovery**: `try [ ... ] error(e) [ ... ] final [ ... ]` blocks.
 * **📚 30+ Native Standard Modules**: Deep standard library spanning AI, networking, crypto, system control, data formats, and math.
 

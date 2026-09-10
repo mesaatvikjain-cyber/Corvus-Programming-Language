@@ -669,16 +669,20 @@ bash Version_4.2/install_macos.sh</code></pre>
 
             <!-- 16. Version 4.3 AI/ML Suite & Diagnostics -->
             <section id="v43-ai-ml" class="doc-section">
-                <h1>16. Version 4.3 AI/ML Suite, 30+ StdLib Modules &amp; Rust Diagnostics</h1>
-                <p>Version 4.3 is Corvus's flagship ecosystem release: complete compiler-interpreter feature parity, first-class Machine Learning stacks, 30+ Standard Library modules, and an actionable Rust-style diagnostic engine.</p>
+                <h1>16. Version 4.3 Full Compiler Parity, AI/ML Suite &amp; Modern Toolchain</h1>
+                <p>Version 4.3 is Corvus's flagship ecosystem release: complete 100% compiler-interpreter feature parity, standalone C99 native transpiler with <code>-O3</code> optimizations, first-class Machine Learning stacks, AST optimization engine, and an actionable Rust-style diagnostic engine.</p>
 
                 <div class="callout success">
                     <div class="callout-title">Flagship v4.3 Capabilities</div>
                     <p>
-                        1. <strong>Native AI &amp; Deep Learning Engines</strong>: Full bindings for <code>tensorflow</code>, <code>torch</code>, <code>numpy</code>, <code>pandas</code>, <code>scikit_learn</code>, and <code>transformers</code>.<br>
-                        2. <strong>30+ Standard Library Modules</strong>: Spans cryptography (<code>crypto_hash</code>, <code>cipher</code>), networking (<code>http</code>, <code>net</code>, <code>url</code>), system control (<code>process</code>, <code>env</code>), and data formats (<code>json</code>, <code>csv</code>, <code>sqlite</code>, <code>yaml</code>, <code>toml</code>).<br>
-                        3. <strong>Rust-Style Diagnostic Catalog (<code>--explain &lt;CODE&gt;</code>)</strong>: Over 18 cataloged error codes with root-cause diagnostics and verified fixes.<br>
-                        4. <strong>Levenshtein Typo Matching &amp; AI-Fix (<code>--ai-fix</code>)</strong>: Suggests native Corvus keywords for habit typos and prints actionable solutions.
+                        1. <strong>100% Compiler-Interpreter Feature Parity</strong>: Run scripts dynamically in the interpreter or compile to standalone native C99/assembly executables with identical execution results.<br>
+                        2. <strong>Native Matrix Multiplication Operator (<code>@</code>)</strong>: Fast 2D matrix multiplication for lists, NumPy, and PyTorch in both interpreted and compiled native modes.<br>
+                        3. <strong>High-Performance C99 Native Transpiler (<code>-O3</code>)</strong>: Transpile Corvus directly to optimized C99 and compile with Clang or GCC.<br>
+                        4. <strong>AST Optimization Engine (<code>--optimize</code>)</strong>: Compile-time constant folding, algebraic simplification (<code>x * 0 &rarr; 0, x * 1 &rarr; x</code>), and dead-branch pruning.<br>
+                        5. <strong>Modern Syntax: F-Strings &amp; Inline Ternaries</strong>: Interpolated formatted strings <code>f"Hello {name}, score: {val * 2}"</code> and inline ternary expressions <code>cond ? true_val : false_val</code>.<br>
+                        6. <strong>High-Precision Benchmarking &amp; AST Profiler</strong>: Built-in <code>corvus bench</code> and <code>corvus profile</code> CLI commands measuring nanosecond execution, ops/sec throughput, peak RAM, and AST breakdown.<br>
+                        7. <strong>Rust-Style Diagnostic Catalog (<code>--explain &lt;CODE&gt;</code>)</strong>: Over 18 cataloged error codes with root-cause diagnostics and verified fixes.<br>
+                        8. <strong>30+ Standard Library Modules</strong>: Spans cryptography, networking, system control, embedded SQLite, and math extensions.
                     </p>
                 </div>
 
