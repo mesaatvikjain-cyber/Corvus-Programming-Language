@@ -370,7 +370,7 @@ class Evaluator:
         }), "any")
 
         # Corvus Native Math Extension & Statistics Engine (v4.2)
-        self.global_env.define("math_ext", ModuleNamespace("math_ext", {
+        math_module_dict = {
             "sqrt": lambda *args: _global_math_ext_engine.sqrt(*args),
             "sin": lambda *args: _global_math_ext_engine.sin(*args),
             "cos": lambda *args: _global_math_ext_engine.cos(*args),
@@ -382,7 +382,9 @@ class Evaluator:
             "median": lambda *args: _global_math_ext_engine.median(*args),
             "variance": lambda *args: _global_math_ext_engine.variance(*args),
             "std_dev": lambda *args: _global_math_ext_engine.std_dev(*args)
-        }), "any")
+        }
+        self.global_env.define("math_ext", ModuleNamespace("math_ext", math_module_dict), "any")
+        self.global_env.define("math", ModuleNamespace("math", math_module_dict), "any")
 
         # Corvus Native SQLite Embedded Database Engine (v4.2)
         self.global_env.define("sqlite", ModuleNamespace("sqlite", {
