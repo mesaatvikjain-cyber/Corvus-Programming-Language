@@ -20,7 +20,7 @@
         </div>
         <div class="header-links">
             <a href="https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-" target="_blank" class="header-link">GitHub Repository</a>
-            <span class="version-badge">v4.3 AI/ML &amp; Diagnostics</span>
+            <span class="version-badge">v4.5 Bytecode VM &amp; Compiler</span>
         </div>
     </header>
 
@@ -40,7 +40,7 @@
             <div class="sidebar-group">
                 <div class="sidebar-title">Version Tutorials</div>
                 <ul class="sidebar-nav">
-                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v4.2)</a></li>
+                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v4.5)</a></li>
                 </ul>
             </div>
             <div class="sidebar-group">
@@ -177,6 +177,7 @@ var double = lambda(x) -> x*2</code></pre>
                     <button class="tab-btn" data-tab="tab-v42">Version 4.2</button>
                     <button class="tab-btn" data-tab="tab-v43">Version 4.3</button>
                     <button class="tab-btn" data-tab="tab-v44">Version 4.4</button>
+                    <button class="tab-btn" data-tab="tab-v45">Version 4.5</button>
                 </div>
 
                 <!-- Tab v1.1 -->
@@ -352,6 +353,29 @@ match count {
     }
     else => log("Other value")
 }</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.5 -->
+                <div id="tab-v45" class="tab-content">
+                    <h2>v4.5 Tutorial: Corvus Bytecode VM &amp; Compact .crvc Binary Compiler</h2>
+                    <p>Experience the high-performance stack-based <code>CorvusVM</code>, binary bytecode compilation into compact <code>.crvc</code> executables, interactive disassembler, and direct VM execution.</p>
+                    <div class="code-wrapper">
+                        <pre><code># 1. Compile Corvus source to binary bytecode (.crvc)
+# corvus compile app.crv -o app.crvc
+
+# 2. Inspect instructions with the interactive disassembler
+# corvus dis app.crvc
+# Disassembly:
+# 0000  LOAD_CONST      1 (42)
+# 0003  STORE_NAME      2 (score)
+# 0006  LOAD_NAME       2 (score)
+# 0009  PRINT           1
+# 0012  RETURN_VALUE
+
+# 3. Direct execution on CorvusVM with zero overhead
+# corvus --vm app.crv
+# corvus app.crvc</code></pre>
                     </div>
                 </div>
             </section>

@@ -9,6 +9,7 @@
 </p>
 
 <p align="center">
+  <a href="Documentation/PROJECT_STRUCTURE.md"><b>🧭 Project Structure</b></a> •
   <a href="Documentation/webpage_corvus/index.html"><b>🌐 Documentation Webpage</b></a> •
   <a href="Documentation/INSTALLATION_GUIDE.md"><b>🛠️ Automated Installers Guide</b></a> •
   <a href="#-hands-on-version-tutorials"><b>📚 Version Tutorials</b></a> •
@@ -19,20 +20,20 @@
 
 ---
 
-## 📦 Zero-Dependency Standalone Distributions & Portable SDK (v4.4)
+## 📦 Zero-Dependency Standalone Distributions & Portable SDK (v4.5 & v4.4)
 
-Corvus now ships with **100% zero-dependency, standalone native executables** and a **portable SDK bundle** inside [`Distributions/Version_4.4/`](Distributions/Version_4.4/README.md). **No Python installation is required!**
+Corvus ships with **100% zero-dependency, standalone native executables** and a **portable SDK bundle** inside [`Distributions/Version_4.5/`](Distributions/Version_4.5/README.md) and [`Distributions/Version_4.4/`](Distributions/Version_4.4/README.md). **No Python installation is required!**
 
 * **🌟 Tier 1: Standalone Single-File Executables (`standalone/`)**:
-  - `corvus.exe` — Self-contained Corvus Interpreter, REPL, Linter, Formatter, and Profiler.
+  - `corvus.exe` — Self-contained Corvus Bytecode VM, `.crvc` Binary Compiler, Disassembler, Interpreter, REPL, Linter, Formatter, and Profiler.
   - `corvusc.exe` — Self-contained C99 Native Compiler driver with `-O3` pipeline optimization.
-  - One-click installer: Run `.\Distributions\Version_4.4\install_standalone_windows.ps1` (or `bash install_standalone_linux.sh` / `bash install_standalone_macos.sh`).
+  - One-click installer: Run `.\Distributions\Version_4.5\install_standalone_windows.ps1` (or `bash install_standalone_linux.sh` / `bash install_standalone_macos.sh`).
 * **🧰 Tier 2: All-in-One Portable SDK (`portable-sdk/`)**:
   - Includes `bin/corvus.bat`, `bin/corvusc.bat`, standard library (`StdLib/`), examples, and zero-config embedded runtime bootstrap.
 
 ---
 
-## 🛠️ Automated Cross-Platform Installers (v1.1 - v4.4)
+## 🛠️ Automated Cross-Platform Installers (v1.1 - v4.5)
 
 Corvus includes self-contained automated installer scripts for **Windows** (PowerShell), **Linux** (Bash), and **macOS** (Zsh/Bash) for **every single version release**!
 

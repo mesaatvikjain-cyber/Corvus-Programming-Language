@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 # install_standalone_macos.sh
-# One-click macOS installer for Corvus v4.4 Standalone Native Binaries
+# One-click macOS installer for Corvus v4.5 Standalone Native Binaries
 
 echo "============================================================"
-echo "  Corvus v4.4 Standalone Native Binaries Installer (macOS)  "
+echo "  Corvus v4.5 Standalone Native Binaries Installer (macOS)  "
 echo "============================================================"
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
