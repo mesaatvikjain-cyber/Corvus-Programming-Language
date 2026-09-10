@@ -1,74 +1,96 @@
-﻿# 🛠️ Corvus Automated Installation Guide (Windows, Linux, macOS)
+# 🛠️ Corvus Automated Installation Guide (Windows, Linux, macOS)
 
-Corvus provides automated, self-contained cross-platform installers for **every single version release** (1.1, 2.0, 3.0, 3.1, 4.0, 4.1, 4.2, 4.3) as well as interactive master installers.
+Corvus provides automated, self-contained cross-platform installers for **every single version release** (v1.1, v2.0, v3.0, v3.1, v4.0, v4.1, v4.2, v4.3, and v4.4) as well as **zero-dependency standalone native binaries**.
 
 ---
 
-## 🪟 Windows Installation (install_windows.ps1)
+## 🌟 Zero-Dependency Standalone Native Binaries (No Python Required!)
+
+If you want to run Corvus without installing Python or any build tools:
+
+### Windows Standalone (Single-File .exe)
+```powershell
+.\Distributions\Version_4.4\install_standalone_windows.ps1
+```
+Installs `corvus.exe` and `corvusc.exe` into your User PATH.
+
+### Linux Standalone
+```bash
+bash Distributions/Version_4.4/install_standalone_linux.sh
+```
+
+### macOS Standalone
+```bash
+bash Distributions/Version_4.4/install_standalone_macos.sh
+```
+
+---
+
+## 🪟 Windows Installation (`install_windows.ps1`)
 
 ### Master Interactive Installer (Select any Version)
 Open PowerShell in the repository root and run:
-`powershell
+```powershell
 .\install_windows.ps1
-`
-This presents an interactive menu to choose between **v1.1**, **v2.0**, **v3.0**, **v3.1**, **v4.0**, **v4.1**, **v4.2**, or **v4.3 [DEFAULT]**.
+```
+This presents an interactive menu where you can choose:
+* **`[0] Standalone Native Binaries v4.4 (Zero Python Required) [RECOMMENDED]`**
+* **`[1] Version 4.4 (Universal Dual Syntax & Smart Type Inference) [DEFAULT]`**
+* **`[2] - [9] Earlier Version Releases (v4.3 down to v1.1)`**
 
 ### Version-Specific Direct Installers
-To install a specific version directly and register CLI wrappers (corvus, corvusc) in your user PATH:
-`powershell
-# Install Version 4.3 (Latest: AI/ML Suite, Parity & Diagnostics)
+To install a specific version directly and register CLI wrappers (`corvus`, `corvusc`) in your user PATH:
+```powershell
+# Install Version 4.4 (Latest: Modern Ergonomics, Dual Brackets & Inference)
+.\Version_4.4\install_windows.ps1
+
+# Install Version 4.3 (AI/ML Suite, Parity & Diagnostics)
 .\Version_4.3\install_windows.ps1
 
 # Install Version 4.2 (Desktop 2D Graphics & Concurrency)
 .\Version_4.2\install_windows.ps1
-
-# Install Version 4.1 (Super Optimization Engine)
-.\Version_4.1\install_windows.ps1
-
-# Install Version 4.0 (Native StdLib & REPL)
-.\Version_4.0\install_windows.ps1
-`
+```
 
 ---
 
-## 🐧 Linux Installation (install_linux.sh)
+## 🐧 Linux Installation (`install_linux.sh`)
 
 ### Master Interactive Installer
 Open terminal in the repository root and run:
-`ash
+```bash
 bash install_linux.sh
-`
+```
 
 ### Version-Specific Direct Installers
-`ash
-# Install Version 4.3 (Latest)
+```bash
+# Install Version 4.4 (Latest)
+bash Version_4.4/install_linux.sh
+
+# Install Version 4.3
 bash Version_4.3/install_linux.sh
 
 # Install Version 4.2
 bash Version_4.2/install_linux.sh
-
-# Install Version 4.1
-bash Version_4.1/install_linux.sh
-`
+```
 
 ---
 
-## 🍏 macOS Installation (install_macos.sh)
+## 🍏 macOS Installation (`install_macos.sh`)
 
 ### Master Interactive Installer
 Open terminal in the repository root and run:
-`ash
+```bash
 bash install_macos.sh
-`
+```
 
 ### Version-Specific Direct Installers
-`ash
-# Install Version 4.3 (Latest)
+```bash
+# Install Version 4.4 (Latest)
+bash Version_4.4/install_macos.sh
+
+# Install Version 4.3
 bash Version_4.3/install_macos.sh
 
 # Install Version 4.2
 bash Version_4.2/install_macos.sh
-
-# Install Version 4.1
-bash Version_4.1/install_macos.sh
-`
+```
