@@ -79,6 +79,8 @@ def format_corvus_code(code: str) -> str:
 
 
 def format_file(filepath: str, check_only: bool = False) -> bool:
+    if ".." in filepath:
+        raise Exception("Invalid file path")
     if not os.path.exists(filepath):
         print(f"[ERROR] File '{filepath}' not found.")
         return False

@@ -978,16 +978,22 @@ class Evaluator:
                     return f.read()
 
             def file_write(path, content):
+                if ".." in path:
+                    raise Exception("Invalid file path")
                 with open(path, "w", encoding="utf-8") as f:
                     f.write(str(content))
                 return True
 
             def file_append(path, content):
+                if ".." in path:
+                    raise Exception("Invalid file path")
                 with open(path, "a", encoding="utf-8") as f:
                     f.write(str(content))
                 return True
 
             def file_lines(path):
+                if ".." in path:
+                    raise Exception("Invalid file path")
                 with open(path, "r", encoding="utf-8") as f:
                     return [line.rstrip("\n") for line in f]
 
@@ -1168,8 +1174,17 @@ class Evaluator:
             return False
 
         try:
-            with open(entry_file, "r", encoding="utf-8") as f:
-                code = f.read()
+            # Validate entry_file to prevent path traversal when loaded from package
+            if package_dir:
+                base_real = os.path.realpath(package_dir)
+                entry_file_real = os.path.realpath(entry_file)
+                if os.path.commonpath([base_real, entry_file_real]) != base_real:
+                    raise Exception("Invalid file path")
+                with open(entry_file_real, "r", encoding="utf-8") as f:
+                    code = f.read()
+            else:
+                with open(entry_file, "r", encoding="utf-8") as f:
+                    code = f.read()
 
             from lexercorvus import tokenize
             from parsercorvus import Parser
