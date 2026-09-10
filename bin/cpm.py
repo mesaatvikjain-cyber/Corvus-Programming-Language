@@ -13,6 +13,35 @@ import urllib.request
 import zipfile
 import subprocess
 import tempfile
+import re
+from urllib.parse import urlparse, urlunparse
+
+
+def build_validated_github_zip_url(base_url: str) -> str:
+    try:
+        # Minimal path validation
+        if "/../" in base_url or re.search(r"/%2e%2e/", base_url, re.IGNORECASE):
+            raise ValueError("Invalid path")
+        
+        parsed = urlparse(base_url)
+        
+        # Protocol + host checks
+        if parsed.scheme not in ("http", "https"):
+            raise ValueError("Invalid protocol")
+        if not parsed.hostname:
+            raise ValueError("Invalid host")
+        allowed_domains = ["github.com"]
+        if parsed.hostname.lower() not in allowed_domains:
+            raise ValueError("Invalid host")
+        
+        # Rebuild path with fixed suffix
+        base_path = parsed.path.rstrip("/")
+        parsed = parsed._replace(path=f"{base_path}/archive/refs/heads/main.zip")
+        
+        return urlunparse(parsed)
+    except Exception:
+        raise ValueError("Invalid URL")
+
 
 CPM_VERSION = "1.0.0"
 GLOBAL_PKG_DIR = os.path.expanduser(os.path.join("~", ".corvus", "packages"))
@@ -169,7 +198,7 @@ def _install_single(pkg_name, pkg_source, dest_dir):
     if pkg_source.startswith("http"):
         # Check if git is available for cloning
         if pkg_source.endswith(".git") or "github.com" in pkg_source:
-            zip_url = pkg_source.rstrip("/") + "/archive/refs/heads/main.zip"
+            zip_url = build_validated_github_zip_url(pkg_source.rstrip("/"))
             try:
                 with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp_zip:
                     tmp_zip_path = tmp_zip.name

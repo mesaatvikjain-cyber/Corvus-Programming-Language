@@ -2,13 +2,39 @@ import urllib.request
 import urllib.parse
 import socket
 import json
+import re
 
 # Corvus Native Network Standard Library Engine (v4.2)
+
+def _validate_url(url: str) -> str:
+    try:
+        # Minimal path validation
+        if "/../" in url or re.search(r"/%2e%2e/", url, re.IGNORECASE):
+            raise ValueError("Invalid path")
+        
+        parsed = urllib.parse.urlparse(url)
+        
+        # Protocol check
+        if parsed.scheme not in ("http", "https"):
+            raise ValueError("Invalid protocol")
+        
+        # Host check
+        if not parsed.hostname:
+            raise ValueError("Invalid host")
+        
+        allowed_domains = ["example.com"]  # add your allowed domains here
+        if parsed.hostname.lower() not in allowed_domains:
+            raise ValueError("Invalid host")
+        
+        return urllib.parse.urlunparse(parsed)
+    except Exception:
+        raise ValueError("Invalid URL")
 
 class NetworkEngine:
     @staticmethod
     def http_get(url, headers=None):
-        req = urllib.request.Request(url, headers=headers or {})
+        validated_url = _validate_url(url)
+        req = urllib.request.Request(validated_url, headers=headers or {})
         try:
             with urllib.request.urlopen(req, timeout=10) as response:
                 body = response.read().decode('utf-8', errors='replace')
@@ -24,6 +50,7 @@ class NetworkEngine:
 
     @staticmethod
     def http_post(url, body="", headers=None):
+        validated_url = _validate_url(url)
         headers = headers or {}
         if isinstance(body, dict):
             body_bytes = json.dumps(body).encode('utf-8')
@@ -33,7 +60,7 @@ class NetworkEngine:
         else:
             body_bytes = str(body).encode('utf-8')
 
-        req = urllib.request.Request(url, data=body_bytes, headers=headers, method='POST')
+        req = urllib.request.Request(validated_url, data=body_bytes, headers=headers, method='POST')
         try:
             with urllib.request.urlopen(req, timeout=10) as response:
                 res_body = response.read().decode('utf-8', errors='replace')

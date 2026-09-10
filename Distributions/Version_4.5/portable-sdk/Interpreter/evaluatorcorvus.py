@@ -1030,21 +1030,51 @@ class Evaluator:
             self.env.define("gui", mod_obj, "module")
 
         elif mod_name == "http":
+            import re
+            from urllib.parse import urlparse, urlunparse
+
+            def validate_url(url: str) -> str:
+                try:
+                    # Minimal path validation
+                    if "/../" in url or re.search(r"/%2e%2e/", url, re.IGNORECASE):
+                        raise ValueError("Invalid path")
+                    
+                    parsed = urlparse(url)
+                    
+                    # Protocol check
+                    if parsed.scheme not in ("http", "https"):
+                        raise ValueError("Invalid protocol")
+                    
+                    # Host check
+                    if not parsed.hostname:
+                        raise ValueError("Invalid host")
+                    
+                    allowed_domains = ["example.com"]  # add your allowed domains here
+                    if parsed.hostname.lower() not in allowed_domains:
+                        raise ValueError("Invalid host")
+                    
+                    return urlunparse(parsed)
+                except Exception:
+                    raise ValueError("Invalid URL")
+
             def http_get(url):
                 import urllib.request
-                req = urllib.request.urlopen(str(url))
+                validated_url = validate_url(str(url))
+                req = urllib.request.urlopen(validated_url)
                 return req.read().decode("utf-8")
 
             def http_post(url, data=""):
                 import urllib.request
+                validated_url = validate_url(str(url))
                 encoded = str(data).encode("utf-8")
-                req = urllib.request.Request(str(url), data=encoded, headers={"Content-Type": "application/json"})
+                req = urllib.request.Request(validated_url, data=encoded, headers={"Content-Type": "application/json"})
                 res = urllib.request.urlopen(req)
                 return res.read().decode("utf-8")
 
             def http_download(url, filename):
                 import urllib.request
-                urllib.request.urlretrieve(str(url), str(filename))
+                validated_url = validate_url(str(url))
+                urllib.request.urlretrieve(validated_url, str(filename))
                 return True
 
             http_symbols = {

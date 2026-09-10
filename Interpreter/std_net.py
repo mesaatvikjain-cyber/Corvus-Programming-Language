@@ -2,8 +2,25 @@ import urllib.request
 import urllib.parse
 import socket
 import json
+import re
 
 # Corvus Native Network Standard Library Engine (v4.2)
+
+def validate_url(url: str) -> str:
+    try:
+        if "/../" in url or re.search(r"/%2e%2e/", url, re.IGNORECASE):
+            raise ValueError("Invalid path")
+        parsed = urllib.parse.urlparse(url)
+        if parsed.scheme not in ("http", "https"):
+            raise ValueError("Invalid protocol")
+        if not parsed.hostname:
+            raise ValueError("Invalid host")
+        allowed_domains = ["example.com"]  # add your allowed domains here
+        if parsed.hostname.lower() not in allowed_domains:
+            raise ValueError("Invalid host")
+        return url
+    except Exception:
+        raise ValueError("Invalid URL")
 
 class NetworkEngine:
     @staticmethod
@@ -24,6 +41,7 @@ class NetworkEngine:
 
     @staticmethod
     def http_post(url, body="", headers=None):
+        url = validate_url(url)
         headers = headers or {}
         if isinstance(body, dict):
             body_bytes = json.dumps(body).encode('utf-8')
