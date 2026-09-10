@@ -15,6 +15,8 @@ class PandasEngine:
             return pd.read_csv(filepath).to_dict(orient="records")
         # Fallback CSV reader returning list of dicts
         records = []
+        if '..' in filepath:
+            raise Exception('Invalid file path')
         with open(filepath, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:

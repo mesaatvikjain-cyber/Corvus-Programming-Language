@@ -978,16 +978,22 @@ class Evaluator:
                     return f.read()
 
             def file_write(path, content):
+                if ".." in path:
+                    raise Exception("Invalid file path")
                 with open(path, "w", encoding="utf-8") as f:
                     f.write(str(content))
                 return True
 
             def file_append(path, content):
+                if ".." in path:
+                    raise Exception("Invalid file path")
                 with open(path, "a", encoding="utf-8") as f:
                     f.write(str(content))
                 return True
 
             def file_lines(path):
+                if ".." in path:
+                    raise Exception("Invalid file path")
                 with open(path, "r", encoding="utf-8") as f:
                     return [line.rstrip("\n") for line in f]
 
@@ -1101,6 +1107,8 @@ class Evaluator:
                 )
 
     def _try_load_corvus_package(self, mod_name: str) -> bool:
+        if ".." in mod_name:
+            raise Exception("Invalid module name")
         entry_file = None
 
         # 1. Check for direct .crv file in script dir, cwd, or StdLib dirs
@@ -1156,6 +1164,17 @@ class Evaluator:
                             entry_file = os.path.join(package_dir, main_rel)
                     except Exception:
                         pass
+                    
+                    if entry_file:
+                        try:
+                            package_dir_real = os.path.realpath(package_dir)
+                            entry_file_real = os.path.realpath(entry_file)
+                            if os.path.commonpath([package_dir_real, entry_file_real]) != package_dir_real:
+                                entry_file = None
+                            else:
+                                entry_file = entry_file_real
+                        except ValueError:
+                            entry_file = None
 
                 if not entry_file or not os.path.exists(entry_file):
                     for candidate in ["main.crv", f"{mod_name}.crv", "index.crv"]:
