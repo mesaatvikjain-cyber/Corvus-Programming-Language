@@ -79,6 +79,7 @@ Every version release of Corvus includes a dedicated Markdown hands-on tutorial 
 * **[Version 4.2 Tutorial](Documentation/tutorials/07_v4.2_desktop_graphics_and_concurrency_tutorial.md)**: Zero-Config Desktop 2D Graphics Canvas (`graphics.crv`), Keyboard/Mouse Event Loop, and Expanded "Murder of Crows" Concurrency.
 * **[Version 4.3 Tutorial](Documentation/tutorials/08_v4.3_ai_ml_suite_and_diagnostics_tutorial.md)**: AI & Deep Learning Stack (`tensorflow`, `torch`, `numpy`, `pandas`, `scikit_learn`, `transformers`), 30+ Standard Library Modules, and Rust-Style Diagnostic Knowledge Base (`--explain`, `--ai-fix`).
 * **[Version 4.4 Tutorial](Documentation/tutorials/09_v4.4_syntax_ergonomics_and_type_inference_tutorial.md)**: Modern Syntax Ergonomics, Universal Dual Brackets (`{ ... }` / `[ ... ]`), Smart Type Inference (`set x = 10`), Top-level `const`, Semicolon-optional typed declarations.
+* **[Version 4.5 Tutorial](Documentation/tutorials/10_v4.5_bytecode_vm_and_compiler_tutorial.md)**: Corvus Bytecode Virtual Machine (`CorvusVM`), Compact `.crvc` Binary Executable Specification, Bytecode Compiler & Disassembler (`corvus compile`, `corvus dis`, `corvus --vm`).
 
 ---
 
@@ -97,6 +98,8 @@ The Corvus codebase is structured into explicit, standalone version releases so 
 | **[`Version_4.2/`](Version_4.2/)** | **v4.2** | **Desktop 2D Graphics Canvas (`graphics.crv`)**, Zero-Config Window/Shape/Event Rendering Loop (`graphics.fps(60)`), Playable Snake/Pong Games, Expanded "Murder of Crows" Concurrency (`crow.parallel_map`, `crow.race`, `crow.nest`) | Real-time Desktop Canvas Engine, Parallel Crows Concurrency, Super-Optimized Compiler | [`Win`](Version_4.2/install_windows.ps1) \| [`Linux`](Version_4.2/install_linux.sh) \| [`macOS`](Version_4.2/install_macos.sh) |
 | **[`Version_4.3/`](Version_4.3/)** | **v4.3** | **100% Compiler-Interpreter Parity & Modern Tooling**: **Native Matrix Multiplication Operator (`@`)**, **C99 Transpiler Backend (`-O3`)**, **AST Constant Folding & Pruning Optimizer**, **High-Precision Benchmarking & AST Profiler**, **Modern F-Strings (`f"..."`) & Inline Ternaries (`? :`)**, **Dynamic Dictionaries in Native Code**, **Strict Static Type Checker (`--strict`)**, **Canonical Formatter (`fmt`)**, **Test Runner (`test`)**, **Integrated CPM Package Manager**, **Rust-Style Diagnostic Catalog (`--explain <CODE>`)**, **Levenshtein Typo Heuristics** | Complete Dual Engine: Enterprise AI/ML Interpreter & Ultra-Fast Native C99/Assembly Compiler with 100% Feature Parity | [`Win`](Version_4.3/install_windows.ps1) \| [`Linux`](Version_4.3/install_linux.sh) \| [`macOS`](Version_4.3/install_macos.sh) |
 | **[`Version_4.4/`](Version_4.4/)** | **v4.4** | **Modern Syntax Ergonomics & Universal Dual Brackets**: **Smart Type Inference (`set x = 10`)**, **Universal Dual Brackets for Code Blocks (`{ ... }` and `[ ... ]`)**, **Universal Dual Brackets for Lists (`[ ... ]` and `{ ... }`)**, **First-Class Top-Level `const` Declarations**, **Semicolon-Optional Typed Declarations (`set int count = 42`)**, **Flexible Expression Conditionals without mandatory parentheses**, **100% Dual Engine Parity across Interpreter & C99 Native Compiler** | Full Modern Ergonomics Interpreter & Ultra-Fast Native C99 Compiler (-O3) with Zero Breaking Changes | [`Win`](Version_4.4/install_windows.ps1) \| [`Linux`](Version_4.4/install_linux.sh) \| [`macOS`](Version_4.4/install_macos.sh) |
+| **[`Version_4.5/`](Version_4.5/)** | **v4.5** | **Bytecode Virtual Machine & `.crvc` Binary Compiler**: **High-Performance Stack-based VM (`CorvusVM`)**, **Compact Binary Executable Format (`.crvc`)**, **Bytecode Compiler (`corvus compile`)**, **Instruction Disassembler (`corvus dis`)**, **Direct VM Runner (`corvus --vm`)**, **First-Class Matrix Math `@` in Bytecode**, **Full Standalone & Portable SDK Bundles** | Tri-Engine Architecture: AST Tree-Walk Interpreter, Stack Bytecode Virtual Machine, and Ultra-Fast Native C99 Compiler | [`Win`](Version_4.5/install_windows.ps1) \| [`Linux`](Version_4.5/install_linux.sh) \| [`macOS`](Version_4.5/install_macos.sh) |
+
 
 ---
 
@@ -127,7 +130,7 @@ It has grown from an interpreted prototype into a **self-hosted, IR-optimized sy
 
 #### 1. Running Programs & AI Matrix Multiplication (`@` Operator)
 ```bash
-# Execute Corvus file
+# Execute Corvus file with AST Interpreter
 python Interpreter/Corvus.py Examples-and-Tests/17_matrix_matmul_suite.crv
 
 # Native 2D lists, NumPy, PyTorch matrix multiplication using @:
@@ -136,7 +139,22 @@ python Interpreter/Corvus.py Examples-and-Tests/17_matrix_matmul_suite.crv
 # set any; C = A @ B  # -> [[19, 22], [43, 50]]
 ```
 
-#### 2. Canonical Code Auto-Formatter (`corvus fmt`)
+#### 2. Corvus Bytecode VM & `.crvc` Binary Compiler (v4.5)
+```bash
+# 1. Compile source into compact binary bytecode (.crvc)
+corvus compile Examples-and-Tests/21_bytecode_vm_suite.crv -o app.crvc
+
+# 2. Disassemble bytecode or source into human-readable instructions
+corvus dis app.crvc
+
+# 3. Execute directly with high-performance Corvus Bytecode VM
+corvus app.crvc
+# or execute source directly in VM mode
+corvus --vm Examples-and-Tests/21_bytecode_vm_suite.crv
+```
+
+
+#### 3. Canonical Code Auto-Formatter (`corvus fmt`)
 ```bash
 # Format a Corvus file in-place
 python Interpreter/Corvus.py fmt myfile.crv
@@ -145,19 +163,31 @@ python Interpreter/Corvus.py fmt myfile.crv
 python Interpreter/Corvus.py fmt myfile.crv --check
 ```
 
-#### 3. Test Runner Auto-Discovery (`corvus test`)
+#### 4. Test Runner Auto-Discovery (`corvus test`)
 ```bash
 # Auto-discover and run all test suites (*test*.crv / *suite*.crv)
 python Interpreter/Corvus.py test
 ```
 
-#### 4. Strict Static Type Checker (`corvus --strict`)
+#### 5. Strict Static Type Checker (`corvus --strict`)
 ```bash
 # Validate types, undeclared variables, and function arity prior to execution
 python Interpreter/Corvus.py --strict myfile.crv
 ```
 
-#### 5. Integrated Package Management (`cpm`)
+#### 6. High-Precision Nanosecond Benchmarking (`corvus bench`)
+```bash
+# Measure execution time across 50 iterations with stats (mean, median, stdev)
+python Interpreter/Corvus.py bench myfile.crv 100
+```
+
+#### 7. AST Statement & Node Profiler (`corvus profile`)
+```bash
+# Profile line-by-line execution count and hotspot bottlenecks
+python Interpreter/Corvus.py profile myfile.crv
+```
+
+#### 8. CPM Package Manager Integration (`corvus install / list / remove`)
 ```bash
 # Initialize a new project manifest
 python Interpreter/Corvus.py init
@@ -167,7 +197,7 @@ python Interpreter/Corvus.py install math_utils
 python Interpreter/Corvus.py list
 ```
 
-#### 6. Diagnostic Explanations & Error Fixing
+#### 9. Diagnostic Explanations & Error Fixing
 ```bash
 # Explain specific error code with verified fix examples
 python Interpreter/Corvus.py --explain E0101

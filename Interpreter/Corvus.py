@@ -61,6 +61,90 @@ def run_file(filepath: str, ai_fix: bool = False, optimize: bool = True):
         print(f"[Corvus Internal Bug]: {e}", file=sys.stderr)
         sys.exit(1)
 
+def compile_to_bytecode(filepath: str, output_path: str = None):
+    """Compile Corvus source (.crv) into bytecode (.crvc)."""
+    if not os.path.exists(filepath):
+        print(f"Error: File '{filepath}' not found.", file=sys.stderr)
+        sys.exit(1)
+    if not output_path:
+        base, _ = os.path.splitext(filepath)
+        output_path = base + ".crvc"
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        code = f.read()
+
+    try:
+        from compiler_vm import BytecodeCompiler
+        import bytecode
+        tokens = tokenize(code)
+        parser = Parser(tokens)
+        ast = parser.parse()
+        compiler = BytecodeCompiler(filename=filepath)
+        code_obj = compiler.compile(ast)
+        serialized = bytecode.serialize(code_obj)
+        with open(output_path, "wb") as f_out:
+            f_out.write(serialized)
+        print(f"[Corvus Bytecode Compiler]: Successfully compiled '{filepath}' -> '{output_path}' ({len(serialized)} bytes)")
+    except Exception as e:
+        print(f"[Corvus Bytecode Compiler Error]: {e}", file=sys.stderr)
+        sys.exit(1)
+
+def disassemble_target(filepath: str):
+    """Disassemble either .crv source or .crvc bytecode."""
+    if not os.path.exists(filepath):
+        print(f"Error: File '{filepath}' not found.", file=sys.stderr)
+        sys.exit(1)
+
+    import bytecode
+    try:
+        if filepath.endswith(".crvc"):
+            with open(filepath, "rb") as f:
+                data = f.read()
+            code_obj = bytecode.deserialize(data)
+        else:
+            with open(filepath, "r", encoding="utf-8") as f:
+                code = f.read()
+            from compiler_vm import BytecodeCompiler
+            tokens = tokenize(code)
+            parser = Parser(tokens)
+            ast = parser.parse()
+            compiler = BytecodeCompiler(filename=filepath)
+            code_obj = compiler.compile(ast)
+
+        print(bytecode.disassemble(code_obj))
+    except Exception as e:
+        print(f"[Corvus Disassembler Error]: {e}", file=sys.stderr)
+        sys.exit(1)
+
+def run_vm(filepath: str):
+    """Execute either a compiled .crvc bytecode file or a .crv source file directly in CorvusVM."""
+    if not os.path.exists(filepath):
+        print(f"Error: File '{filepath}' not found.", file=sys.stderr)
+        sys.exit(1)
+
+    import bytecode
+    from vm import CorvusVM
+    try:
+        if filepath.endswith(".crvc"):
+            with open(filepath, "rb") as f:
+                data = f.read()
+            code_obj = bytecode.deserialize(data)
+        else:
+            with open(filepath, "r", encoding="utf-8") as f:
+                code = f.read()
+            from compiler_vm import BytecodeCompiler
+            tokens = tokenize(code)
+            parser = Parser(tokens)
+            ast = parser.parse()
+            compiler = BytecodeCompiler(filename=filepath)
+            code_obj = compiler.compile(ast)
+
+        machine = CorvusVM()
+        machine.run(code_obj)
+    except Exception as e:
+        print(f"[Corvus VM Runtime Error]: {e}", file=sys.stderr)
+        sys.exit(1)
+
 from formatter import format_file
 from typechecker import TypeChecker
 from benchmark import run_benchmark, run_profile
@@ -211,6 +295,36 @@ def main():
         run_profile(sys.argv[2])
         return
 
+    # Bytecode Compiler (corvus compile <file.crv> [-o output.crvc])
+    if arg1 == "compile":
+        if len(sys.argv) < 3:
+            print("Usage: corvus compile <file.crv> [-o output.crvc]")
+            sys.exit(1)
+        src_file = sys.argv[2]
+        out_file = None
+        if "-o" in sys.argv:
+            o_idx = sys.argv.index("-o")
+            if o_idx + 1 < len(sys.argv):
+                out_file = sys.argv[o_idx + 1]
+        compile_to_bytecode(src_file, out_file)
+        return
+
+    # Bytecode Disassembler (corvus dis <file.crv | file.crvc>)
+    if arg1 == "dis":
+        if len(sys.argv) < 3:
+            print("Usage: corvus dis <file.crv | file.crvc>")
+            sys.exit(1)
+        disassemble_target(sys.argv[2])
+        return
+
+    # Virtual Machine Direct Run (corvus --vm <file.crv | file.crvc>)
+    if arg1 in ("--vm", "-vm"):
+        if len(sys.argv) < 3:
+            print("Usage: corvus --vm <file.crv | file.crvc>")
+            sys.exit(1)
+        run_vm(sys.argv[2])
+        return
+
     if arg1 in ("--repl", "-r"):
         start_repl()
     elif arg1 in ("--check", "-c"):
@@ -219,10 +333,14 @@ def main():
             sys.exit(1)
         check_syntax(sys.argv[2])
     elif arg1 in ("--help", "-h"):
-        print("Corvus Language Launcher & Toolchain v4.3.0")
+        print("Corvus Language Launcher & Toolchain v4.5.0")
         print("Usage:")
         print("  corvus                                   Launch interactive REPL")
         print("  corvus <file.crv>                        Execute Corvus source file")
+        print("  corvus <file.crvc>                       Execute precompiled Corvus bytecode")
+        print("  corvus compile <file.crv> [-o out.crvc]  Compile Corvus source to binary bytecode")
+        print("  corvus dis <file.crv | file.crvc>        Disassemble Corvus source or bytecode")
+        print("  corvus --vm <file.crv | file.crvc>       Execute using Corvus Bytecode Virtual Machine")
         print("  corvus <file.crv> --ai-fix               Execute with AI-grade diagnostic solutions")
         print("  corvus <file.crv> --no-opt               Disable AST optimization engine")
         print("  corvus --strict <file.crv>               Run static type analyzer & strict linter")
@@ -242,7 +360,11 @@ def main():
         ai_fix = "--ai-fix" in sys.argv
         args_filtered = [a for a in sys.argv[1:] if a != "--ai-fix"]
         if args_filtered:
-            run_file(args_filtered[0], ai_fix=ai_fix)
+            target = args_filtered[0]
+            if target.endswith(".crvc"):
+                run_vm(target)
+            else:
+                run_file(target, ai_fix=ai_fix)
         else:
             start_repl()
 

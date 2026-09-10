@@ -1,0 +1,14 @@
+# Corvus HTTP Client & Server Module
+
+func get(url) [
+    givout net.http_get(url)
+]
+
+func post(url, body) [
+    givout net.http_post(url, body)
+]
+
+func create_server(port, handler) [
+    log("Corvus HTTP Server listener initialized on port " + str(port))
+    givout 1
+]

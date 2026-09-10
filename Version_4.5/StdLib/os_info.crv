@@ -1,0 +1,13 @@
+# Corvus Target Operating System & Hardware Inspection Module
+
+func get_platform() [
+    givout process.get_platform()
+]
+
+func get_arch() [
+    givout process.get_arch()
+]
+
+func get_os_release() [
+    givout process.get_os_release()
+]

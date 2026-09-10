@@ -29,9 +29,10 @@
 
 ## 🌟 Key Features
 
+* **⚡ Corvus Bytecode VM & `.crvc` Binary Compiler (v4.5)**: High-performance stack-based Virtual Machine (`CorvusVM`), compact binary bytecode format (`.crvc`), bytecode compiler (`corvus compile`), and disassembler (`corvus dis`).
 * **🔄 Universal Dual Syntax (v4.4)**: Seamlessly supports mainstream `{ ... }` blocks and `[ ... ]` lists as well as classic `[ ... ]` blocks and `{ ... }` lists — zero breaking changes!
 * **🧠 Smart Type Inference (v4.4)**: Declare variables cleanly with `set name = value` or `const PI = 3.14159` without boilerplate type tokens or mandatory semicolons.
-* **⚡ 100% Compiler-Interpreter Feature Parity**: Run scripts dynamically via the Interpreter or compile to standalone `-O3` native C99/assembly executables with identical execution semantics.
+* **⚡ 100% Compiler-Interpreter Feature Parity**: Run scripts dynamically via the Interpreter, execute via the Bytecode VM, or compile to standalone `-O3` native C99/assembly executables with identical execution semantics.
 * **📦 Explicit Scope Delimiters**: Code blocks can use `{ ... }` or `[ ... ]` for clean, unambiguous scope boundaries.
 * **🏷️ Flexible & Explicit Type Declarations**: Inferred `set name = value`, modern `set int count = 42`, or classic `set <type>; name = value`.
 * **🚀 AST Optimization Engine**: Constant folding, algebraic simplification ($x \times 0 \to 0, x \times 1 \to x$), and dead branch pruning (`--optimize`).

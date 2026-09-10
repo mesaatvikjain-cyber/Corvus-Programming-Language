@@ -1,0 +1,10 @@
+# Corvus Sub-Process Spawner & Shell Command Manager Module
+
+func run(command) [
+    givout process.run(command)
+]
+
+func exec(command) [
+    var res = process.run(command)
+    givout res.stdout
+]

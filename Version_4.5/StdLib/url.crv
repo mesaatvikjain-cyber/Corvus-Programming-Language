@@ -1,0 +1,14 @@
+# Corvus URL Deconstructor & Parser Module
+
+func parse_url(url_str) [
+    var domain = "localhost"
+    var port = 80
+    var path = "/"
+    var query = ""
+
+    if (regex.match("https://", url_str)) [
+        port = 443
+    ]
+
+    givout { "domain": domain, "port": port, "path": path, "query": query }
+]

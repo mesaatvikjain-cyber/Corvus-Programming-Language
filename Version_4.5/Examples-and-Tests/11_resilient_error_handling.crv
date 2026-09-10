@@ -1,0 +1,51 @@
+# Corvus Version 3.1 Enterprise Resilient Error Handling & Traceback Test Suite
+
+log("=========================================")
+log(" Corvus v3.1 Resilient Error Test Suite")
+log("=========================================")
+
+# --- Test 1: Exception Resilience with Try/Error ---
+log("\n[1/2] Exception Handling Resilience (try/error)")
+
+try [
+    log("Attempting division by zero in safe try block...")
+    set int; a = 10
+    set int; b = 0
+    set int; c = a / b
+    log("Result:", c)
+] error(err) [
+    log("[RECOVERED] Successfully caught runtime error in error block:", err)
+] final [
+    log("Executing final cleanup block.")
+]
+
+# --- Test 2: Deep Call Stack Traceback Generation ---
+log("\n[2/2] Deep Nested Call Stack Diagnostic Traceback")
+
+mk func fn_level_c() [
+    log("Inside Level C - Triggering intentional diagnostic traceback...")
+    set lis; arr = {[1, 2, 3]}
+    # Index out of bounds access to demonstrate rich diagnostic traceback
+    set int; item = arr[10]
+    givout item
+]
+
+mk func fn_level_b() [
+    log("Inside Level B - Calling Level C...")
+    givout fn_level_c()
+]
+
+mk func fn_level_a() [
+    log("Inside Level A - Calling Level B...")
+    givout fn_level_b()
+]
+
+try [
+    fn_level_a()
+] error(err) [
+    log("[STACK TRACE RECOVERED] Diagnostic call stack handled safely:", err)
+]
+
+log("\n=========================================")
+log(" [SUCCESS] Version 3.1 Error Engine Ready!")
+log("=========================================")

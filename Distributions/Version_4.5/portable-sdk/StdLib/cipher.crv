@@ -1,0 +1,9 @@
+# Corvus Block Data Encryption & Decryption Module
+
+func encrypt(data, key) [
+    givout crypto.encrypt(data, key)
+]
+
+func decrypt(cipher_text, key) [
+    givout crypto.decrypt(cipher_text, key)
+]

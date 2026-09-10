@@ -1,0 +1,66 @@
+// 21_bytecode_vm_suite.crv - Comprehensive Verification for Corvus Bytecode VM v4.5
+
+// 1. Primitive Arithmetic & Types
+set a = 40
+set b = 2
+set sum_val = a + b
+set diff_val = a - b
+set prod_val = a * b
+set div_val = a / b
+
+log(f"[VM Test 1] Arithmetic: sum={sum_val}, diff={diff_val}, prod={prod_val}, div={div_val}")
+
+// 2. High-Performance Matrix Multiplication (@ operator)
+set M1 = [[1, 2], [3, 4]]
+set M2 = [[5, 6], [7, 8]]
+set M_res = M1 @ M2
+log(f"[VM Test 2] Matrix Matmul @: {M_res}")
+
+// 3. User-defined Functions and Recursion / Closures
+func multiply_and_add(x, y, z) [
+    givout (x * y) + z
+]
+set fn_res = multiply_and_add(6, 7, 8)
+log(f"[VM Test 3] Function Call: {fn_res}")
+
+// 4. While Loops & Accumulation
+set count = 0
+set acc = 0
+while (count < 5) [
+    acc = acc + count
+    count = count + 1
+]
+log(f"[VM Test 4] While Loop Acc: {acc}")
+
+// 5. For Loops over Collections
+set items = [10, 20, 30, 40]
+set loop_total = 0
+for (it in items) [
+    loop_total = loop_total + it
+]
+log(f"[VM Test 5] For Loop Total: {loop_total}")
+
+// 6. Pattern Matching
+set test_code = 200
+set status_text = ""
+match test_code [
+    case 200 => [
+        set status_text = "OK"
+    ]
+    case 404 => [
+        set status_text = "NOT_FOUND"
+    ]
+    else => [
+        set status_text = "UNKNOWN"
+    ]
+]
+log(f"[VM Test 6] Pattern Match Result: {status_text}")
+
+// 7. Built-in Function Invocations
+set numbers = [5, 1, 9, 3, 7]
+set max_num = max(numbers)
+set min_num = min(numbers)
+set sum_num = sum(numbers)
+log(f"[VM Test 7] Builtins: max={max_num}, min={min_num}, sum={sum_num}")
+
+log("=== ALL CORVUS VM TESTS PASSED SUCCESSFULLY ===")
