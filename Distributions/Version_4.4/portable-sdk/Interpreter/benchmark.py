@@ -117,6 +117,8 @@ def run_profile(filepath: str):
         print(f"[Error]: File '{filepath}' not found.", file=sys.stderr)
         sys.exit(1)
 
+    if ".." in filepath:
+        raise Exception("Invalid file path")
     with open(filepath, "r", encoding="utf-8") as f:
         code = f.read()
 
