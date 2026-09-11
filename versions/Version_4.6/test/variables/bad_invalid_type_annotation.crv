@@ -1,0 +1,2 @@
+// Invalid type annotation keyword
+set unknown_datatype x = 10

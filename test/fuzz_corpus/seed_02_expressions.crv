@@ -1,0 +1,5 @@
+set A = [[1, 2], [3, 4]]
+set B = [[5, 6], [7, 8]]
+set C = A @ B
+set greeting = f"Result: {C}"
+set grade = score >= 90 ? "A" : "B"

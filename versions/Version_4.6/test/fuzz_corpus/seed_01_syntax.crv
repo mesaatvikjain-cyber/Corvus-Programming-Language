@@ -1,0 +1,4 @@
+set int score = 95
+set str name = "Saatvik"
+const MAX_LIMIT = 100
+set lis = [1, 2, 3, 4]

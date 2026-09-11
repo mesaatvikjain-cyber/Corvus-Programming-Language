@@ -23,10 +23,12 @@ class Parser:
             return self.tokens[self.pos]
         return None
 
-    def advance(self) -> Token:
-        tok = self.tokens[self.pos]
-        self.pos += 1
-        return tok
+    def advance(self) -> Token | None:
+        if self.pos < len(self.tokens):
+            tok = self.tokens[self.pos]
+            self.pos += 1
+            return tok
+        return None
 
     def match(self, token_type: str, value: str = None) -> bool:
         tok = self.peek()
@@ -324,9 +326,18 @@ class Parser:
             while True:
                 tok = self.peek()
                 if tok and tok.type in ('ID', 'KEYWORD', 'TYPE'):
-                    params.append(self.advance().value)
+                    param_name = self.advance().value
                 else:
-                    params.append(self.expect('ID').value)
+                    param_name = self.expect('ID').value
+                if param_name in params:
+                    raise CorvusError(
+                        error_type="Corvus SyntaxError",
+                        message=f"Duplicate parameter '{param_name}' in function '{name}' definition.",
+                        line=tok.line if tok else 1,
+                        col=tok.column if tok else 1,
+                        suggestion="Ensure all parameter names in function declaration are distinct."
+                    )
+                params.append(param_name)
                 if not self.match('COMMA'):
                     break
             self.expect('RPAREN')
@@ -648,7 +659,16 @@ class Parser:
             params = []
             if not self.match('RBRACKET'):
                 while True:
-                    params.append(self.expect('ID').value)
+                    p_name = self.expect('ID').value
+                    if p_name in params:
+                        raise CorvusError(
+                            error_type="Corvus SyntaxError",
+                            message=f"Duplicate parameter '{p_name}' in lambda definition.",
+                            line=tok.line,
+                            col=tok.column,
+                            suggestion="Ensure all parameter names in lambda declaration are distinct."
+                        )
+                    params.append(p_name)
                     if not self.match('COMMA'):
                         break
                 self.expect('RBRACKET')

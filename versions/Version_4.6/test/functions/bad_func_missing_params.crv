@@ -1,0 +1,4 @@
+// Malformed function declaration missing parentheses
+func calculate_sum [
+    givout 10
+]

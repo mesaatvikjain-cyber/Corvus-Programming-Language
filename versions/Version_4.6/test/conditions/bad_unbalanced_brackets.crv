@@ -1,0 +1,3 @@
+// Unbalanced opening bracket in if statement
+if x > 10 [
+    log("unclosed")

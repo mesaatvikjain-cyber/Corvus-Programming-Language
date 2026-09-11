@@ -1,0 +1,4 @@
+// While loop missing condition expression
+while [
+    log("looping")
+]

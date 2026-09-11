@@ -1,0 +1,5 @@
+// Calling function with insufficient arguments
+func multiply(x, y) [
+    givout x * y
+]
+set res = multiply(5)

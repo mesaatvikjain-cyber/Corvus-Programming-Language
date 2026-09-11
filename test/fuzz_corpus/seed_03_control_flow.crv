@@ -1,0 +1,8 @@
+func compute(x, y) [
+    if x > y [
+        givout x * 2
+    ] else [
+        givout y + 10
+    ]
+]
+set val = compute(10, 20)

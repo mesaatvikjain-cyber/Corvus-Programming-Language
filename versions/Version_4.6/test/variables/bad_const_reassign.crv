@@ -1,0 +1,3 @@
+// Reassigning a declared constant
+const MAX_SIZE = 50
+MAX_SIZE = 100

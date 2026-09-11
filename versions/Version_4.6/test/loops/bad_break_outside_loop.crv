@@ -1,0 +1,3 @@
+// Break statement placed outside of any loop
+set x = 10
+brk

@@ -1,0 +1,2 @@
+// Invalid consecutive operators without operands
+set x = 10 + * 20

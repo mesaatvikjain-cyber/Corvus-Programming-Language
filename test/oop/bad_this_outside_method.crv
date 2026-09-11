@@ -1,0 +1,2 @@
+// Referencing this keyword outside of class context
+set this.value = 100

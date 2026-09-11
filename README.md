@@ -101,7 +101,7 @@ The Corvus codebase is structured into explicit, standalone version releases so 
 | **[`versions/Version_4.3/`](versions/Version_4.3/)** | **v4.3** | **100% Compiler-Interpreter Parity & Modern Tooling**: **Native Matrix Multiplication Operator (`@`)**, **C99 Transpiler Backend (`-O3`)**, **AST Constant Folding & Pruning Optimizer**, **High-Precision Benchmarking & AST Profiler**, **Modern F-Strings (`f"..."`) & Inline Ternaries (`? :`)**, **Dynamic Dictionaries in Native Code**, **Strict Static Type Checker (`--strict`)**, **Canonical Formatter (`fmt`)**, **Test Runner (`test`)**, **Integrated CPM Package Manager**, **Rust-Style Diagnostic Catalog (`--explain <CODE>`)**, **Levenshtein Typo Heuristics** | Complete Dual Engine: Enterprise AI/ML Interpreter & Ultra-Fast Native C99/Assembly Compiler with 100% Feature Parity | [`Win`](versions/Version_4.3/install_windows.ps1) \| [`Linux`](versions/Version_4.3/install_linux.sh) \| [`macOS`](versions/Version_4.3/install_macos.sh) |
 | **[`versions/Version_4.4/`](versions/Version_4.4/)** | **v4.4** | **Modern Syntax Ergonomics & Universal Dual Brackets**: **Smart Type Inference (`set x = 10`)**, **Universal Dual Brackets for Code Blocks (`{ ... }` and `[ ... ]`)**, **Universal Dual Brackets for Lists (`[ ... ]` and `{ ... }`)**, **First-Class Top-Level `const` Declarations**, **Semicolon-Optional Typed Declarations (`set int count = 42`)**, **Flexible Expression Conditionals without mandatory parentheses**, **100% Dual Engine Parity across Interpreter & C99 Native Compiler** | Full Modern Ergonomics Interpreter & Ultra-Fast Native C99 Compiler (-O3) with Zero Breaking Changes | [`Win`](versions/Version_4.4/install_windows.ps1) \| [`Linux`](versions/Version_4.4/install_linux.sh) \| [`macOS`](versions/Version_4.4/install_macos.sh) |
 | **[`versions/Version_4.5/`](versions/Version_4.5/)** | **v4.5** | **Bytecode Virtual Machine & `.crvc` Binary Compiler**: **High-Performance Stack-based VM (`CorvusVM`)**, **Compact Binary Executable Format (`.crvc`)**, **Bytecode Compiler (`corvus compile`)**, **Instruction Disassembler (`corvus dis`)**, **Direct VM Runner (`corvus --vm`)**, **First-Class Matrix Math `@` in Bytecode**, **Full Standalone & Portable SDK Bundles** | Tri-Engine Architecture: AST Tree-Walk Interpreter, Stack Bytecode Virtual Machine, and Ultra-Fast Native C99 Compiler | [`Win`](versions/Version_4.5/install_windows.ps1) \| [`Linux`](versions/Version_4.5/install_linux.sh) \| [`macOS`](versions/Version_4.5/install_macos.sh) |
-| **[`versions/Version_4.6/`](versions/Version_4.6/)** | **v4.6** | **Enterprise Security Hardening & Robustness Engine**: **Zero `shell=True` Subprocess Execution**, **SSRF & Resource Bounds Enforcement (10MB Payload Limits, URL Scheme Whitelisting)**, **Safe SQLite Parameterization**, **HMAC-SHA256, SHA-512 & Secure Random Bytes**, **Hardened Bytecode Deserializer (Truncation & Bounds Protected)**, **Call Stack Depth & Stack Guard Rails (`MAX_STACK_DEPTH = 10000`)** | Hardened Tri-Engine Architecture: Secure AST Interpreter, Safe Stack Bytecode VM, and Optimized C99 Compiler | [`Win`](versions/Version_4.6/install_windows.ps1) \| [`Linux`](versions/Version_4.6/install_linux.sh) \| [`macOS`](versions/Version_4.6/install_macos.sh) |
+| **[`versions/Version_4.6/`](versions/Version_4.6/)** | **v4.6** | **Enterprise Security Hardening, Robustness Engine & Automated Fuzzing**: **Zero `shell=True` Subprocess Execution**, **SSRF & Resource Bounds Enforcement (10MB Payload Limits, URL Scheme Whitelisting)**, **Safe SQLite Parameterization**, **HMAC-SHA256, SHA-512 & Secure Random Bytes**, **Hardened Bytecode Deserializer (Truncation & Bounds Protected)**, **Call Stack Depth & Stack Guard Rails (`MAX_STACK_DEPTH = 10000`)**, **Categorized Negative Test Suite (`test/`) & Automated Fuzzer (`test/fuzzer.py`)** | Hardened Tri-Engine Architecture: Secure AST Interpreter, Safe Stack Bytecode VM, and Optimized C99 Compiler | [`Win`](versions/Version_4.6/install_windows.ps1) \| [`Linux`](versions/Version_4.6/install_linux.sh) \| [`macOS`](versions/Version_4.6/install_macos.sh) |
 
 
 ---
@@ -232,6 +232,20 @@ python Interpreter/Corvus.py profile myfile.crv
 ```bash
 # Transpile Corvus directly to portable C99 and compile to native optimized binary:
 python Compiler/CorvusC_c.py myfile.crv -o myfile.exe -O3 --run
+```
+
+#### 10. Categorized Negative Testing & Automated Fuzzing Engine (`test/`)
+Corvus includes a dedicated negative test suite and an automated fuzzing engine located in the `test/` directory to ensure all malformed, invalid, and structurally broken code is caught gracefully with clean `CorvusError` diagnostics rather than unhandled engine crashes:
+
+```bash
+# Run all 28 categorized negative tests (variables, conditions, loops, functions, oop, expressions)
+python test/run_all_tests.py
+
+# Run the automated fuzzer (stress-tests parser, evaluator, and bytecode compiler)
+python test/fuzzer.py -n 100 -t 10
+
+# Run standard test suites across language features
+python Interpreter/Corvus.py test Examples-and-Tests
 ```
 
 ---

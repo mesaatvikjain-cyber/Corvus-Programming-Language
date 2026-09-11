@@ -228,6 +228,7 @@ class Evaluator:
     def __init__(self, global_env: Environment):
         self.global_env = global_env
         self.env = global_env
+        self.loop_depth = 0
         self.executor = ThreadPoolExecutor(max_workers=8)
         self._setup_builtins()
 
@@ -417,7 +418,22 @@ class Evaluator:
 
 
     def evaluate(self, node):
-        return self.visit(node)
+        try:
+            return self.visit(node)
+        except BreakException:
+            raise CorvusError(
+                error_type="Corvus SyntaxError",
+                message="'brk' outside of loop.",
+                suggestion="'brk' statements can only be used inside 'while' or 'for' loop bodies."
+            )
+        except ContinueException:
+            raise CorvusError(
+                error_type="Corvus SyntaxError",
+                message="'con' outside of loop.",
+                suggestion="'con' statements can only be used inside 'while' or 'for' loop bodies."
+            )
+        except ReturnException as ret:
+            return ret.value
 
     def visit(self, node):
         method_name = f"visit_{type(node).__name__}"
@@ -452,6 +468,21 @@ class Evaluator:
             type_matches = isinstance(val, dict)
         elif expected_type in ("func", "lmb"):
             type_matches = callable(val) or isinstance(val, Future)
+
+        KNOWN_PRIMITIVES = {"int", "flo", "str", "bool", "lis", "tup", "dic", "func", "lmb"}
+        if expected_type not in KNOWN_PRIMITIVES:
+            # Check if expected_type is a defined class in the environment
+            try:
+                cls_obj = self.env.get(expected_type)
+                if not (isinstance(val, CorvusInstance) and val.corvus_class.name == expected_type):
+                    type_matches = False
+            except Exception:
+                raise CorvusError(
+                    error_type="Corvus TypeError",
+                    error_code="E0101",
+                    message=f"Unknown or invalid type '{expected_type}' for variable '{var_name}'.",
+                    suggestion=f"Valid types are {', '.join(sorted(KNOWN_PRIMITIVES))} or a defined class name."
+                )
 
         if not type_matches:
             actual_type = type(val).__name__
@@ -537,32 +568,41 @@ class Evaluator:
         right = self.visit(node.right)
         op = node.op
 
-        if op == '+':   return left + right
-        if op == '-':   return left - right
-        if op == '*':   return left * right
-        if op == '/':
-            if right == 0:
-                raise CorvusError(
-                    error_type="Corvus MathError",
-                    error_code="E0301",
-                    message="Division by zero.",
-                    suggestion="Ensure your denominator expression evaluates to a non-zero number."
-                )
-            if isinstance(left, int) and isinstance(right, int) and left % right == 0:
-                return left // right
-            return left / right
-        if op == '%':   return left % right
-        if op == '**':  return left ** right
-        if op == '==':  return left == right
-        if op == '!=':  return left != right
-        if op == '<':   return left < right
-        if op == '>':   return left > right
-        if op == '<=':  return left <= right
-        if op == '>=':  return left >= right
-        if op == 'and': return left and right
-        if op == 'or':  return left or right
-        if op == 'xor': return bool(left) ^ bool(right)
-        if op == 'in':  return left in right
+        try:
+            if op == '+':   return left + right
+            if op == '-':   return left - right
+            if op == '*':   return left * right
+            if op == '/':
+                if right == 0:
+                    raise CorvusError(
+                        error_type="Corvus MathError",
+                        error_code="E0301",
+                        message="Division by zero.",
+                        suggestion="Ensure your denominator expression evaluates to a non-zero number."
+                    )
+                if isinstance(left, int) and isinstance(right, int) and left % right == 0:
+                    return left // right
+                return left / right
+            if op == '%':   return left % right
+            if op == '**':  return left ** right
+            if op == '==':  return left == right
+            if op == '!=':  return left != right
+            if op == '<':   return left < right
+            if op == '>':   return left > right
+            if op == '<=':  return left <= right
+            if op == '>=':  return left >= right
+            if op == 'and': return left and right
+            if op == 'or':  return left or right
+            if op == 'xor': return bool(left) ^ bool(right)
+            if op == 'in':  return left in right
+            if op == '??':  return left if left is not None else right
+        except TypeError as te:
+            raise CorvusError(
+                error_type="Corvus TypeError",
+                error_code="E0101",
+                message=f"Unsupported operand type(s) for '{op}': '{type(left).__name__}' and '{type(right).__name__}'.",
+                suggestion=f"Check that both operands for '{op}' are compatible data types."
+            )
         if op == '@':
             # Matrix multiplication dispatch
             if hasattr(left, '__matmul__'):
@@ -808,35 +848,55 @@ class Evaluator:
         return None
 
     def visit_WhileNode(self, node: WhileNode):
-        while self.visit(node.condition):
-            try:
-                self.visit(node.body)
-            except BreakException:
-                break
-            except ContinueException:
-                continue
+        self.loop_depth += 1
+        try:
+            while self.visit(node.condition):
+                try:
+                    self.visit(node.body)
+                except BreakException:
+                    break
+                except ContinueException:
+                    continue
+        finally:
+            self.loop_depth -= 1
 
     def visit_ForNode(self, node: ForNode):
         iterable = self.visit(node.collection)
-        for item in iterable:
-            prev_env = self.env
-            self.env = Environment(parent=prev_env)
-            self.env.define(node.iterator, item, "any")
-            try:
-                self.visit(node.body)
-            except BreakException:
-                self.env = prev_env
-                break
-            except ContinueException:
-                self.env = prev_env
-                continue
-            finally:
-                self.env = prev_env
+        self.loop_depth += 1
+        try:
+            for item in iterable:
+                prev_env = self.env
+                self.env = Environment(parent=prev_env)
+                self.env.define(node.iterator, item, "any")
+                try:
+                    self.visit(node.body)
+                except BreakException:
+                    self.env = prev_env
+                    break
+                except ContinueException:
+                    self.env = prev_env
+                    continue
+                finally:
+                    self.env = prev_env
+        finally:
+            self.loop_depth -= 1
 
     def visit_BreakNode(self, node: BreakNode):
+        if self.loop_depth <= 0:
+            raise CorvusError(
+                error_type="Corvus SyntaxError",
+                message="'brk' outside of loop.",
+                suggestion="'brk' can only be executed within an active 'while' or 'for' loop."
+            )
         raise BreakException()
 
     def visit_ContinueNode(self, node: ContinueNode):
+        if self.loop_depth <= 0:
+            raise CorvusError(
+                error_type="Corvus SyntaxError",
+                message="'con' outside of loop.",
+                suggestion="'con' can only be executed within an active 'while' or 'for' loop."
+            )
         raise ContinueException()
 
     def visit_PassNode(self, node: PassNode):
@@ -849,6 +909,13 @@ class Evaluator:
     def visit_FuncDeclNode(self, node: FuncDeclNode):
         closure_env = self.env
         def user_func(*args):
+            if len(args) > len(node.params):
+                raise CorvusError(
+                    error_type="Corvus TypeError",
+                    error_code="E0101",
+                    message=f"Function '{node.name}' takes at most {len(node.params)} arguments but {len(args)} were given.",
+                    suggestion=f"Provide at most {len(node.params)} arguments when calling '{node.name}'."
+                )
             func_env = Environment(parent=closure_env)
             for i, param in enumerate(node.params):
                 arg = args[i] if i < len(args) else None
@@ -873,6 +940,13 @@ class Evaluator:
     def visit_LambdaNode(self, node: LambdaNode):
         closure_env = self.env
         def lambda_func(*args):
+            if len(args) > len(node.params):
+                raise CorvusError(
+                    error_type="Corvus TypeError",
+                    error_code="E0101",
+                    message=f"Lambda takes at most {len(node.params)} arguments but {len(args)} were given.",
+                    suggestion=f"Provide at most {len(node.params)} arguments when calling the lambda."
+                )
             lmb_env = Environment(parent=closure_env)
             for i, param in enumerate(node.params):
                 arg = args[i] if i < len(args) else None
@@ -1122,8 +1196,13 @@ class Evaluator:
 
 
         else:
-            # 1. First attempt to load a Corvus package from corvus_modules/ or global package store
+            # 1. First attempt to load a Corvus package from StdLib, corvus_modules/ or global package store
             if self._try_load_corvus_package(mod_name):
+                return
+
+            # 2. Check if module is already registered in global environment (e.g. torch, tensorflow, numpy)
+            if mod_name in self.global_env.values:
+                self.env.define(mod_name, self.global_env.values[mod_name], "module")
                 return
 
             # 2. Universal Python Module Bridge fallback: dynamically import any Python library

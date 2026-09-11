@@ -1,0 +1,2 @@
+// Referencing undefined variable
+set total = missing_variable + 10

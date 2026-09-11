@@ -1,0 +1,2 @@
+// Lambda missing arrow token
+set fn = lambda(x) x * 2

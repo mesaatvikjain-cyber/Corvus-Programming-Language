@@ -1,0 +1,4 @@
+// Givout statement missing value expression in expression context
+func test() [
+    givout +
+]

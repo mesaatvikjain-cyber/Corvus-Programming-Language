@@ -1,0 +1,2 @@
+// Ternary operator missing colon separator
+set grade = score > 90 ? "A"

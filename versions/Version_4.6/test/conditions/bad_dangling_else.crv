@@ -1,0 +1,4 @@
+// Dangling else without corresponding if
+else [
+    log("orphan else")
+]

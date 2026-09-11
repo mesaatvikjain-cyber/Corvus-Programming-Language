@@ -1,5 +1,9 @@
 import re
 from dataclasses import dataclass
+try:
+    from errors import CorvusError
+except ImportError:
+    from .errors import CorvusError
 
 @dataclass
 class Token:
@@ -96,7 +100,13 @@ def tokenize(code: str):
                 line_start = match.end() - (len(value) - value.rfind('\n') - 1)
             continue
         elif kind == 'MISMATCH':
-            raise SyntaxError(f"Unexpected character '{value}' at line {line_num}, column {column}")
+            raise CorvusError(
+                error_type="Corvus SyntaxError",
+                message=f"Unexpected character '{value}' at line {line_num}, column {column}.",
+                line=line_num,
+                col=column,
+                suggestion="Check for unclosed quotes, invalid operators, or illegal characters."
+            )
 
         tokens.append(Token(type=kind, value=value, line=line_num, column=column))
 

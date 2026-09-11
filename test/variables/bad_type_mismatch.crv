@@ -1,0 +1,2 @@
+// Type mismatch: string assigned to int
+set int score = "one hundred"

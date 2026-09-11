@@ -1,0 +1,4 @@
+// Class with unclosed bracket block
+class Animal [
+    func init(name) [
+        set this.name = name
