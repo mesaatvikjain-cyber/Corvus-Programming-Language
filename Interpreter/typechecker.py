@@ -121,10 +121,10 @@ class TypeChecker:
             self.define(node.name, decl_type)
             return decl_type
 
-        elif nt == ConstDeclNode:
+        elif nt == "ConstDeclNode":
             val_type = self.visit(node.value)
-            self.define(node.name, val_type)
-            return val_type
+            self.define(node.name, val_type or "any")
+            return val_type or "any"
 
         elif nt == "AssignmentNode":
             val_type = self.visit(node.value)

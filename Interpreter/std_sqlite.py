@@ -1,4 +1,4 @@
-﻿import sqlite3
+import sqlite3
 
 # Corvus Embedded SQLite Database Engine (v4.6 - Security Hardened)
 
@@ -14,6 +14,8 @@ class SQLiteEngine:
         cursor = conn.cursor()
         if isinstance(params, (list, tuple)):
             clean_params = params
+        elif isinstance(params, dict):
+            clean_params = params if len(params) > 0 else ()
         elif params is None or params == ():
             clean_params = ()
         else:
@@ -27,6 +29,8 @@ class SQLiteEngine:
         cursor = conn.cursor()
         if isinstance(params, (list, tuple)):
             clean_params = params
+        elif isinstance(params, dict):
+            clean_params = params if len(params) > 0 else ()
         elif params is None or params == ():
             clean_params = ()
         else:

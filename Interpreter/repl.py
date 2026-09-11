@@ -42,8 +42,10 @@ class CorvusCompleter:
         return None
 
 def start_repl():
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     print("=========================================================")
-    print("  Corvus Interactive REPL Shell v4.2.0 (Release 4.2)")
+    print("  Corvus Interactive REPL Shell v4.6.0 (Release 4.6)")
     print("  Type .help for directives, .exit or Ctrl+C to quit.")
     print("=========================================================\n")
 
