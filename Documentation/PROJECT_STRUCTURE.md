@@ -17,9 +17,10 @@ Corvus/
 ├── StdLib/               # 📚 30+ Standard Library modules (.crv and native bridges)
 ├── Distributions/        # 📦 Zero-Dependency Standalone Executables & Portable SDKs
 │   ├── Version_4.4/      # Distribution bundle for v4.4
-│   └── Version_4.5/      # Distribution bundle for v4.5 (Bytecode VM & Compiler)
+│   ├── Version_4.5/      # Distribution bundle for v4.5 (Bytecode VM & Compiler)
+│   └── Version_4.6/      # Distribution bundle for v4.6 (Security Hardened & VM)
 ├── Documentation/        # 📖 Master Documentation, Tutorials, and Web Docs source
-│   ├── tutorials/        # Markdown tutorials for v1.1 through v4.5
+│   ├── tutorials/        # Markdown tutorials for v1.1 through v4.6
 │   ├── webpage_corvus/   # Interactive Master Documentation Website source
 │   ├── INSTALLATION_GUIDE.md # Cross-platform installation instructions
 │   └── HOSTING.md        # Hosting guide for GitHub Pages, Vercel, Netlify
@@ -27,7 +28,7 @@ Corvus/
 ├── Examples-and-Tests/   # 🧪 Test suites and real-world example programs
 ├── Editor-Extension/     # 💻 Visual Studio Code syntax & language diagnostics extension
 ├── bin/                  # 🚀 Command-line wrapper scripts (corvus, corvusc)
-├── versions/             # 📜 Historical release snapshots (v1.1 through v4.5)
+├── versions/             # 📜 Historical release snapshots (v1.1 through v4.6)
 │   ├── Version_1.1/      # Reference AST visitor interpreter & OOP
 │   ├── Version_2.0/      # Multi-platform NASM assembly compiler
 │   ├── Version_3.0/      # Self-hosted compiler & "Murder of Crows" concurrency
@@ -37,7 +38,8 @@ Corvus/
 │   ├── Version_4.2/      # Desktop 2D graphics canvas & event loop
 │   ├── Version_4.3/      # AI/ML suite, 30+ stdlib modules & diagnostics
 │   ├── Version_4.4/      # Modern dual bracket syntax & smart type inference
-│   └── Version_4.5/      # Corvus Bytecode VM & .crvc binary compiler
+│   ├── Version_4.5/      # Corvus Bytecode VM & .crvc binary compiler
+│   └── Version_4.6/      # Enterprise Security Hardening & Robustness Engine
 ├── install_windows.ps1   # 🪟 Interactive master Windows installer (all versions)
 ├── install_linux.sh      # 🐧 Interactive master Linux installer (all versions)
 ├── install_macos.sh      # 🍏 Interactive master macOS installer (all versions)
@@ -86,18 +88,18 @@ Standard libraries accessible via `get <module>`:
 
 ### 4. `Distributions/`
 Pre-packaged standalone bundles for end users who do not have Python installed:
-* **`Version_4.5/`**:
+* **`Version_4.6/`** & **`Version_4.5/`**:
   * `standalone/`: Contains single-file standalone binaries `corvus.exe` and `corvusc.exe`.
   * `portable-sdk/`: Full portable Corvus development kit with `bin/corvus.bat` and `bin/corvusc.bat`.
   * `install_standalone_windows.ps1`: One-click PATH installer.
 
 ### 5. `Documentation/` & `docs/`
-* `Documentation/tutorials/`: 10 comprehensive version tutorials spanning v1.1 up to v4.5.
+* `Documentation/tutorials/`: 11 comprehensive version tutorials spanning v1.1 up to v4.6.
 * `Documentation/webpage_corvus/`: Canonical HTML/CSS/JS source of the master interactive documentation website.
 * `docs/`: Deployment target for GitHub Pages hosting.
 
-### 6. `versions/` (`Version_1.1/` through `Version_4.5/`)
-Dedicated directory grouping all 10 historical release snapshots of Corvus. Each version snapshot is fully isolated with its own dedicated interpreter, compiler, test suite, and platform installers for reproducibility, educational reference, and regression testing.
+### 6. `versions/` (`Version_1.1/` through `Version_4.6/`)
+Dedicated directory grouping all 11 historical release snapshots of Corvus. Each version snapshot is fully isolated with its own dedicated interpreter, compiler, test suite, and platform installers for reproducibility, educational reference, and regression testing.
 
 ---
 

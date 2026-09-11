@@ -1,0 +1,38 @@
+# Corvus Extended Mathematics, Vector Physics & Trigonometry Module
+
+cls Vec2() [
+    var x = 0
+    var y = 0
+
+    func init(x, y) [
+        self.x = x
+        self.y = y
+    ]
+
+    func mag() [
+        givout math_ext.sqrt(self.x * self.x + self.y * self.y)
+    ]
+
+    func add(other) [
+        givout Vec2(self.x + other.x, self.y + other.y)
+    ]
+
+    func sub(other) [
+        givout Vec2(self.x - other.x, self.y - other.y)
+    ]
+
+    func dot(other) [
+        givout self.x * other.x + self.y * other.y
+    ]
+]
+
+func sin(rad) [ givout math_ext.sin(rad) ]
+func cos(rad) [ givout math_ext.cos(rad) ]
+func tan(rad) [ givout math_ext.tan(rad) ]
+func atan2(y, x) [ givout math_ext.atan2(y, x) ]
+func radians(deg) [ givout math_ext.radians(deg) ]
+func degrees(rad) [ givout math_ext.degrees(rad) ]
+func mean(lis) [ givout math_ext.mean(lis) ]
+func median(lis) [ givout math_ext.median(lis) ]
+func variance(lis) [ givout math_ext.variance(lis) ]
+func std_dev(lis) [ givout math_ext.std_dev(lis) ]

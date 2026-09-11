@@ -1,0 +1,96 @@
+# Corvus v4.4 Modern Ergonomics & Universal Dual Syntax Test Suite
+# Tests:
+# 1. Smart Type Inference (set name = "value", set count = 100)
+# 2. Universal Dual Brackets for code blocks ({ ... } and [ ... ])
+# 3. Universal Dual Brackets for lists ([ ... ] and { ... })
+# 4. First-class top-level const declarations (const PI = 3.14159)
+# 5. Semicolon-optional typed declarations (set int total = 500)
+# 6. Dual brackets in pattern matching (match expr { case ... => { ... } })
+
+log("==================================================")
+log("  Corvus v4.4 Modern Syntax Ergonomics Suite     ")
+log("==================================================")
+
+# 1. Smart Type Inference (No explicit type annotation or semicolon required)
+set language = "Corvus"
+set version_num = 4.4
+set is_active = true
+log("1. Inferred Variables:")
+log(language)
+log(version_num)
+log(is_active)
+
+# 2. First-class Top-level const declaration
+const PI = 3.14159
+const MAX_BUFFER = 4096
+log("2. Constant Declarations:")
+log(PI)
+log(MAX_BUFFER)
+
+# 3. Semicolon-optional typed declarations
+set int user_count = 128
+set flo user_ratio = 0.75
+log("3. Semicolon-optional Typed Declarations:")
+log(user_count)
+log(user_ratio)
+
+# 4. Universal Dual Brackets: Lists with standard [ ... ] and legacy { ... }
+set standard_list = [10, 20, 30]
+set legacy_list = {40, 50, 60}
+log("4. Standard and Legacy Lists:")
+log(standard_list)
+log(legacy_list)
+log(standard_list[0])
+log(legacy_list[1])
+
+# 5. Universal Dual Brackets: Code blocks with standard { ... } and legacy [ ... ]
+set sum_acc = 0
+if is_active {
+    log("Inside modern curly brace block { ... }")
+    sum_acc = sum_acc + 10
+}
+
+if sum_acc == 10 [
+    log("Inside legacy square bracket block [ ... ]")
+    sum_acc = sum_acc + 20
+]
+
+log("Accumulator after blocks:")
+log(sum_acc)
+
+# 6. Functions declared with modern curly braces
+mk add_values(a, b) {
+    givout a + b
+}
+
+set result = add_values(15, 25)
+log("Function with { ... } result:")
+log(result)
+
+# 7. Pattern matching with modern curly braces
+set code_status = 200
+match code_status {
+    case 200 => {
+        set msg = "HTTP OK"
+        log("Match case { ... }:")
+        log(msg)
+    }
+    case 404 => {
+        log("Not Found")
+    }
+    else => {
+        log("Unknown status")
+    }
+}
+
+# 8. Loop with curly braces
+set loop_counter = 0
+while loop_counter < 3 {
+    loop_counter = loop_counter + 1
+}
+log("While loop with { ... } counter:")
+log(loop_counter)
+
+log("==================================================")
+log("[SUCCESS] All v4.4 Modern Syntax Features Passed! ")
+log("==================================================")

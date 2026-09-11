@@ -1,0 +1,48 @@
+# Corvus Ecosystem Expansion Test Suite (v4.2)
+
+get collections;
+get math_ext;
+get sqlite;
+get kv_store;
+get event_emitter;
+
+log("--- Testing Collections (Stack & Queue) ---")
+var s = collections.Stack()
+s.push("Item 1")
+s.push("Item 2")
+log("Stack peek: " + str(s.peek()))
+log("Stack size: " + str(s.size()))
+
+var q = collections.Queue()
+q.enqueue("Task A")
+q.enqueue("Task B")
+log("Queue peek: " + str(q.peek()))
+
+log("--- Testing Math Extensions & Vec2 ---")
+var v1 = math_ext.Vec2(3, 4)
+log("Vec2 (3,4) magnitude: " + str(v1.mag()))
+log("Sin(radians(90)): " + str(math_ext.sin(math_ext.radians(90))))
+
+log("--- Testing Embedded SQLite Database ---")
+var db = sqlite.connect(":memory:")
+sqlite.execute(db, "CREATE TABLE users (id INT, name TEXT)", {})
+sqlite.execute(db, "INSERT INTO users VALUES (1, 'Saatvik')", {})
+var users = sqlite.fetch_all(db, "SELECT * FROM users", {})
+log("SQLite User Fetch: " + str(users))
+sqlite.close(db)
+
+log("--- Testing Persistent Key-Value Store ---")
+var kv = kv_store.KVStore("scratch/test_kv.json")
+kv.set("theme", "dark")
+kv.set("version", 4.2)
+log("KV Store theme: " + str(kv.get("theme")))
+
+log("--- Testing Event Emitter ---")
+var ee = event_emitter.EventEmitter()
+func on_user_login(user) [
+    log("Event Received -> User Logged In: " + str(user))
+]
+ee.on("login", on_user_login)
+ee.emit("login", "Developer123")
+
+log("[SUCCESS]: Corvus Ecosystem Expansion Suite Executed Successfully!")

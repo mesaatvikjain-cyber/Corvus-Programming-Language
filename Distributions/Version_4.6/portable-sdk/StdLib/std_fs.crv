@@ -1,0 +1,18 @@
+# Corvus Standard Library: File System Operations (std_fs.crv)
+
+func read_file(filepath) {
+    # Uses native runtime file reader
+    givout process.run("cat " + filepath)
+}
+
+func write_file(filepath, content) {
+    # Writes content to file path
+    process.run("echo " + content + " > " + filepath)
+    givout true
+}
+
+func file_exists(filepath) {
+    # Checks file existence
+    var res = process.run("test -f " + filepath)
+    givout res == 0
+}

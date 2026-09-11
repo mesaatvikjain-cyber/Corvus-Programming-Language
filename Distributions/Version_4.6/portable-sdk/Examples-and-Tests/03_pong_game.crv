@@ -1,0 +1,100 @@
+# Corvus v4.2 Showcase: Playable 2-Player Desktop Pong Game
+# Zero configuration! Controls: W/S (Player 1) and Up/Down (Player 2)
+
+graphics.init_window("Corvus Pong v4.2 Desktop", 800, 500, "#0b0f19")
+
+var p1_y = 200
+var p2_y = 200
+var ball_x = 400
+var ball_y = 250
+var ball_vx = 6
+var ball_vy = 4
+
+var score1 = 0
+var score2 = 0
+
+log("Corvus Pong Game Launched!")
+
+while (graphics.is_open()) [
+    # Player 1 Controls (W/S)
+    if (graphics.is_key_pressed("w")) [
+        if (p1_y > 10) [ set p1_y = p1_y - 8 ]
+    ]
+    if (graphics.is_key_pressed("s")) [
+        if (p1_y < 390) [ set p1_y = p1_y + 8 ]
+    ]
+
+    # Player 2 Controls (Up/Down)
+    if (graphics.is_key_pressed("Up")) [
+        if (p2_y > 10) [ set p2_y = p2_y - 8 ]
+    ]
+    if (graphics.is_key_pressed("Down")) [
+        if (p2_y < 390) [ set p2_y = p2_y + 8 ]
+    ]
+
+    # Ball Physics Movement
+    set ball_x = ball_x + ball_vx
+    set ball_y = ball_y + ball_vy
+
+    # Top & Bottom Bounce
+    if (ball_y <= 10) [ set ball_vy = 0 - ball_vy ]
+    if (ball_y >= 490) [ set ball_vy = 0 - ball_vy ]
+
+    # Paddle 1 Collision (Left)
+    if (ball_x <= 40) [
+        if (ball_y >= p1_y) [
+            if (ball_y <= p1_y + 100) [
+                set ball_vx = 0 - ball_vx
+                set ball_x = 45
+            ]
+        ]
+    ]
+
+    # Paddle 2 Collision (Right)
+    if (ball_x >= 760) [
+        if (ball_y >= p2_y) [
+            if (ball_y <= p2_y + 100) [
+                set ball_vx = 0 - ball_vx
+                set ball_x = 755
+            ]
+        ]
+    ]
+
+    # Goal Check (Player 2 Score)
+    if (ball_x < 0) [
+        set score2 = score2 + 1
+        set ball_x = 400
+        set ball_y = 250
+        set ball_vx = 6
+    ]
+
+    # Goal Check (Player 1 Score)
+    if (ball_x > 800) [
+        set score1 = score1 + 1
+        set ball_x = 400
+        set ball_y = 250
+        set ball_vx = 0 - 6
+    ]
+
+    # Render
+    graphics.clear("#0b0f19")
+
+    # Center Net Line
+    graphics.draw_line(400, 0, 400, 500, "#1e293b", 4)
+
+    # Draw Paddles
+    graphics.draw_rect(20, p1_y, 16, 100, "#38bdf8", 1)
+    graphics.draw_rect(764, p2_y, 16, 100, "#fb923c", 1)
+
+    # Draw Ball
+    graphics.draw_circle(ball_x, ball_y, 10, "#4ade80", 1)
+
+    # Scores & Header
+    graphics.draw_text(str(score1), 320, 30, 32, "#38bdf8")
+    graphics.draw_text(str(score2), 460, 30, 32, "#fb923c")
+    graphics.draw_text("W/S: P1 | Up/Down: P2", 300, 460, 14, "#94a3b8")
+
+    graphics.fps(60)
+]
+
+log("Pong Game Closed.")

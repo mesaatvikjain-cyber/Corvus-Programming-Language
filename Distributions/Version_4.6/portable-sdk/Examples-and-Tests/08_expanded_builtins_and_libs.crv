@@ -1,0 +1,33 @@
+// 08_expanded_builtins_and_libs.crv
+// Demonstrating Python Built-in Parity & Standard Modules (gui, http, process)
+
+get http
+get process
+
+// 1. Expanded Global Built-in Functions
+set lis; numbers = {15, 3, 42, 8, 99}
+log("Sum =")
+log(sum(numbers))
+
+log("Min =")
+log(min(numbers))
+
+log("Max =")
+log(max(numbers))
+
+log("Abs(-100) =")
+log(abs(-100))
+
+set str; val_type = type("Hello Corvus")
+log("Type of string =")
+log(val_type)
+
+// 2. Process Module
+set str; cwd_path = process.cwd()
+log("Current Working Directory =")
+log(cwd_path)
+
+// 3. HTTP Request Module
+set str; ip_info = http.get("https://httpbin.org/ip")
+log("HTTP GET Response:")
+log(ip_info)

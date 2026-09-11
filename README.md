@@ -20,20 +20,20 @@
 
 ---
 
-## 📦 Zero-Dependency Standalone Distributions & Portable SDK (v4.5 & v4.4)
+## 📦 Zero-Dependency Standalone Distributions & Portable SDK (v4.6 & v4.5)
 
-Corvus ships with **100% zero-dependency, standalone native executables** and a **portable SDK bundle** inside [`Distributions/Version_4.5/`](Distributions/Version_4.5/README.md) and [`Distributions/Version_4.4/`](Distributions/Version_4.4/README.md). **No Python installation is required!**
+Corvus ships with **100% zero-dependency, standalone native executables** and a **portable SDK bundle** inside [`Distributions/Version_4.6/`](Distributions/Version_4.6/README.md), [`Distributions/Version_4.5/`](Distributions/Version_4.5/README.md) and [`Distributions/Version_4.4/`](Distributions/Version_4.4/README.md). **No Python installation is required!**
 
 * **🌟 Tier 1: Standalone Single-File Executables (`standalone/`)**:
   - `corvus.exe` — Self-contained Corvus Bytecode VM, `.crvc` Binary Compiler, Disassembler, Interpreter, REPL, Linter, Formatter, and Profiler.
   - `corvusc.exe` — Self-contained C99 Native Compiler driver with `-O3` pipeline optimization.
-  - One-click installer: Run `.\Distributions\Version_4.5\install_standalone_windows.ps1` (or `bash install_standalone_linux.sh` / `bash install_standalone_macos.sh`).
+  - One-click installer: Run `.\Distributions\Version_4.6\install_standalone_windows.ps1` (or `bash install_standalone_linux.sh` / `bash install_standalone_macos.sh`).
 * **🧰 Tier 2: All-in-One Portable SDK (`portable-sdk/`)**:
   - Includes `bin/corvus.bat`, `bin/corvusc.bat`, standard library (`StdLib/`), examples, and zero-config embedded runtime bootstrap.
 
 ---
 
-## 🛠️ Automated Cross-Platform Installers (v1.1 - v4.5)
+## 🛠️ Automated Cross-Platform Installers (v1.1 - v4.6)
 
 Corvus includes self-contained automated installer scripts for **Windows** (PowerShell), **Linux** (Bash), and **macOS** (Zsh/Bash) for **every single version release**!
 
@@ -81,6 +81,7 @@ Every version release of Corvus includes a dedicated Markdown hands-on tutorial 
 * **[Version 4.3 Tutorial](Documentation/tutorials/08_v4.3_ai_ml_suite_and_diagnostics_tutorial.md)**: AI & Deep Learning Stack (`tensorflow`, `torch`, `numpy`, `pandas`, `scikit_learn`, `transformers`), 30+ Standard Library Modules, and Rust-Style Diagnostic Knowledge Base (`--explain`, `--ai-fix`).
 * **[Version 4.4 Tutorial](Documentation/tutorials/09_v4.4_syntax_ergonomics_and_type_inference_tutorial.md)**: Modern Syntax Ergonomics, Universal Dual Brackets (`{ ... }` / `[ ... ]`), Smart Type Inference (`set x = 10`), Top-level `const`, Semicolon-optional typed declarations.
 * **[Version 4.5 Tutorial](Documentation/tutorials/10_v4.5_bytecode_vm_and_compiler_tutorial.md)**: Corvus Bytecode Virtual Machine (`CorvusVM`), Compact `.crvc` Binary Executable Specification, Bytecode Compiler & Disassembler (`corvus compile`, `corvus dis`, `corvus --vm`).
+* **[Version 4.6 Tutorial](Documentation/tutorials/11_v4.6_security_hardening_and_resilience_tutorial.md)**: Enterprise Security Hardening, Subprocess Sanitization, SSRF/DoS Bounds Guards, SQLite Prepared Sequences, Hardened Bytecode Deserializer, and VM Stack Guards.
 
 ---
 
@@ -100,6 +101,7 @@ The Corvus codebase is structured into explicit, standalone version releases so 
 | **[`versions/Version_4.3/`](versions/Version_4.3/)** | **v4.3** | **100% Compiler-Interpreter Parity & Modern Tooling**: **Native Matrix Multiplication Operator (`@`)**, **C99 Transpiler Backend (`-O3`)**, **AST Constant Folding & Pruning Optimizer**, **High-Precision Benchmarking & AST Profiler**, **Modern F-Strings (`f"..."`) & Inline Ternaries (`? :`)**, **Dynamic Dictionaries in Native Code**, **Strict Static Type Checker (`--strict`)**, **Canonical Formatter (`fmt`)**, **Test Runner (`test`)**, **Integrated CPM Package Manager**, **Rust-Style Diagnostic Catalog (`--explain <CODE>`)**, **Levenshtein Typo Heuristics** | Complete Dual Engine: Enterprise AI/ML Interpreter & Ultra-Fast Native C99/Assembly Compiler with 100% Feature Parity | [`Win`](versions/Version_4.3/install_windows.ps1) \| [`Linux`](versions/Version_4.3/install_linux.sh) \| [`macOS`](versions/Version_4.3/install_macos.sh) |
 | **[`versions/Version_4.4/`](versions/Version_4.4/)** | **v4.4** | **Modern Syntax Ergonomics & Universal Dual Brackets**: **Smart Type Inference (`set x = 10`)**, **Universal Dual Brackets for Code Blocks (`{ ... }` and `[ ... ]`)**, **Universal Dual Brackets for Lists (`[ ... ]` and `{ ... }`)**, **First-Class Top-Level `const` Declarations**, **Semicolon-Optional Typed Declarations (`set int count = 42`)**, **Flexible Expression Conditionals without mandatory parentheses**, **100% Dual Engine Parity across Interpreter & C99 Native Compiler** | Full Modern Ergonomics Interpreter & Ultra-Fast Native C99 Compiler (-O3) with Zero Breaking Changes | [`Win`](versions/Version_4.4/install_windows.ps1) \| [`Linux`](versions/Version_4.4/install_linux.sh) \| [`macOS`](versions/Version_4.4/install_macos.sh) |
 | **[`versions/Version_4.5/`](versions/Version_4.5/)** | **v4.5** | **Bytecode Virtual Machine & `.crvc` Binary Compiler**: **High-Performance Stack-based VM (`CorvusVM`)**, **Compact Binary Executable Format (`.crvc`)**, **Bytecode Compiler (`corvus compile`)**, **Instruction Disassembler (`corvus dis`)**, **Direct VM Runner (`corvus --vm`)**, **First-Class Matrix Math `@` in Bytecode**, **Full Standalone & Portable SDK Bundles** | Tri-Engine Architecture: AST Tree-Walk Interpreter, Stack Bytecode Virtual Machine, and Ultra-Fast Native C99 Compiler | [`Win`](versions/Version_4.5/install_windows.ps1) \| [`Linux`](versions/Version_4.5/install_linux.sh) \| [`macOS`](versions/Version_4.5/install_macos.sh) |
+| **[`versions/Version_4.6/`](versions/Version_4.6/)** | **v4.6** | **Enterprise Security Hardening & Robustness Engine**: **Zero `shell=True` Subprocess Execution**, **SSRF & Resource Bounds Enforcement (10MB Payload Limits, URL Scheme Whitelisting)**, **Safe SQLite Parameterization**, **HMAC-SHA256, SHA-512 & Secure Random Bytes**, **Hardened Bytecode Deserializer (Truncation & Bounds Protected)**, **Call Stack Depth & Stack Guard Rails (`MAX_STACK_DEPTH = 10000`)** | Hardened Tri-Engine Architecture: Secure AST Interpreter, Safe Stack Bytecode VM, and Optimized C99 Compiler | [`Win`](versions/Version_4.6/install_windows.ps1) \| [`Linux`](versions/Version_4.6/install_linux.sh) \| [`macOS`](versions/Version_4.6/install_macos.sh) |
 
 
 ---

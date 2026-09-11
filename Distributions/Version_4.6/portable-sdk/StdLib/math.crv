@@ -1,0 +1,63 @@
+# Corvus Standard Library: Native Math Module (math.crv)
+
+func abs(x) {
+    if (x < 0) {
+        givout 0 - x
+    }
+    givout x
+}
+
+func max(a, b) {
+    if (a > b) {
+        givout a
+    }
+    givout b
+}
+
+func min(a, b) {
+    if (a < b) {
+        givout a
+    }
+    givout b
+}
+
+func pow(base, exp) {
+    var result = 1
+    var i = 0
+    while (i < exp) {
+        set result = result * base
+        set i = i + 1
+    }
+    givout result
+}
+
+func factorial(n) {
+    if (n <= 1) {
+        givout 1
+    }
+    givout n * factorial(n - 1)
+}
+
+func clamp(val, min_val, max_val) {
+    if (val < min_val) {
+        givout min_val
+    }
+    if (val > max_val) {
+        givout max_val
+    }
+    givout val
+}
+
+func sqrt_approx(n) {
+    if (n < 0) {
+        givout 0
+    }
+    var x = n
+    var y = 1
+    var e = 1
+    while (x - y > e) {
+        set x = (x + y) / 2
+        set y = n / x
+    }
+    givout x
+}

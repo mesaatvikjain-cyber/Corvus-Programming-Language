@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -20,7 +20,7 @@
         </div>
         <div class="header-links">
             <a href="https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-" target="_blank" class="header-link">GitHub Repository</a>
-            <span class="version-badge">v4.5 Bytecode VM &amp; Compiler</span>
+            <span class="version-badge">v4.6 Enterprise Hardened</span>
         </div>
     </header>
 
@@ -164,7 +164,7 @@ var double = lambda(x) -> x*2</code></pre>
 
             <!-- Version Tutorials Section -->
             <section id="version-tutorials" class="doc-section">
-                <h1>Interactive Version Tutorials (v1.1 - v4.1)</h1>
+                <h1>Interactive Version Tutorials (v1.1 - v4.6)</h1>
                 <p>Select a version release to view hands-on code walkthroughs and architectural evolution guides:</p>
                 
                 <div class="tutorial-tabs">
@@ -178,6 +178,7 @@ var double = lambda(x) -> x*2</code></pre>
                     <button class="tab-btn" data-tab="tab-v43">Version 4.3</button>
                     <button class="tab-btn" data-tab="tab-v44">Version 4.4</button>
                     <button class="tab-btn" data-tab="tab-v45">Version 4.5</button>
+                    <button class="tab-btn" data-tab="tab-v46">Version 4.6</button>
                 </div>
 
                 <!-- Tab v1.1 -->
@@ -366,16 +367,34 @@ match count {
 
 # 2. Inspect instructions with the interactive disassembler
 # corvus dis app.crvc
-# Disassembly:
-# 0000  LOAD_CONST      1 (42)
-# 0003  STORE_NAME      2 (score)
-# 0006  LOAD_NAME       2 (score)
-# 0009  PRINT           1
-# 0012  RETURN_VALUE
 
 # 3. Direct execution on CorvusVM with zero overhead
 # corvus --vm app.crv
 # corvus app.crvc</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.6 -->
+                <div id="tab-v46" class="tab-content">
+                    <h2>v4.6 Tutorial: Enterprise Security Hardening &amp; Robustness Engine</h2>
+                    <p>Explore production-grade security protections: safe non-shell subprocess dispatching, SSRF &amp; memory payload limit guards, SQLite query parameterization, cryptographically secure random bytes, HMAC-SHA256, and VM call stack depth bounds.</p>
+                    <div class="code-wrapper">
+                        <pre><code># 1. Safe Network Request with 10MB payload guard &amp; scheme validation
+get net
+set res = net.get("https://api.github.com/zen")
+
+# 2. Cryptographically secure random tokens &amp; HMAC-SHA256
+get crypto
+set token = crypto.random_bytes(32)
+set signature = crypto.hmac_sha256("app_secret_key", "payload_data")
+
+# 3. Parameterized Safe Database Queries (Zero SQL Injection)
+get sqlite
+set db = sqlite.open("app.db")
+set users = db.query("SELECT * FROM accounts WHERE role = ? AND active = ?", ["admin", 1])
+
+# 4. Run official security hardening test suite
+# python Examples-and-Tests/22_security_hardening_suite.py</code></pre>
                     </div>
                 </div>
             </section>

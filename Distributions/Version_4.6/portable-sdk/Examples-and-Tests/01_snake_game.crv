@@ -1,0 +1,79 @@
+# Corvus v4.2 Showcase: Playable Snake Desktop Game
+# Zero configuration! Runs natively with built-in graphics module.
+
+graphics.init_window("Corvus Snake Game v4.2", 800, 600, "#0f172a")
+
+var snake_x = 400
+var snake_y = 300
+var dir_x = 20
+var dir_y = 0
+
+var food_x = 200
+var food_y = 200
+var score = 0
+
+log("Corvus Snake Game Launched! Use Arrow Keys to control the snake.")
+
+while (graphics.is_open()) [
+    # Process Controls
+    if (graphics.is_key_pressed("Up")) [
+        if (dir_y == 0) [
+            set dir_x = 0
+            set dir_y = 0 - 20
+        ]
+    ]
+    if (graphics.is_key_pressed("Down")) [
+        if (dir_y == 0) [
+            set dir_x = 0
+            set dir_y = 20
+        ]
+    ]
+    if (graphics.is_key_pressed("Left")) [
+        if (dir_x == 0) [
+            set dir_x = 0 - 20
+            set dir_y = 0
+        ]
+    ]
+    if (graphics.is_key_pressed("Right")) [
+        if (dir_x == 0) [
+            set dir_x = 20
+            set dir_y = 0
+        ]
+    ]
+
+    # Move Snake Head
+    set snake_x = snake_x + dir_x
+    set snake_y = snake_y + dir_y
+
+    # Screen Bounds Wrap
+    if (snake_x < 0) [ set snake_x = 780 ]
+    if (snake_x >= 800) [ set snake_x = 0 ]
+    if (snake_y < 0) [ set snake_y = 580 ]
+    if (snake_y >= 600) [ set snake_y = 0 ]
+
+    # Food Collision Check
+    if (abs(snake_x - food_x) < 20) [
+        if (abs(snake_y - food_y) < 20) [
+            set score = score + 10
+            set food_x = (score * 37 + 120) % 740 + 20
+            set food_y = (score * 53 + 80) % 540 + 20
+        ]
+    ]
+
+    # Render Frame
+    graphics.clear("#0f172a")
+
+    # Draw Food
+    graphics.draw_rect(food_x, food_y, 18, 18, "#ef4444", 1)
+
+    # Draw Snake Head
+    graphics.draw_rect(snake_x, snake_y, 18, 18, "#34d399", 1)
+
+    # Draw UI & Score
+    graphics.draw_text("SCORE: " + str(score), 20, 20, 20, "#38bdf8")
+    graphics.draw_text("Corvus v4.2 Zero-Config Engine", 500, 20, 16, "#94a3b8")
+
+    graphics.fps(15)
+]
+
+log("Snake Game Closed.")
