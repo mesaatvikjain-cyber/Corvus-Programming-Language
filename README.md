@@ -236,6 +236,19 @@ python Compiler/CorvusC_c.py myfile.crv -o myfile.exe -O3 --run
 
 ---
 
+## 🐛 Found a Bug?
+
+We want Corvus to be as robust and developer-friendly as possible! If you encounter an unexpected error, crash, or parser failure, please **[open an issue on GitHub](https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language/issues/new/choose)** using our automated issue template and include:
+
+1. **Corvus version** (e.g. `v4.6`, `v4.5`, or `v4.4`)
+2. **Operating system** (Windows, Linux, or macOS)
+3. **Minimal `.crv` program** that reproduces the problem
+4. **Expected behavior**
+5. **Actual behavior**
+6. **Error / output** (full terminal output or traceback)
+
+---
+
 ## 📜 License & Author
 
 - **Author**: Saatvik Jain
