@@ -577,6 +577,8 @@ class AsmGeneratorLinux:
             if not hasattr(self, "imported_modules"):
                 self.imported_modules = set()
             if mod_name and mod_name not in self.imported_modules:
+                if ".." in mod_name:
+                    raise Exception("Invalid file path")
                 self.imported_modules.add(mod_name)
                 candidates = [
                     f"{mod_name}.crv",
