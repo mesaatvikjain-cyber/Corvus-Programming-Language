@@ -2,6 +2,7 @@ import sys
 import os
 import shutil
 import subprocess
+import re
 
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if base_dir not in sys.path:
@@ -26,6 +27,11 @@ def find_tool(names):
 
 
 def compile_linux(source_path, output_path=None, run_after=False, keep_asm=False):
+    if not re.match(r'^[a-zA-Z0-9_\-./\\]+$', source_path):
+        raise ValueError("Invalid source_path")
+    if output_path is not None:
+        if not re.match(r'^[a-zA-Z0-9_\-./\\]+$', output_path):
+            raise ValueError("Invalid output_path")
     base_name = os.path.splitext(source_path)[0]
     asm_file = f"{base_name}.asm"
     obj_file = f"{base_name}.o"

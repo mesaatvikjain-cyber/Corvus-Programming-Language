@@ -2,6 +2,7 @@ import sys
 import os
 import shutil
 import subprocess
+import re
 
 try:
     from Compiler_Core.Lexercompiler import tokenize
@@ -84,6 +85,9 @@ def compile_linux(source_path, output_path=None, run_after=False, keep_asm=False
     print(f"\n[SUCCESS] Built native Linux executable: {exe_file}")
 
     if run_after:
+        if not re.match(r'^[a-zA-Z0-9_\-./\\]+$', exe_file):
+            print("[ERROR] Invalid executable file name.")
+            sys.exit(1)
         print(f"\n[RUN] Running ./{exe_file}:\n" + "=" * 40)
         subprocess.run([f"./{exe_file}"], shell=True)
 
