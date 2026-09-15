@@ -1,0 +1,77 @@
+# Corvus Full Feature Parity Test Suite (Compiler & Interpreter Parity)
+# Tests @ Matrix Multiplication, Built-ins (sum, min, max, abs, round, type, range),
+# Dictionaries, List Methods (.add, .pop, .length), String Methods (.upper), and Math Module.
+
+log("==================================================")
+log("  Corvus Full Feature Parity Suite (v4.3)         ")
+log("==================================================")
+
+# 1. Native Matrix Multiplication (@ Operator)
+set lis; m1 = [[1, 2], [3, 4]]
+set lis; m2 = [[5, 6], [7, 8]]
+set lis; mm_res = m1 @ m2
+log("Matrix Multiplication @ Result:")
+log(mm_res)
+
+# 2. Built-in Mathematical & Utility Functions
+set lis; numbers = {10, 20, 30, 40}
+set int; total = sum(numbers)
+set int; smallest = min(15, 8)
+set int; largest = max(15, 8)
+set int; positive_val = abs(-99)
+set flo; rounded_val = round(3.14159, 2)
+set str; type_name = type(42)
+
+log("Builtins -> Sum:")
+log(total)
+log("Builtins -> Min:")
+log(smallest)
+log("Builtins -> Max:")
+log(largest)
+log("Builtins -> Abs:")
+log(positive_val)
+log("Builtins -> Round:")
+log(rounded_val)
+log("Builtins -> Type:")
+log(type_name)
+
+# 3. Dynamic List Methods (.add, .pop, .length)
+set lis; fruits = {"apple", "banana"}
+fruits.add("cherry")
+log("List after add:")
+log(fruits)
+log("List length:")
+log(fruits.length())
+
+set str; removed = fruits.pop()
+log("Popped element:")
+log(removed)
+log("List after pop:")
+log(fruits)
+
+# 4. Dictionaries & Key Indexing
+set dic; config = {"language": "Corvus", "target": "native"}
+log("Dictionary config:")
+log(config)
+log("Dictionary lookup ['language']:")
+log(config["language"])
+
+# 5. String Manipulation Methods
+set str; sample_str = "corvus language"
+set str; shout = sample_str.upper()
+log("String upper:")
+log(shout)
+
+# 6. Standard Math Module Method
+set flo; root_val = math.sqrt(64.0)
+log("Math sqrt(64.0):")
+log(root_val)
+
+# 7. Modern F-String and Ternary in Parity
+set str; status = total > 50 ? "PASSED" : "FAILED"
+set str; banner = f"Status: {status} | Final Score: {total}"
+log(banner)
+
+log("==================================================")
+log("[SUCCESS] Compiler-Interpreter Full Parity Verified!")
+log("==================================================")

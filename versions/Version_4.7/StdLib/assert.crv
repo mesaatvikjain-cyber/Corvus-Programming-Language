@@ -1,0 +1,27 @@
+# Corvus Program State Assertion Module
+
+func equal(a, b) [
+    if (a != b) [
+        log("[AssertionError]: Expected " + str(a) + " == " + str(b))
+        givout 0
+    ]
+    givout 1
+]
+
+func is_true(condition) [
+    if (condition == 0) [
+        log("[AssertionError]: Condition evaluated to False")
+        givout 0
+    ]
+    givout 1
+]
+
+func throws(fn) [
+    try [
+        fn()
+        log("[AssertionError]: Function failed to throw expected exception")
+        givout 0
+    ] catch [
+        givout 1
+    ]
+]

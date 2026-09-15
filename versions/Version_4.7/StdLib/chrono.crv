@@ -1,0 +1,13 @@
+# Corvus Chrono Timing & Date Module
+
+func now() [
+    givout chrono.now()
+]
+
+func sleep(ms) [
+    givout chrono.sleep(ms)
+]
+
+func format_date(ts) [
+    givout chrono.format_date(ts)
+]

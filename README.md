@@ -102,6 +102,7 @@ The Corvus codebase is structured into explicit, standalone version releases so 
 | **[`versions/Version_4.4/`](versions/Version_4.4/)** | **v4.4** | **Modern Syntax Ergonomics & Universal Dual Brackets**: **Smart Type Inference (`set x = 10`)**, **Universal Dual Brackets for Code Blocks (`{ ... }` and `[ ... ]`)**, **Universal Dual Brackets for Lists (`[ ... ]` and `{ ... }`)**, **First-Class Top-Level `const` Declarations**, **Semicolon-Optional Typed Declarations (`set int count = 42`)**, **Flexible Expression Conditionals without mandatory parentheses**, **100% Dual Engine Parity across Interpreter & C99 Native Compiler** | Full Modern Ergonomics Interpreter & Ultra-Fast Native C99 Compiler (-O3) with Zero Breaking Changes | [`Win`](versions/Version_4.4/install_windows.ps1) \| [`Linux`](versions/Version_4.4/install_linux.sh) \| [`macOS`](versions/Version_4.4/install_macos.sh) |
 | **[`versions/Version_4.5/`](versions/Version_4.5/)** | **v4.5** | **Bytecode Virtual Machine & `.crvc` Binary Compiler**: **High-Performance Stack-based VM (`CorvusVM`)**, **Compact Binary Executable Format (`.crvc`)**, **Bytecode Compiler (`corvus compile`)**, **Instruction Disassembler (`corvus dis`)**, **Direct VM Runner (`corvus --vm`)**, **First-Class Matrix Math `@` in Bytecode**, **Full Standalone & Portable SDK Bundles** | Tri-Engine Architecture: AST Tree-Walk Interpreter, Stack Bytecode Virtual Machine, and Ultra-Fast Native C99 Compiler | [`Win`](versions/Version_4.5/install_windows.ps1) \| [`Linux`](versions/Version_4.5/install_linux.sh) \| [`macOS`](versions/Version_4.5/install_macos.sh) |
 | **[`versions/Version_4.6/`](versions/Version_4.6/)** | **v4.6** | **Enterprise Security Hardening, Robustness Engine & Automated Fuzzing**: **Zero `shell=True` Subprocess Execution**, **SSRF & Resource Bounds Enforcement (10MB Payload Limits, URL Scheme Whitelisting)**, **Safe SQLite Parameterization**, **HMAC-SHA256, SHA-512 & Secure Random Bytes**, **Hardened Bytecode Deserializer (Truncation & Bounds Protected)**, **Call Stack Depth & Stack Guard Rails (`MAX_STACK_DEPTH = 10000`)**, **Categorized Negative Test Suite (`test/`) & Automated Fuzzer (`test/fuzzer.py`)** | Hardened Tri-Engine Architecture: Secure AST Interpreter, Safe Stack Bytecode VM, and Optimized C99 Compiler | [`Win`](versions/Version_4.6/install_windows.ps1) \| [`Linux`](versions/Version_4.6/install_linux.sh) \| [`macOS`](versions/Version_4.6/install_macos.sh) |
+| **[`versions/Version_4.7/`](versions/Version_4.7/)** | **v4.7** | **"RavenAI" Built-in AI Assistant & Transpiler**: **Interactive AI Chat Assistant (`corvus ai`)**, **Typo-Tolerant & Fuzzy Semantic Q&A (`corvus ai ask`)**, **Structural Code Explainer & AST Inspector (`corvus ai explain`)**, **Diagnostic Bug Analysis & Automatic Patch Synthesis (`corvus ai fix`)**, **Python-to-Corvus Code Transpiler (`corvus ai translate`)** | AI-Augmented Tri-Engine Architecture: Intelligent AST Interpreter, Bytecode VM, and C99 Native Compiler | [`Win`](versions/Version_4.7/install_windows.ps1) \| [`Linux`](versions/Version_4.7/install_linux.sh) \| [`macOS`](versions/Version_4.7/install_macos.sh) |
 
 
 ---
@@ -246,6 +247,26 @@ python test/fuzzer.py -n 100 -t 10
 
 # Run standard test suites across language features
 python Interpreter/Corvus.py test Examples-and-Tests
+```
+
+#### 11. RavenAI Built-in Developer Assistant & Transpiler (`corvus ai`)
+Corvus v4.7 includes **RavenAI**, a native offline intelligent assistant specializing in Corvus syntax, code structural inspection, automated bug fixes, and Python-to-Corvus transpilation:
+
+```bash
+# 1. Launch interactive RavenAI assistant chat
+corvus ai
+
+# 2. Ask any question about Corvus syntax or features (with typo tolerance!)
+corvus ai ask "How do classes and constructors work in Corvus?"
+
+# 3. Analyze and explain any Corvus file or snippet
+corvus ai explain Examples-and-Tests/17_matrix_matmul_suite.crv
+
+# 4. Diagnose broken scripts and synthesize automatic patches
+corvus ai fix broken_script.crv
+
+# 5. Transpile Python source code directly into valid Corvus code
+corvus ai translate script.py
 ```
 
 ---

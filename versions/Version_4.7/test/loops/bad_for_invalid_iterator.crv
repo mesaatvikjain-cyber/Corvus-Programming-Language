@@ -1,0 +1,4 @@
+// For-in loop over non-iterable number
+for item in 42 [
+    log(item)
+]
