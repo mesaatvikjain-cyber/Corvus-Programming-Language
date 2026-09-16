@@ -15,12 +15,14 @@ Corvus/
 ├── Compiler_Linux/       # 🐧 Linux x86_64 NASM Assembly Compiler backend
 ├── Compiler_MacOS/       # 🍏 macOS Mach-O NASM Assembly Compiler backend
 ├── StdLib/               # 📚 30+ Standard Library modules (.crv and native bridges)
+├── test/                 # 🧪 Categorized Negative Test Suite & Grammar-Aware Fuzzer
 ├── Distributions/        # 📦 Zero-Dependency Standalone Executables & Portable SDKs
 │   ├── Version_4.4/      # Distribution bundle for v4.4
 │   ├── Version_4.5/      # Distribution bundle for v4.5 (Bytecode VM & Compiler)
-│   └── Version_4.6/      # Distribution bundle for v4.6 (Security Hardened & VM)
+│   ├── Version_4.6/      # Distribution bundle for v4.6 (Security Hardened & VM)
+│   └── Version_4.7/      # Distribution bundle for v4.7 (RavenAI & Hardened VM)
 ├── Documentation/        # 📖 Master Documentation, Tutorials, and Web Docs source
-│   ├── tutorials/        # Markdown tutorials for v1.1 through v4.6
+│   ├── tutorials/        # Markdown tutorials for v1.1 through v4.7
 │   ├── webpage_corvus/   # Interactive Master Documentation Website source
 │   ├── INSTALLATION_GUIDE.md # Cross-platform installation instructions
 │   └── HOSTING.md        # Hosting guide for GitHub Pages, Vercel, Netlify
@@ -28,7 +30,7 @@ Corvus/
 ├── Examples-and-Tests/   # 🧪 Test suites and real-world example programs
 ├── Editor-Extension/     # 💻 Visual Studio Code syntax & language diagnostics extension
 ├── bin/                  # 🚀 Command-line wrapper scripts (corvus, corvusc)
-├── versions/             # 📜 Historical release snapshots (v1.1 through v4.6)
+├── versions/             # 📜 Standalone release snapshots (v1.1 through v4.7)
 │   ├── Version_1.1/      # Reference AST visitor interpreter & OOP
 │   ├── Version_2.0/      # Multi-platform NASM assembly compiler
 │   ├── Version_3.0/      # Self-hosted compiler & "Murder of Crows" concurrency
@@ -39,7 +41,8 @@ Corvus/
 │   ├── Version_4.3/      # AI/ML suite, 30+ stdlib modules & diagnostics
 │   ├── Version_4.4/      # Modern dual bracket syntax & smart type inference
 │   ├── Version_4.5/      # Corvus Bytecode VM & .crvc binary compiler
-│   └── Version_4.6/      # Enterprise Security Hardening & Robustness Engine
+│   ├── Version_4.6/      # Enterprise Security Hardening & Robustness Engine
+│   └── Version_4.7/      # "RavenAI" Built-in Assistant, Transpiler & Hardened VM
 ├── install_windows.ps1   # 🪟 Interactive master Windows installer (all versions)
 ├── install_linux.sh      # 🐧 Interactive master Linux installer (all versions)
 ├── install_macos.sh      # 🍏 Interactive master macOS installer (all versions)

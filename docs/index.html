@@ -20,7 +20,7 @@
         </div>
         <div class="header-links">
             <a href="https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-" target="_blank" class="header-link">GitHub Repository</a>
-            <span class="version-badge">v4.6 Enterprise Hardened</span>
+            <span class="version-badge">v4.7 RavenAI &amp; Hardened VM</span>
         </div>
     </header>
 
@@ -40,7 +40,7 @@
             <div class="sidebar-group">
                 <div class="sidebar-title">Version Tutorials</div>
                 <ul class="sidebar-nav">
-                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v4.5)</a></li>
+                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v4.7)</a></li>
                 </ul>
             </div>
             <div class="sidebar-group">
@@ -164,7 +164,7 @@ var double = lambda(x) -> x*2</code></pre>
 
             <!-- Version Tutorials Section -->
             <section id="version-tutorials" class="doc-section">
-                <h1>Interactive Version Tutorials (v1.1 - v4.6)</h1>
+                <h1>Interactive Version Tutorials (v1.1 - v4.7)</h1>
                 <p>Select a version release to view hands-on code walkthroughs and architectural evolution guides:</p>
                 
                 <div class="tutorial-tabs">
@@ -179,6 +179,7 @@ var double = lambda(x) -> x*2</code></pre>
                     <button class="tab-btn" data-tab="tab-v44">Version 4.4</button>
                     <button class="tab-btn" data-tab="tab-v45">Version 4.5</button>
                     <button class="tab-btn" data-tab="tab-v46">Version 4.6</button>
+                    <button class="tab-btn" data-tab="tab-v47">Version 4.7</button>
                 </div>
 
                 <!-- Tab v1.1 -->
@@ -395,6 +396,28 @@ set users = db.query("SELECT * FROM accounts WHERE role = ? AND active = ?", ["a
 
 # 4. Run official security hardening test suite
 # python Examples-and-Tests/22_security_hardening_suite.py</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.7 -->
+                <div id="tab-v47" class="tab-content">
+                    <h2>v4.7 Tutorial: RavenAI Assistant, Code Explainer, Auto-Fixer &amp; Python Transpiler</h2>
+                    <p>Experience RavenAI: a 100% offline developer assistant built into the Corvus CLI. Ask questions with typo-tolerant fuzzy search, explain script architecture, auto-fix common syntax errors and Pythonisms, or transpile Python code to Corvus.</p>
+                    <div class="code-wrapper">
+                        <pre><code># 1. Ask RavenAI syntax questions (tolerant to typos like "funtion" or "matix")
+corvus ai ask "how to define a funtion?"
+
+# 2. Structural Code Explainer &amp; AST Analysis
+corvus ai explain Examples-and-Tests/01_hello_and_input.crv
+
+# 3. Diagnostic Auto-Fixer (detects print -&gt; log, def -&gt; mk func, etc.)
+corvus ai fix "def greet(name): print('Hello', name)"
+
+# 4. Transpile Python to Corvus
+corvus ai translate script.py &gt; script.crv
+
+# 5. Interactive Assistant REPL
+corvus ai chat</code></pre>
                     </div>
                 </div>
             </section>

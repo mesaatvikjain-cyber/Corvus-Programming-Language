@@ -46,23 +46,24 @@ Open PowerShell in the repository root and run:
 .\install_windows.ps1
 ```
 This presents an interactive menu where you can choose:
-* **`[0] Standalone Native Binaries v4.6 (Zero Python Required) [RECOMMENDED]`**
-* **`[1] Version 4.6 (Security Hardened, Bytecode VM & .crvc Compiler) [DEFAULT]`**
-* **`[2] Version 4.5 (Corvus Bytecode VM & .crvc Compiler)`**
-* **`[3] Version 4.4 (Universal Dual Syntax & Smart Type Inference)`**
-* **`[4] - [11] Earlier Version Releases (v4.3 down to v1.1)`**
+* **`[0] Standalone Native Binaries (Zero Python Required) [RECOMMENDED]`**
+* **`[1] Version 4.7 ("RavenAI" Assistant, Transpiler, Hardened VM) [DEFAULT]`**
+* **`[2] Version 4.6 (Security Hardened, Bytecode VM & Fuzz Tested)`**
+* **`[3] Version 4.5 (Corvus Bytecode VM & .crvc Compiler)`**
+* **`[4] Version 4.4 (Universal Dual Syntax & Smart Type Inference)`**
+* **`[5] - [12] Earlier Version Releases (v4.3 down to v1.1)`**
 
 ### Version-Specific Direct Installers
 To install a specific version directly and register CLI wrappers (`corvus`, `corvusc`) in your user PATH:
 ```powershell
-# Install Version 4.6 (Latest: Security Hardened, Bytecode VM & .crvc Compiler)
+# Install Version 4.7 (Latest: RavenAI Assistant, Transpiler, Hardened VM)
+.\versions\Version_4.7\install_windows.ps1
+
+# Install Version 4.6 (Security Hardened & Bytecode VM)
 .\versions\Version_4.6\install_windows.ps1
 
 # Install Version 4.5 (Bytecode VM, .crvc Compiler & Disassembler)
 .\versions\Version_4.5\install_windows.ps1
-
-# Install Version 4.4 (Modern Ergonomics, Dual Brackets & Inference)
-.\versions\Version_4.4\install_windows.ps1
 ```
 
 ---
@@ -77,14 +78,14 @@ bash install_linux.sh
 
 ### Version-Specific Direct Installers
 ```bash
-# Install Version 4.6 (Latest)
+# Install Version 4.7 (Latest)
+bash versions/Version_4.7/install_linux.sh
+
+# Install Version 4.6
 bash versions/Version_4.6/install_linux.sh
 
 # Install Version 4.5
 bash versions/Version_4.5/install_linux.sh
-
-# Install Version 4.4
-bash versions/Version_4.4/install_linux.sh
 ```
 
 ---
@@ -99,12 +100,12 @@ bash install_macos.sh
 
 ### Version-Specific Direct Installers
 ```bash
-# Install Version 4.6 (Latest)
+# Install Version 4.7 (Latest)
+bash versions/Version_4.7/install_macos.sh
+
+# Install Version 4.6
 bash versions/Version_4.6/install_macos.sh
 
 # Install Version 4.5
 bash versions/Version_4.5/install_macos.sh
-
-# Install Version 4.4
-bash versions/Version_4.4/install_macos.sh
 ```

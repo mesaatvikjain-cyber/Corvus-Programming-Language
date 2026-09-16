@@ -1,0 +1,5 @@
+# Corvus Sound Synth & System Audio Module
+
+func beep(freq, duration_ms) [
+    givout audio.beep(freq, duration_ms)
+]

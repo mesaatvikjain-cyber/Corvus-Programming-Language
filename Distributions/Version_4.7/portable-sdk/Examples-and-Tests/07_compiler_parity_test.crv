@@ -1,0 +1,35 @@
+// 07_compiler_parity_test.crv
+// Verifying Compiler Parity for Lambdas, Lists, Math, and OOP
+
+// 1. Math Library Functions
+get math
+
+set int; base_val = 2
+set int; exp_val = 5
+set int; pow_res = base_val ** exp_val
+log("2 ** 5 =")
+log(pow_res)
+
+// 2. Anonymous Lambdas
+set lmb; multiplier = lmb[x] => x * 3
+set int; mult_res = multiplier(7)
+log("Lambda 7 * 3 =")
+log(mult_res)
+
+// 3. Dynamic Lists and List Length
+set lis; numbers = {10, 20, 30, 40, 50}
+log("List length =")
+log(numbers.length())
+
+set int; first_elem = numbers[0]
+log("First element =")
+log(first_elem)
+
+// 4. Custom Function
+mk func calculate_total(a, b) [
+    givout a + b
+]
+
+set int; total = calculate_total(100, 50)
+log("Total =")
+log(total)

@@ -1,0 +1,9 @@
+# Corvus Base64 Encoding & Decoding Module
+
+func encode(data) [
+    givout crypto.base64_encode(data)
+]
+
+func decode(encoded_str) [
+    givout crypto.base64_decode(encoded_str)
+]

@@ -29,6 +29,8 @@
 
 ## 🌟 Key Features
 
+* **🤖 "RavenAI" Developer Assistant & Transpiler (v4.7)**: Built-in offline intelligent assistant (`corvus ai`) featuring typo-tolerant semantic Q&A (`ask`), structural code analysis (`explain`), diagnostic error auto-patching (`fix`), and Python-to-Corvus code transpilation (`translate`).
+* **🛡️ Enterprise Security Hardening & Automated Fuzzing (v4.6)**: Zero `shell=True` subprocess calls, SSRF and resource-exhaustion bounds (10MB payload limit), safe SQLite parameterization, SHA-512/HMAC crypto, stack guards (`MAX_STACK_DEPTH = 10000`), and a 28-case negative test suite with automated fuzzer.
 * **⚡ Corvus Bytecode VM & `.crvc` Binary Compiler (v4.5)**: High-performance stack-based Virtual Machine (`CorvusVM`), compact binary bytecode format (`.crvc`), bytecode compiler (`corvus compile`), and disassembler (`corvus dis`).
 * **🔄 Universal Dual Syntax (v4.4)**: Seamlessly supports mainstream `{ ... }` blocks and `[ ... ]` lists as well as classic `[ ... ]` blocks and `{ ... }` lists — zero breaking changes!
 * **🧠 Smart Type Inference (v4.4)**: Declare variables cleanly with `set name = value` or `const PI = 3.14159` without boilerplate type tokens or mandatory semicolons.

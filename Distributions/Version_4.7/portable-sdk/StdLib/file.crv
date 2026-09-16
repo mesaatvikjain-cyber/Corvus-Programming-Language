@@ -1,0 +1,13 @@
+# Corvus Standard Library: File I/O Module (file.crv)
+
+func read_all(filepath) {
+    givout std.fs.read_file(filepath)
+}
+
+func write_all(filepath, data) {
+    givout std.fs.write_file(filepath, data)
+}
+
+func file_exists(filepath) {
+    givout std.fs.file_exists(filepath)
+}
