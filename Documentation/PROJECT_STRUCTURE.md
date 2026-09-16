@@ -20,9 +20,10 @@ Corvus/
 │   ├── Version_4.4/      # Distribution bundle for v4.4
 │   ├── Version_4.5/      # Distribution bundle for v4.5 (Bytecode VM & Compiler)
 │   ├── Version_4.6/      # Distribution bundle for v4.6 (Security Hardened & VM)
-│   └── Version_4.7/      # Distribution bundle for v4.7 (RavenAI & Hardened VM)
+│   ├── Version_4.7/      # Distribution bundle for v4.7 (RavenAI & Hardened VM)
+│   └── Version_5.0/      # Distribution bundle for v5.0 (Enterprise Ecosystem)
 ├── Documentation/        # 📖 Master Documentation, Tutorials, and Web Docs source
-│   ├── tutorials/        # Markdown tutorials for v1.1 through v4.7
+│   ├── tutorials/        # Markdown tutorials for v1.1 through v5.0
 │   ├── webpage_corvus/   # Interactive Master Documentation Website source
 │   ├── INSTALLATION_GUIDE.md # Cross-platform installation instructions
 │   └── HOSTING.md        # Hosting guide for GitHub Pages, Vercel, Netlify
@@ -30,7 +31,7 @@ Corvus/
 ├── Examples-and-Tests/   # 🧪 Test suites and real-world example programs
 ├── Editor-Extension/     # 💻 Visual Studio Code syntax & language diagnostics extension
 ├── bin/                  # 🚀 Command-line wrapper scripts (corvus, corvusc)
-├── versions/             # 📜 Standalone release snapshots (v1.1 through v4.7)
+├── versions/             # 📜 Standalone release snapshots (v1.1 through v5.0)
 │   ├── Version_1.1/      # Reference AST visitor interpreter & OOP
 │   ├── Version_2.0/      # Multi-platform NASM assembly compiler
 │   ├── Version_3.0/      # Self-hosted compiler & "Murder of Crows" concurrency
@@ -42,7 +43,8 @@ Corvus/
 │   ├── Version_4.4/      # Modern dual bracket syntax & smart type inference
 │   ├── Version_4.5/      # Corvus Bytecode VM & .crvc binary compiler
 │   ├── Version_4.6/      # Enterprise Security Hardening & Robustness Engine
-│   └── Version_4.7/      # "RavenAI" Built-in Assistant, Transpiler & Hardened VM
+│   ├── Version_4.7/      # "RavenAI" Built-in Assistant, Transpiler & Hardened VM
+│   └── Version_5.0/      # Enterprise Ecosystem: RavenAI 2.0, CPM, Web, Tour, LSP, Wasm
 ├── install_windows.ps1   # 🪟 Interactive master Windows installer (all versions)
 ├── install_linux.sh      # 🐧 Interactive master Linux installer (all versions)
 ├── install_macos.sh      # 🍏 Interactive master macOS installer (all versions)
@@ -76,6 +78,12 @@ The primary development and execution driver for Corvus:
 * `vm.py`: Stack-based virtual machine with activation call frames and native matrix `@` multiplication.
 * `ast_optimizer.py`: High-level AST optimization pass (constant folding, algebraic simplification, dead branch pruning).
 * `errors.py`: Rust-style diagnostic error system with `--explain <CODE>` and Levenshtein typo correction heuristics.
+* `ai_engine.py`: RavenAI 2.0 developer assistant (`testgen`, `doc`, `review`, `export`, `ask`, `explain`, `fix`, `translate`).
+* `package_manager.py`: CPM 2.0 package manager engine resolving `corvus.json` and `corvus.lock`.
+* `lsp_server.py`: Microsoft JSON-RPC 2.0 Language Server Protocol daemon (`corvus lsp`).
+* `tour.py`: Interactive 8-lesson terminal tutorial engine (`corvus tour`).
+* `std_web.py`: Native zero-dependency micro HTTP web framework (`web.server()`).
+* `wasm_backend.py`: WebAssembly Text Format (`.wat`) emitter and HTML5 browser runner generator.
 
 ### 2. `Compiler/` & `Compiler_Core/`
 The native compilation pipeline:
@@ -85,24 +93,25 @@ The native compilation pipeline:
 
 ### 3. `StdLib/`
 Standard libraries accessible via `get <module>`:
+* **Web Framework**: `corvus_web.crv` (zero-dependency HTTP server, JSON routing, query param parsing).
 * **AI / ML Stack**: `numpy.crv`, `torch.crv`, `tensorflow.crv`, `pandas.crv`, `scikit_learn.crv`, `transformers.crv`.
 * **Graphics & Games**: `graphics.crv` (zero-dependency desktop 2D canvas).
 * **System & Utilities**: `math.crv`, `string.crv`, `file.crv`, `sys.crv`, `json.crv`, `crypto.crv`, `socket.crv`.
 
 ### 4. `Distributions/`
 Pre-packaged standalone bundles for end users who do not have Python installed:
-* **`Version_4.6/`** & **`Version_4.5/`**:
+* **`Version_5.0/`**, **`Version_4.7/`**, **`Version_4.6/`** & **`Version_4.5/`**:
   * `standalone/`: Contains single-file standalone binaries `corvus.exe` and `corvusc.exe`.
   * `portable-sdk/`: Full portable Corvus development kit with `bin/corvus.bat` and `bin/corvusc.bat`.
   * `install_standalone_windows.ps1`: One-click PATH installer.
 
 ### 5. `Documentation/` & `docs/`
-* `Documentation/tutorials/`: 11 comprehensive version tutorials spanning v1.1 up to v4.6.
+* `Documentation/tutorials/`: 13 comprehensive version tutorials spanning v1.1 up to v5.0.
 * `Documentation/webpage_corvus/`: Canonical HTML/CSS/JS source of the master interactive documentation website.
 * `docs/`: Deployment target for GitHub Pages hosting.
 
-### 6. `versions/` (`Version_1.1/` through `Version_4.6/`)
-Dedicated directory grouping all 11 historical release snapshots of Corvus. Each version snapshot is fully isolated with its own dedicated interpreter, compiler, test suite, and platform installers for reproducibility, educational reference, and regression testing.
+### 6. `versions/` (`Version_1.1/` through `Version_5.0/`)
+Dedicated directory grouping all 13 historical release snapshots of Corvus. Each version snapshot is fully isolated with its own dedicated interpreter, compiler, test suite, and platform installers for reproducibility, educational reference, and regression testing.
 
 ---
 

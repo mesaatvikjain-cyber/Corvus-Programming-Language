@@ -39,9 +39,10 @@ The Corvus compiler and runtime ecosystem follows a modern Tri-Engine design:
 - **`StdLib/`**: 30+ standard library modules written natively in Corvus syntax (`math.crv`, `string.crv`, `graphics.crv`, `sqlite.crv`, `torch.crv`, `numpy.crv`).
 - **`test/`**: **Categorized Negative Test Suite** (`variables/`, `conditions/`, `loops/`, `functions/`, `oop/`, `expressions/`) and automated grammar-aware **`fuzzer.py`**.
 - **`Examples-and-Tests/`**: Automated functional test suites and playable desktop game demos (Snake, Pong).
-- **`versions/`**: Historical release snapshots from `Version_1.1` to `Version_4.7`.
-- **`Documentation/`**: Master Documentation, tutorials (`01_...` through `12_v4.7_...`), Installation Guide, and Hosting documentation.
-- **`Editor-Extension/`**: VS Code extension package (`.vsix`) and Language Server Protocol.
+- **`Distributions/`**: Zero-dependency standalone binary releases and portable SDK bundles (`Version_5.0/`, `Version_4.7/`, `Version_4.6/`, `Version_4.5/`, `Version_4.4/`).
+- **`versions/`**: Historical release snapshots from `Version_1.1` to `Version_5.0`.
+- **`Documentation/`**: Master Documentation, tutorials (`01_...` through `13_v5.0_...`), Installation Guide, and Hosting documentation.
+- **`Editor-Extension/`**: VS Code extension package (`.vsix`) and Language Server Protocol daemon (`corvus lsp`).
 
 ---
 

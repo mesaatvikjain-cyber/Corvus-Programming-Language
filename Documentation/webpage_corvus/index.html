@@ -20,7 +20,7 @@
         </div>
         <div class="header-links">
             <a href="https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-" target="_blank" class="header-link">GitHub Repository</a>
-            <span class="version-badge">v4.7 RavenAI &amp; Hardened VM</span>
+            <span class="version-badge">v5.0 Enterprise Ecosystem</span>
         </div>
     </header>
 
@@ -40,7 +40,7 @@
             <div class="sidebar-group">
                 <div class="sidebar-title">Version Tutorials</div>
                 <ul class="sidebar-nav">
-                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v4.7)</a></li>
+                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v5.0)</a></li>
                 </ul>
             </div>
             <div class="sidebar-group">
@@ -164,7 +164,7 @@ var double = lambda(x) -> x*2</code></pre>
 
             <!-- Version Tutorials Section -->
             <section id="version-tutorials" class="doc-section">
-                <h1>Interactive Version Tutorials (v1.1 - v4.7)</h1>
+                <h1>Interactive Version Tutorials (v1.1 - v5.0)</h1>
                 <p>Select a version release to view hands-on code walkthroughs and architectural evolution guides:</p>
                 
                 <div class="tutorial-tabs">
@@ -180,6 +180,7 @@ var double = lambda(x) -> x*2</code></pre>
                     <button class="tab-btn" data-tab="tab-v45">Version 4.5</button>
                     <button class="tab-btn" data-tab="tab-v46">Version 4.6</button>
                     <button class="tab-btn" data-tab="tab-v47">Version 4.7</button>
+                    <button class="tab-btn" data-tab="tab-v50">Version 5.0</button>
                 </div>
 
                 <!-- Tab v1.1 -->
@@ -418,6 +419,46 @@ corvus ai translate script.py &gt; script.crv
 
 # 5. Interactive Assistant REPL
 corvus ai chat</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v5.0 -->
+                <div id="tab-v50" class="tab-content">
+                    <h2>v5.0 Tutorial: Enterprise Developer Ecosystem, RavenAI 2.0, CPM, Web Framework, LSP &amp; Wasm</h2>
+                    <p>Corvus v5.0 is the Enterprise Ecosystem Release: introducing <strong>RavenAI 2.0</strong> (automated unit test generator, doc generator, code review/linting, and reverse transpiler), <strong>CPM 2.0</strong> package manager, a <strong>Native Micro Web Framework</strong>, an <strong>Interactive CLI Tour</strong>, a <strong>Language Server Protocol (LSP) Daemon</strong>, and <strong>WebAssembly (Wasm) Text Export</strong>.</p>
+                    <div class="code-wrapper">
+                        <pre><code># 1. RavenAI 2.0 Automated Unit Test Suite Generation
+# corvus ai testgen my_math.crv -o test_my_math.crv
+
+# 2. Automated Markdown Documentation Generator
+# corvus ai doc my_math.crv -o API.md
+
+# 3. Intelligent Code Review &amp; Optimization Linting
+# corvus ai review my_math.crv
+
+# 4. Reverse Transpiler (Corvus -&gt; Python or C99)
+# corvus ai export my_math.crv --target py
+# corvus ai export my_math.crv --target c
+
+# 5. CPM 2.0 Package Manager
+# corvus pkg init my_app
+# corvus pkg add https://github.com/user/lib.git
+# corvus pkg install
+
+# 6. Native Micro Web Framework (StdLib/corvus_web.crv)
+get web
+set any; app = web.server(8080)
+app.route("/", \req -> "Hello from Corvus Web!")
+app.start()
+
+# 7. Interactive Terminal Tutorial (8 lessons)
+# corvus tour
+
+# 8. Language Server Protocol (LSP) Daemon for VS Code / Neovim
+# corvus lsp
+
+# 9. WebAssembly (Wasm) Text Format (.wat) &amp; HTML5 Runner
+# corvus compile app.crv --target wasm -o app.wat</code></pre>
                     </div>
                 </div>
             </section>

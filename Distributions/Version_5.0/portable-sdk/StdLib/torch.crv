@@ -1,0 +1,41 @@
+# Corvus Native PyTorch Deep Learning & Autograd Module
+
+func tensor(data, requires_grad) [
+    givout torch_engine.tensor(data, requires_grad)
+]
+
+func zeros(shape) [
+    givout torch_engine.zeros(shape)
+]
+
+func ones(shape) [
+    givout torch_engine.ones(shape)
+]
+
+func add(a, b) [
+    givout torch_engine.add(a, b)
+]
+
+func matmul(a, b) [
+    givout torch_engine.matmul(a, b)
+]
+
+func relu(x) [
+    givout torch_engine.relu(x)
+]
+
+func sigmoid(x) [
+    givout torch_engine.sigmoid(x)
+]
+
+func linear(inputs, in_features, out_features, weights, bias) [
+    givout torch_engine.linear(inputs, in_features, out_features, weights, bias)
+]
+
+func backward(y_pred, y_true) [
+    givout torch_engine.backward(y_pred, y_true)
+]
+
+func adam_step(params, grads, lr) [
+    givout torch_engine.adam_step(params, grads, lr)
+]

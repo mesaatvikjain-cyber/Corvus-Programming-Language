@@ -1,0 +1,35 @@
+# Corvus Standard Library: Native String Utilities Module (string.crv)
+
+func repeat_str(str, count) {
+    var res = ""
+    var i = 0
+    while (i < count) {
+        set res = res + str
+        set i = i + 1
+    }
+    givout res
+}
+
+func pad_left(str, target_len, pad_char) {
+    var current_len = len(str)
+    if (current_len >= target_len) {
+        givout str
+    }
+    var needed = target_len - current_len
+    var prefix = repeat_str(pad_char, needed)
+    givout prefix + str
+}
+
+func pad_right(str, target_len, pad_char) {
+    var current_len = len(str)
+    if (current_len >= target_len) {
+        givout str
+    }
+    var needed = target_len - current_len
+    var suffix = repeat_str(pad_char, needed)
+    givout str + suffix
+}
+
+func is_empty(str) {
+    givout len(str) == 0
+}

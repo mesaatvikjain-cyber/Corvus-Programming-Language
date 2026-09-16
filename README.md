@@ -20,20 +20,20 @@
 
 ---
 
-## 📦 Zero-Dependency Standalone Distributions & Portable SDK (v4.7 - v4.4)
+## 📦 Zero-Dependency Standalone Distributions & Portable SDK (v5.0 - v4.4)
 
-Corvus ships with **100% zero-dependency, standalone native executables** and a **portable SDK bundle** inside [`Distributions/Version_4.7/`](Distributions/Version_4.7/README.md), [`Distributions/Version_4.6/`](Distributions/Version_4.6/README.md), [`Distributions/Version_4.5/`](Distributions/Version_4.5/README.md) and [`Distributions/Version_4.4/`](Distributions/Version_4.4/README.md). **No Python installation is required!**
+Corvus ships with **100% zero-dependency, standalone native executables** and a **portable SDK bundle** inside [`Distributions/Version_5.0/`](Distributions/Version_5.0/README.md), [`Distributions/Version_4.7/`](Distributions/Version_4.7/README.md), [`Distributions/Version_4.6/`](Distributions/Version_4.6/README.md), [`Distributions/Version_4.5/`](Distributions/Version_4.5/README.md) and [`Distributions/Version_4.4/`](Distributions/Version_4.4/README.md). **No Python installation is required!**
 
 * **🌟 Tier 1: Standalone Single-File Executables (`standalone/`)**:
-  - `corvus.exe` — Self-contained Corvus v4.7 engine with RavenAI Assistant, Bytecode VM, `.crvc` Binary Compiler, Disassembler, Interpreter, REPL, Linter, Formatter, and Profiler.
+  - `corvus.exe` — Self-contained Corvus v5.0 engine with RavenAI 2.0 Developer Suite (TestGen, Doc, Review, Reverse Transpiler), CPM 2.0 Package Manager, Interactive CLI Tour, Language Server Protocol (LSP) Daemon, WebAssembly (Wasm) Backend, Micro Web Server, Bytecode VM, `.crvc` Binary Compiler, Disassembler, Interpreter, REPL, Linter, Formatter, and Profiler.
   - `corvusc.exe` — Self-contained C99 Native Compiler driver with `-O3` pipeline optimization.
-  - One-click installer: Run `.\Distributions\Version_4.7\install_standalone_windows.ps1` (or `bash install_standalone_linux.sh` / `bash install_standalone_macos.sh`).
+  - One-click installer: Run `.\Distributions\Version_5.0\install_standalone_windows.ps1` (or `bash install_standalone_linux.sh` / `bash install_standalone_macos.sh`).
 * **🧰 Tier 2: All-in-One Portable SDK (`portable-sdk/`)**:
   - Includes `bin/corvus.bat`, `bin/corvusc.bat`, standard library (`StdLib/`), examples, and zero-config embedded runtime bootstrap.
 
 ---
 
-## 🛠️ Automated Cross-Platform Installers (v1.1 - v4.7)
+## 🛠️ Automated Cross-Platform Installers (v1.1 - v5.0)
 
 Corvus includes self-contained automated installer scripts for **Windows** (PowerShell), **Linux** (Bash), and **macOS** (Zsh/Bash) for **every single version release**!
 
@@ -51,7 +51,7 @@ Corvus includes self-contained automated installer scripts for **Windows** (Powe
   bash install_macos.sh
   ```
 
-For detailed version-by-version installation steps, see [Documentation/INSTALLATION_GUIDE.md](Documentation/INSTALLATION_GUIDE.md) and [Distributions/Version_4.4/README.md](Distributions/Version_4.4/README.md).
+For detailed version-by-version installation steps, see [Documentation/INSTALLATION_GUIDE.md](Documentation/INSTALLATION_GUIDE.md) and [Distributions/Version_5.0/README.md](Distributions/Version_5.0/README.md).
 
 ---
 
@@ -60,9 +60,9 @@ For detailed version-by-version installation steps, see [Documentation/INSTALLAT
 Corvus features a complete, interactive, self-contained **Master Documentation Website** located inside [`Documentation/webpage_corvus/`](Documentation/webpage_corvus/index.html) (and mirrored in [`docs/`](docs/index.html) for GitHub Pages).
 
 ### 🚀 Highlights of the Documentation Webpage
-- **Interactive Version Tutorials (v1.1 - v4.3)**: Hands-on code walkthroughs with interactive tab selectors.
+- **Interactive Version Tutorials (v1.1 - v5.0)**: Hands-on code walkthroughs with interactive tab selectors.
 - **Language Syntax Quick Cheat Sheet**: Rapid reference cards for variables, control flow, functions, and OOP.
-- **16 Exhaustive Chapters**: Covers Language Story, Syntax, Control Flow, Lambdas, OOP, Functional Pipelines, Ref-Counting Memory GC, "Murder of Crows" Concurrency, Native C FFI, 30+ Standard Libraries, TAC IR Compiler, v4.1 Super Optimizer, Desktop 2D Graphics, AI/ML Suite, Rust-Style Diagnostics, and VS Code Tooling.
+- **17 Exhaustive Chapters**: Covers Language Story, Syntax, Control Flow, Lambdas, OOP, Functional Pipelines, Ref-Counting Memory GC, "Murder of Crows" Concurrency, Native C FFI, 30+ Standard Libraries, TAC IR Compiler, v4.1 Super Optimizer, Desktop 2D Graphics, AI/ML Suite, Rust-Style Diagnostics, VS Code Tooling, and v5.0 Enterprise Ecosystem.
 - **Free Online Hosting Support**: Easily host on **GitHub Pages**, **Vercel**, **Netlify**, or **Cloudflare Pages**. See [Documentation/HOSTING.md](Documentation/HOSTING.md) for step-by-step instructions.
 
 ---
@@ -83,6 +83,7 @@ Every version release of Corvus includes a dedicated Markdown hands-on tutorial 
 * **[Version 4.5 Tutorial](Documentation/tutorials/10_v4.5_bytecode_vm_and_compiler_tutorial.md)**: Corvus Bytecode Virtual Machine (`CorvusVM`), Compact `.crvc` Binary Executable Specification, Bytecode Compiler & Disassembler (`corvus compile`, `corvus dis`, `corvus --vm`).
 * **[Version 4.6 Tutorial](Documentation/tutorials/11_v4.6_security_hardening_and_resilience_tutorial.md)**: Enterprise Security Hardening, Subprocess Sanitization, SSRF/DoS Bounds Guards, SQLite Prepared Sequences, Hardened Bytecode Deserializer, and VM Stack Guards.
 * **[Version 4.7 Tutorial](Documentation/tutorials/12_v4.7_raven_ai_assistant_and_transpiler_tutorial.md)**: Built-in RavenAI Developer Assistant, Typo-Tolerant Knowledge Base, Code Explainer, Diagnostic Auto-Fixer, and Python-to-Corvus Transpiler.
+* **[Version 5.0 Tutorial](Documentation/tutorials/13_v5.0_enterprise_ecosystem_tutorial.md)**: Enterprise Ecosystem: RavenAI 2.0 (Automated TestGen, DocGen, Code Review, Reverse Transpiler), CPM 2.0 Package Manager, Native Micro Web Framework, Interactive Terminal Tour, Language Server Protocol (LSP), and WebAssembly (Wasm) Export.
 
 ---
 
@@ -92,6 +93,8 @@ The Corvus codebase is structured into explicit, standalone version releases so 
 
 | Directory | Version | Core Features | Execution Engine | Installer Scripts |
 | :--- | :--- | :--- | :--- | :--- |
+| **[`versions/Version_5.0/`](versions/Version_5.0/)** | **v5.0** | **Enterprise Developer Ecosystem**: **RavenAI 2.0 (`testgen`, `doc`, `review`, `export`)**, **CPM 2.0 Package Manager (`corvus.json` / `corvus.lock`)**, **Native Micro Web Framework (`web.server()`)**, **Interactive Terminal Tour (`corvus tour`)**, **Language Server Protocol Daemon (`corvus lsp`)**, **WebAssembly Backend (`corvus compile --target wasm`)** | Enterprise Polyglot Engine: AI-Powered Interpreter, Stack Bytecode VM, C99 Native Compiler, LSP Server & Wasm Emitter | [`Win`](versions/Version_5.0/install_windows.ps1) \| [`Linux`](versions/Version_5.0/install_linux.sh) \| [`macOS`](versions/Version_5.0/install_macos.sh) |
+| **[`versions/Version_4.7/`](versions/Version_4.7/)** | **v4.7** | **"RavenAI" Built-in AI Assistant & Transpiler**: **Interactive AI Chat Assistant (`corvus ai`)**, **Typo-Tolerant & Fuzzy Semantic Q&A (`corvus ai ask`)**, **Structural Code Explainer & AST Inspector (`corvus ai explain`)**, **Diagnostic Bug Analysis & Automatic Patch Synthesis (`corvus ai fix`)**, **Python-to-Corvus Code Transpiler (`corvus ai translate`)** | AI-Augmented Tri-Engine Architecture: Intelligent AST Interpreter, Bytecode VM, and C99 Native Compiler | [`Win`](versions/Version_4.7/install_windows.ps1) \| [`Linux`](versions/Version_4.7/install_linux.sh) \| [`macOS`](versions/Version_4.7/install_macos.sh) |
 | **[`versions/Version_1.1/`](versions/Version_1.1/)** | **v1.1** | Basic AST Interpreter, Lambdas, OOP, CPM Package Manager | Python AST Visitor Interpreter | [`Win`](versions/Version_1.1/install_windows.ps1) \| [`Linux`](versions/Version_1.1/install_linux.sh) \| [`macOS`](versions/Version_1.1/install_macos.sh) |
 | **[`versions/Version_2.0/`](versions/Version_2.0/)** | **v2.0** | Multi-Platform Native Assembly Compiler (`--target windows\|linux\|macos`), Pattern Matching, Pipeline Operator (`\|>`), Built-in Libs | NASM x86_64 Win64, ELF64, Mach-O Compiler & Interpreter | [`Win`](versions/Version_2.0/install_windows.ps1) \| [`Linux`](versions/Version_2.0/install_linux.sh) \| [`macOS`](versions/Version_2.0/install_macos.sh) |
 | **[`versions/Version_3.0/`](versions/Version_3.0/)** | **v3.0** | **Self-Hosted Compiler (`CorvusCompiler.crv`)**, **Three-Address Code (TAC) IR Optimizer**, **Ref-Counting GC**, **"Murder of Crows" 🐦 Concurrency Engine**, **Native C FFI** | Optimized TAC IR Compiler, Self-Hosted Corvus Compiler & Interpreter | [`Win`](versions/Version_3.0/install_windows.ps1) \| [`Linux`](versions/Version_3.0/install_linux.sh) \| [`macOS`](versions/Version_3.0/install_macos.sh) |
@@ -270,13 +273,45 @@ corvus ai fix broken_script.crv
 corvus ai translate script.py
 ```
 
+#### 12. Enterprise Ecosystem & Developer Tooling (`v5.0`)
+Corvus v5.0 delivers the full **Enterprise Developer Ecosystem**:
+```bash
+# 1. RavenAI 2.0 Automated Unit Test Suite Generator
+corvus ai testgen my_module.crv -o test_my_module.crv
+
+# 2. Automated API & Markdown Documentation Generator
+corvus ai doc my_module.crv -o API.md
+
+# 3. Intelligent Code Review & Optimization Linting
+corvus ai review my_module.crv
+
+# 4. Reverse Transpiler (Corvus to Python or ISO C99)
+corvus ai export my_module.crv --target py
+corvus ai export my_module.crv --target c
+
+# 5. CPM 2.0 Package Manager
+corvus pkg init my_project
+corvus pkg add https://github.com/user/lib.git
+corvus pkg install
+corvus pkg list
+
+# 6. Interactive Terminal Tutorial (8 lessons with auto-grading)
+corvus tour
+
+# 7. Language Server Protocol (LSP) Daemon (VS Code / Neovim / Helix)
+corvus lsp
+
+# 8. WebAssembly Text (.wat) & HTML5 Browser Runner Export
+corvus compile app.crv --target wasm -o app.wat
+```
+
 ---
 
 ## 🐛 Found a Bug?
 
 We want Corvus to be as robust and developer-friendly as possible! If you encounter an unexpected error, crash, or parser failure, please **[open an issue on GitHub](https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language/issues/new/choose)** using our automated issue template and include:
 
-1. **Corvus version** (e.g. `v4.6`, `v4.5`, or `v4.4`)
+1. **Corvus version** (e.g. `v5.0`, `v4.7`, `v4.6`, `v4.5`, or `v4.4`)
 2. **Operating system** (Windows, Linux, or macOS)
 3. **Minimal `.crv` program** that reproduces the problem
 4. **Expected behavior**

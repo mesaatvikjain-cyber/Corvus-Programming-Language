@@ -1,0 +1,21 @@
+# Corvus Terminal ANSI Color & Text Formatting Module
+
+func red(text) [
+    givout "\033[31m" + str(text) + "\033[0m"
+]
+
+func green(text) [
+    givout "\033[32m" + str(text) + "\033[0m"
+]
+
+func yellow(text) [
+    givout "\033[33m" + str(text) + "\033[0m"
+]
+
+func blue(text) [
+    givout "\033[34m" + str(text) + "\033[0m"
+]
+
+func bold(text) [
+    givout "\033[1m" + str(text) + "\033[0m"
+]

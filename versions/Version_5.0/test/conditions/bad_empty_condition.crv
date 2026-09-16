@@ -1,0 +1,4 @@
+// If statement with empty condition
+if () [
+    log("empty")
+]

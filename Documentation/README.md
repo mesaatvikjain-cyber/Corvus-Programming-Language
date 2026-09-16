@@ -29,6 +29,7 @@
 
 ## 🌟 Key Features
 
+* **🌐 Enterprise Developer Ecosystem (v5.0)**: Complete modern tooling suite featuring **RavenAI 2.0** (Automated TestGen `testgen`, Markdown DocGen `doc`, Code Review & Linting `review`, Reverse Transpiler `export`), **CPM 2.0 Package Manager** (`pkg init/add/install/list` with Git/ZIP module resolution), **Native Micro Web Framework** (`web.server()` with routing & JSON payloads), **Interactive Terminal Tour** (`corvus tour` with 8 lessons), **Language Server Protocol Daemon** (`corvus lsp` JSON-RPC 2.0 for IDEs), and **WebAssembly (Wasm) Backend** (`corvus compile --target wasm`).
 * **🤖 "RavenAI" Developer Assistant & Transpiler (v4.7)**: Built-in offline intelligent assistant (`corvus ai`) featuring typo-tolerant semantic Q&A (`ask`), structural code analysis (`explain`), diagnostic error auto-patching (`fix`), and Python-to-Corvus code transpilation (`translate`).
 * **🛡️ Enterprise Security Hardening & Automated Fuzzing (v4.6)**: Zero `shell=True` subprocess calls, SSRF and resource-exhaustion bounds (10MB payload limit), safe SQLite parameterization, SHA-512/HMAC crypto, stack guards (`MAX_STACK_DEPTH = 10000`), and a 28-case negative test suite with automated fuzzer.
 * **⚡ Corvus Bytecode VM & `.crvc` Binary Compiler (v4.5)**: High-performance stack-based Virtual Machine (`CorvusVM`), compact binary bytecode format (`.crvc`), bytecode compiler (`corvus compile`), and disassembler (`corvus dis`).

@@ -1,6 +1,6 @@
 # 🛠️ Corvus Automated Installation Guide (Windows, Linux, macOS)
 
-Corvus provides automated, self-contained cross-platform installers for **every single version release** (v1.1, v2.0, v3.0, v3.1, v4.0, v4.1, v4.2, v4.3, v4.4, v4.5, and v4.6) as well as **zero-dependency standalone native binaries**.
+Corvus provides automated, self-contained cross-platform installers for **every single version release** (v1.1, v2.0, v3.0, v3.1, v4.0, v4.1, v4.2, v4.3, v4.4, v4.5, v4.6, v4.7, and v5.0) as well as **zero-dependency standalone native binaries**.
 
 ---
 
@@ -10,30 +10,30 @@ If you want to run Corvus without installing Python or any build tools:
 
 ### Windows Standalone (Single-File .exe)
 ```powershell
-# Install v4.6 (Latest: Security Hardened, Bytecode VM & .crvc Compiler)
-.\Distributions\Version_4.6\install_standalone_windows.ps1
+# Install v5.0 (Latest: Enterprise Ecosystem, RavenAI 2.0, CPM, Web, Tour, LSP, Wasm)
+.\Distributions\Version_5.0\install_standalone_windows.ps1
 
-# Or install v4.5
-.\Distributions\Version_4.5\install_standalone_windows.ps1
+# Or install v4.7
+.\Distributions\Version_4.7\install_standalone_windows.ps1
 ```
 Installs `corvus.exe` and `corvusc.exe` into your User PATH.
 
 ### Linux Standalone
 ```bash
-# Install v4.6
-bash Distributions/Version_4.6/install_standalone_linux.sh
+# Install v5.0
+bash Distributions/Version_5.0/install_standalone_linux.sh
 
-# Or install v4.5
-bash Distributions/Version_4.5/install_standalone_linux.sh
+# Or install v4.7
+bash Distributions/Version_4.7/install_standalone_linux.sh
 ```
 
 ### macOS Standalone
 ```bash
-# Install v4.6
-bash Distributions/Version_4.6/install_standalone_macos.sh
+# Install v5.0
+bash Distributions/Version_5.0/install_standalone_macos.sh
 
-# Or install v4.5
-bash Distributions/Version_4.5/install_standalone_macos.sh
+# Or install v4.7
+bash Distributions/Version_4.7/install_standalone_macos.sh
 ```
 
 ---
@@ -46,24 +46,25 @@ Open PowerShell in the repository root and run:
 .\install_windows.ps1
 ```
 This presents an interactive menu where you can choose:
-* **`[0] Standalone Native Binaries (Zero Python Required) [RECOMMENDED]`**
-* **`[1] Version 4.7 ("RavenAI" Assistant, Transpiler, Hardened VM) [DEFAULT]`**
-* **`[2] Version 4.6 (Security Hardened, Bytecode VM & Fuzz Tested)`**
-* **`[3] Version 4.5 (Corvus Bytecode VM & .crvc Compiler)`**
-* **`[4] Version 4.4 (Universal Dual Syntax & Smart Type Inference)`**
-* **`[5] - [12] Earlier Version Releases (v4.3 down to v1.1)`**
+* **`[0] Standalone Native Binaries v5.0 (Zero Python Required) [RECOMMENDED]`**
+* **`[1] Version 5.0 (Enterprise Ecosystem: RavenAI 2.0, CPM, Web, Tour, LSP, Wasm) [DEFAULT]`**
+* **`[2] Version 4.7 (RavenAI Assistant, Transpiler, Hardened VM)`**
+* **`[3] Version 4.6 (Security Hardened, Bytecode VM & Fuzz Tested)`**
+* **`[4] Version 4.5 (Corvus Bytecode VM & .crvc Compiler)`**
+* **`[5] Version 4.4 (Universal Dual Syntax & Smart Type Inference)`**
+* **`[6] - [13] Earlier Version Releases (v4.3 down to v1.1)`**
 
 ### Version-Specific Direct Installers
 To install a specific version directly and register CLI wrappers (`corvus`, `corvusc`) in your user PATH:
 ```powershell
-# Install Version 4.7 (Latest: RavenAI Assistant, Transpiler, Hardened VM)
+# Install Version 5.0 (Latest: Enterprise Ecosystem)
+.\versions\Version_5.0\install_windows.ps1
+
+# Install Version 4.7 (RavenAI Assistant, Transpiler, Hardened VM)
 .\versions\Version_4.7\install_windows.ps1
 
 # Install Version 4.6 (Security Hardened & Bytecode VM)
 .\versions\Version_4.6\install_windows.ps1
-
-# Install Version 4.5 (Bytecode VM, .crvc Compiler & Disassembler)
-.\versions\Version_4.5\install_windows.ps1
 ```
 
 ---
@@ -78,7 +79,10 @@ bash install_linux.sh
 
 ### Version-Specific Direct Installers
 ```bash
-# Install Version 4.7 (Latest)
+# Install Version 5.0 (Latest: Enterprise Ecosystem)
+bash versions/Version_5.0/install_linux.sh
+
+# Install Version 4.7
 bash versions/Version_4.7/install_linux.sh
 
 # Install Version 4.6
@@ -100,7 +104,10 @@ bash install_macos.sh
 
 ### Version-Specific Direct Installers
 ```bash
-# Install Version 4.7 (Latest)
+# Install Version 5.0 (Latest: Enterprise Ecosystem)
+bash versions/Version_5.0/install_macos.sh
+
+# Install Version 4.7
 bash versions/Version_4.7/install_macos.sh
 
 # Install Version 4.6

@@ -1,0 +1,20 @@
+?{ =================================================
+   Corvus Example 4: Object-Oriented Classes
+   ================================================= }
+
+cls Person() [
+    set str; name
+    set int; age
+
+    mk func init(name_val, age_val) [
+        self.name = name_val
+        self.age = age_val
+    ]
+
+    mk func describe() [
+        log("Person -> Name:", self.name, "| Age:", self.age)
+    ]
+]
+
+set Person; dev = Person("Saatvik Jain", 11)
+dev.describe()

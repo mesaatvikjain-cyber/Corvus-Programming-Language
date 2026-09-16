@@ -1,0 +1,86 @@
+{
+  "name": "corvus-language-support",
+  "displayName": "Corvus Language Support",
+  "description": "Syntax highlighting, language diagnostics, interactive REPL, and execution commands for Corvus v4.0.",
+  "version": "0.3.0",
+  "publisher": "mesaatvikjain",
+  "main": "./extension.js",
+  "icon": "icon.png",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "activationEvents": [
+    "onLanguage:corvus",
+    "onCommand:corvus.runFile",
+    "onCommand:corvus.compileAndRun",
+    "onCommand:corvus.startRepl"
+  ],
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Snippets"
+  ],
+  "keywords": [
+    "corvus",
+    "programming language",
+    "language support",
+    "repl",
+    "compiler"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "corvus",
+        "aliases": [
+          "Corvus",
+          "corvus"
+        ],
+        "extensions": [
+          ".crv",
+          ".Crv"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "corvus",
+        "scopeName": "source.corvus",
+        "path": "./syntaxes/corvus.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "corvus",
+        "path": "./snippets/corvus.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "corvus.runFile",
+        "title": "Corvus: Run Current File in Interpreter",
+        "icon": "$(play)"
+      },
+      {
+        "command": "corvus.compileAndRun",
+        "title": "Corvus: Compile & Run Native Binary",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "corvus.startRepl",
+        "title": "Corvus: Open Interactive REPL Shell",
+        "icon": "$(terminal-repl)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "corvus.runFile",
+          "group": "navigation",
+          "when": "resourceExtname == .crv"
+        }
+      ]
+    }
+  }
+}

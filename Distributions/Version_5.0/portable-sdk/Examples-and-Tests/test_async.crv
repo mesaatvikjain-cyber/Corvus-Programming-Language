@@ -1,0 +1,21 @@
+?{ =================================================
+   Corvus Feature Test: True Async & Await (awt)
+   ================================================= }
+
+log("=== Testing Corvus async mk func & awt ===")
+
+async mk func fetch_data(task_name) [
+    log("  [Async Task Started]:", task_name)
+    givout task_name + " completed!"
+]
+
+log("1. Dispatching async background task...")
+set func; future_task = fetch_data("Database Query #101")
+
+log("2. Performing main thread execution concurrently...")
+
+log("3. Awaiting (awt) background task result...")
+set str; result = awt future_task
+
+log("4. Received async result:", result)
+log("=== Async / Await Test Passed Successfully ===")

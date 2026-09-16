@@ -1,0 +1,4 @@
+// Duplicate parameter name in function definition
+func add_nums(a, a) [
+    givout a + a
+]

@@ -1,0 +1,31 @@
+# Corvus Persistent Key-Value Store Engine
+
+cls KVStore() [
+    var filename = ""
+    var data = {}
+
+    func init(fn) [
+        self.filename = fn
+    ]
+
+    func set(key, val) [
+        self.data[key] = val
+        givout self
+    ]
+
+    func get(key) [
+        if (key in self.data) [
+            givout self.data[key]
+        ]
+        givout null
+    ]
+
+    func has(key) [
+        givout key in self.data
+    ]
+
+    func save() [
+        file.write(self.filename, json.stringify(self.data))
+        givout 1
+    ]
+]
