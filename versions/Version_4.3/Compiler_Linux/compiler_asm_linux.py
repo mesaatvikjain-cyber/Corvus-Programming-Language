@@ -1,6 +1,7 @@
 # COMPILE TO NASM ELF64 ASSEMBLY (Corvus Compiler Linux Backend v2.0)
 import os
 import sys
+import re
 
 try:
     from Compiler_Core.astnodes import (
@@ -401,8 +402,12 @@ class AsmGeneratorLinux:
                         self.text_lines.append("    push rax")
 
                 if callee_name and callee_name in self.declared_funcs:
+                    if not re.match(r'^[a-zA-Z0-9_]+$', str(callee_name)):
+                        raise ValueError("Invalid input")
                     self.text_lines.append(f"    call {callee_name}")
                 elif callee_name:
+                    if not re.match(r'^[a-zA-Z0-9_]+$', str(callee_name)):
+                        raise ValueError("Invalid input")
                     self.text_lines.append(f"    mov rax, [{callee_name}]")
                     self.text_lines.append("    call rax")
                 else:
