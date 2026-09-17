@@ -1,0 +1,17 @@
+# Corvus Regular Expression Engine & Validator Module
+
+func match(pattern, text) [
+    givout regex.match(pattern, text)
+]
+
+func findall(pattern, text) [
+    givout regex.findall(pattern, text)
+]
+
+func replace(pattern, replacement, text) [
+    givout regex.replace(pattern, replacement, text)
+]
+
+func is_email(email_str) [
+    givout regex.is_email(email_str)
+]

@@ -1,0 +1,9 @@
+# Corvus Standard Library: System Module (sys.crv)
+
+func get_platform() {
+    givout "Corvus Core 4.0 Native Runtime"
+}
+
+func get_version() {
+    givout "4.0.0"
+}

@@ -1,0 +1,12 @@
+// dataframe.crv
+// Corvus Standard Library: Reactive DataFrame Engine
+
+get dataframe
+
+mk func from_records(records) [
+    givout dataframe.DataFrame.from_records(records)
+]
+
+mk func read_csv(path) [
+    givout dataframe.DataFrame.read_csv(path)
+]

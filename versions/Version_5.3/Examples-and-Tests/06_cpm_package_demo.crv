@@ -1,0 +1,11 @@
+# 06_cpm_package_demo.crv
+# Demonstrating CPM package importing via `get`
+
+get sample_package
+
+log("CPM Package Author: " + sample_package.pkg_author)
+set str; greeting = sample_package.greet("Saatvik")
+log(greeting)
+
+set int; sum = sample_package.add_numbers(40, 2)
+log("Sum calculated from CPM package: " + str(sum))

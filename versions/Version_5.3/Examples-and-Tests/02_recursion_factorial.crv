@@ -1,0 +1,13 @@
+?{ =================================================
+   Corvus Example 2: Recursive Factorial Function
+   ================================================= }
+
+mk func factorial(n) [
+    if (n <= 1) [
+        givout 1
+    ]
+    givout n * factorial(n - 1)
+]
+
+log("Factorial of 5 is:", factorial(5))
+log("Factorial of 6 is:", factorial(6))

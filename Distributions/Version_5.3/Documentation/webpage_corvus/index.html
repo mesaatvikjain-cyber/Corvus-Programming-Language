@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corvus Programming Language - Official Master Documentation & Tutorials</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header>
+        <a href="#" class="logo-area">
+            <img src="corvus_logo.png" alt="Corvus Logo">
+            <span>Corvus Core Docs & Tutorials</span>
+        </a>
+        <div class="search-box">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" id="doc-search" placeholder="Search Corvus documentation & tutorials...">
+        </div>
+        <div class="header-links">
+            <a href="https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-" target="_blank" class="header-link">GitHub Repository</a>
+            <span class="version-badge">v5.2 Deep Learning Neural AI Ecosystem</span>
+        </div>
+    </header>
+
+    <!-- Layout Container -->
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <sidebar>
+            <div class="sidebar-group">
+                <div class="sidebar-title">Getting Started</div>
+                <ul class="sidebar-nav">
+                    <li><a href="#intro">1. Introduction & Story</a></li>
+                    <li><a href="#wasm-playground" style="color: var(--accent-green); font-weight: 600;">âš¡ Wasm Interactive Playground</a></li>
+                    <li><a href="#quickstart">2. Quickstart & Install</a></li>
+                    <li><a href="#cheatsheet">Quick Cheat Sheet</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-group">
+                <div class="sidebar-title">Version Tutorials</div>
+                <ul class="sidebar-nav">
+                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v5.2)</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-group">
+                <div class="sidebar-title">Language Fundamentals</div>
+                <ul class="sidebar-nav">
+                    <li><a href="#syntax">3. Syntax &amp; Variables</a></li>
+                    <li><a href="#controlflow">4. Control Flow</a></li>
+                    <li><a href="#functions">5. Functions &amp; Lambdas</a></li>
+                    <li><a href="#oop">6. Object-Oriented Corvus</a></li>
+                    <li><a href="#functional">7. Functional Features</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-group">
+                <div class="sidebar-title">Enterprise System Architecture</div>
+                <ul class="sidebar-nav">
+                    <li><a href="#memory">8. Memory Ref-Counting</a></li>
+                    <li><a href="#concurrency">9. "Murder of Crows" Concurrency</a></li>
+                    <li><a href="#ffi">10. Native C FFI</a></li>
+                    <li><a href="#stdlib">11. Standard Libraries</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-group">
+                <div class="sidebar-title">Compiler &amp; Tooling</div>
+                <ul class="sidebar-nav">
+                    <li><a href="#compiler">12. TAC IR &amp; v4.1 Super Optimizer</a></li>
+                    <li><a href="#selfhosted">13. Self-Hosted Architecture</a></li>
+                    <li><a href="#tooling">14. VS Code &amp; REPL Shell</a></li>
+                    <li><a href="#v42-graphics" style="color: var(--accent-orange); font-weight: 600;">15. v4.2 Graphics &amp; Crows Engine</a></li>
+                    <li><a href="#v43-ai-ml" style="color: var(--accent-green); font-weight: 600;">16. v4.3 AI/ML Suite &amp; Diagnostics</a></li>
+                    <li><a href="#v51-omni-platform" style="color: var(--accent-blue); font-weight: 600;">17. v5.1 Omni-Platform &amp; JIT</a></li>
+                    <li><a href="#v52-neural-ai" style="color: var(--accent-purple); font-weight: 600;">18. v5.2 Deep Learning Neural AI</a></li>
+                </ul>
+            </div>
+        </sidebar>
+
+        <!-- Main Content -->
+        <main>
+            <!-- 1. Introduction & Story -->
+            <section id="intro" class="doc-section">
+                <h1>1. Introduction & The Story of Corvus</h1>
+                <p>Welcome to the official master documentation and interactive tutorial hub for the <strong>Corvus Programming Language</strong>!</p>
+                <div class="callout info">
+                    <div class="callout-title">The Story Behind Corvus</div>
+                    <p><em>"I got inspired to build my own programming language after watching a video about a programmer who created G# and C#, and a video by AstroSam. Since I already knew Python, I decided to take on the challenge and build my very own programming language from scratch!"</em><br>â€” <strong>Saatvik Jain</strong> (Creator of Corvus)</p>
+                </div>
+                <p>Corvus introduces a distinctive syntax using <strong>square brackets <code>[ ... ]</code> for code blocks</strong> and reserving <strong>curly braces <code>{ ... }</code> for native lists</strong>. Over 8 major release iterations (v1.1 to v5.2), Corvus has evolved from an interpreted prototype into a multi-platform systems language featuring Three-Address Code (TAC) IR optimization, a self-hosted compiler, native C FFI, scope memory ref-counting, Bytecode VM, tiered JIT compiler, real-time WebSockets, GameKit 2D physics, SQLite ORM, reactive DataFrames, and RavenLM Deep Learning Neural Transformers!</p>
+            </section>
+
+            <!-- Interactive WebAssembly (Wasm) Playground -->
+            <section id="wasm-playground" class="doc-section">
+                <h1>âš¡ Interactive Corvus WebAssembly (Wasm) Playground</h1>
+                <p>Experience Corvus right in your browser! Powered by in-browser client-side WebAssembly, this interactive playground parses, interprets, and executes Corvus code live in your browser sandbox with zero installation.</p>
+
+                <div class="playground-container">
+                    <div class="playground-toolbar">
+                        <div class="toolbar-group">
+                            <label for="wasm-sample-select">Load Preset Sample:</label>
+                            <select id="wasm-sample-select" class="sample-dropdown">
+                                <option value="v52_neural_ai">🧠 v5.2 RavenLM Neural Transformer AI</option>
+                                <option value="hello">Hello World &amp; Control Flow</option>
+                                <option value="v51_jit">⚡ v5.1 Tiered JIT &amp; Matrix Operator (@)</option>
+                                <option value="v51_channels">🗄️ v5.1 Typed Async Channels</option>
+                                <option value="v51_gamekit">🎮 v5.1 GameKit 2D Physics Simulator</option>
+                                <option value="v51_orm_dataframe">📊 v5.1 SQLite ORM &amp; DataFrames</option>
+                                <option value="factorial">Recursion &amp; Factorial</option>
+                                <option value="stdlib">Standard Library (Math &amp; String)</option>
+                                <option value="pipeline">Pipeline (|&gt;) &amp; Pattern Matching</option>
+                                <option value="optimizer">v4.1 Super Optimizer Demo</option>
+                                <option value="crows_v42">v4.2 Expanded "Murder of Crows" Concurrency</option>
+                                <option value="graphics_demo">v4.2 Zero-Config Desktop 2D Graphics</option>
+                            </select>
+                        </div>
+                        <button id="run-wasm-btn" class="run-btn">â–¶ Run Code (Wasm)</button>
+                    </div>
+
+                    <div class="playground-grid">
+                        <div class="editor-pane">
+                            <div class="pane-header">
+                                <span>Corvus Source Code Editor</span>
+                                <span class="badge-lang">.crv</span>
+                            </div>
+                            <textarea id="wasm-code-editor" spellcheck="false" placeholder="Write Corvus code here..."></textarea>
+                        </div>
+                        <div class="terminal-pane">
+                            <div class="pane-header">
+                                <span>Terminal Console Output</span>
+                                <span id="wasm-status-badge" class="status-badge">Ready</span>
+                            </div>
+                            <pre id="wasm-terminal-output" class="terminal-output">Click "â–¶ Run Code (Wasm)" to initialize Wasm engine &amp; execute program...</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Cheat Sheet -->
+            <section id="cheatsheet" class="doc-section">
+                <h1>Language Quick Cheat Sheet</h1>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-card">
+                        <h3>Variables & Types</h3>
+                        <pre><code>var x = 10        # Mutable
+const PI = 3.14   # Constant
+set x = x + 1     # Reassign</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Lists & Collections</h3>
+                        <pre><code>var list = {1, 2, 3} # List
+var tuple = ("A", 42) # Tuple
+var map = {"k": "v"} # Dict</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Control Flow Blocks</h3>
+                        <pre><code>if (val > 10) [
+    log("Greater")
+] else [
+    log("Smaller")
+]</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Functions & Lambdas</h3>
+                        <pre><code>func add(a, b) [
+    givout a + b
+]
+var double = lambda(x) -> x*2</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Version Tutorials Section -->
+            <section id="version-tutorials" class="doc-section">
+                <h1>Interactive Version Tutorials (v1.1 - v5.0)</h1>
+                <p>Select a version release to view hands-on code walkthroughs and architectural evolution guides:</p>
+                
+                <div class="tutorial-tabs">
+                    <button class="tab-btn active" data-tab="tab-v11">Version 1.1</button>
+                    <button class="tab-btn" data-tab="tab-v20">Version 2.0</button>
+                    <button class="tab-btn" data-tab="tab-v30">Version 3.0</button>
+                    <button class="tab-btn" data-tab="tab-v31">Version 3.1</button>
+                    <button class="tab-btn" data-tab="tab-v40">Version 4.0</button>
+                    <button class="tab-btn" data-tab="tab-v41">Version 4.1</button>
+                    <button class="tab-btn" data-tab="tab-v42">Version 4.2</button>
+                    <button class="tab-btn" data-tab="tab-v43">Version 4.3</button>
+                    <button class="tab-btn" data-tab="tab-v44">Version 4.4</button>
+                    <button class="tab-btn" data-tab="tab-v45">Version 4.5</button>
+                    <button class="tab-btn" data-tab="tab-v46">Version 4.6</button>
+                    <button class="tab-btn" data-tab="tab-v47">Version 4.7</button>
+                    <button class="tab-btn" data-tab="tab-v50">Version 5.0</button>
+                </div>
+
+                <!-- Tab v1.1 -->
+                <div id="tab-v11" class="tab-content active">
+                    <h2>v1.1 Tutorial: AST Visitor Interpreter & Basics</h2>
+                    <p>Learn core syntax, recursion, lambdas, and class object instantiation in the reference AST Visitor Interpreter.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Class Definition in v1.1
+class Calculator [
+    func init(brand) [
+        set self.brand = brand
+    ]
+
+    func square(x) [
+        givout x * x
+    ]
+]
+
+var calc = Calculator("Corvus-v1.1")
+log("Square of 7: " + str(calc.square(7)))  # 49</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v2.0 -->
+                <div id="tab-v20" class="tab-content">
+                    <h2>v2.0 Tutorial: Native Multi-Platform Compilation</h2>
+                    <p>Compile scripts to native x86_64 binaries for Windows, Linux, and macOS using pattern matching and functional pipelines.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Pipeline Operator (|>) & Pattern Matching
+func double(x) [ givout x * 2 ]
+func add_ten(x) [ givout x + 10 ]
+
+var res = 5 |> double |> add_ten
+
+match (res) [
+    case 20: log("Matched 20!")
+    else: log("Other result")
+]
+
+# Build Native Binary
+# python versions/Version_2.0/Compiler/CorvusC.py script.crv --target windows -r</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v3.0 -->
+                <div id="tab-v30" class="tab-content">
+                    <h2>v3.0 Tutorial: Concurrency, C FFI & Self-Hosted Compiler</h2>
+                    <p>Explore multi-threaded worker pools ("Murder of Crows" ðŸ¦), native C FFI, and pure Corvus compiler self-hosting.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Concurrent Thread Pools with crow
+func worker_task() [
+    log("Task running on worker thread")
+    givout 100
+]
+
+var handle = crow.fly(worker_task, {})
+var res = crow.flock({handle})
+
+# C FFI Library Binding
+var user32 = ffi.load("user32.dll")
+var msg = ffi.bind(user32, "MessageBoxA", "int", {"int", "str", "str", "int"})
+ffi.call(msg, {0, "Hello C FFI!", "Corvus", 0})</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v3.1 -->
+                <div id="tab-v31" class="tab-content">
+                    <h2>v3.1 Tutorial: Visual Tracebacks & Assembly Runtime Panic Guards</h2>
+                    <p>Learn how panic-mode statement recovery (`synchronize()`) and visual tracebacks eliminate cryptic crashes.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Visual Call Stack Traceback Preview
+======================================================
+[Corvus NameError]
+--> Location: File 'app.crv', Line 14, Column 5:
+    14 |     set score = score + undefined_variable
+       |                         ^^^^^^^^^^^^^^^^^^
+Details: Undefined variable 'undefined_variable'.
+======================================================</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.0 -->
+                <div id="tab-v40" class="tab-content">
+                    <h2>v4.0 Tutorial: Native StdLib, Interactive REPL & VS Code Extension</h2>
+                    <p>Leverage standard modules (`math.crv`, `string.crv`, `file.crv`), interactive REPL commands, and VS Code extension v0.3.0.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Native Math & String StdLib Modules
+var fact = math.factorial(5)  # 120
+var padded = string.pad_left("Corvus", 10, " ")
+
+# Interactive REPL Command
+# python versions/Version_4.0/Interpreter/Corvus.py --repl
+# corvus> .vars</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.1 -->
+                <div id="tab-v41" class="tab-content">
+                    <h2>v4.1 Tutorial: Super High-Level Optimization Engine</h2>
+                    <p>Deep dive into Constant Propagation, Strength Reduction (`x * 4 -> SHL`), Constant Branch Folding, and Assembly Peephole Optimization.</p>
+                    <div class="code-wrapper">
+                        <pre><code># v4.1 Strength Reduction & Bitwise Shifts
+var x = 8
+var mult_by_4 = x * 4  # Reduced to SHL x, 2 (32)
+var div_by_2 = x / 2   # Reduced to SHR x, 1 (4)
+
+# Algebraic Identities
+var val = x + 0       # Simplified to x
+var zero = x * 0      # Simplified to 0</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.2 -->
+                <div id="tab-v42" class="tab-content">
+                    <h2>v4.2 Tutorial: Desktop 2D Graphics & Murder of Crows Concurrency</h2>
+                    <p>Build 2D desktop games and multi-threaded parallel programs with zero external pip dependencies.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Desktop 2D Canvas & 60 FPS Event Loop
+get graphics
+graphics.init_window("Snake Game", 800, 600, "#0f172a")
+
+while (graphics.is_open()) [
+    graphics.clear("#0b0f19")
+    if (graphics.is_key_pressed("Right")) [ ... ]
+    graphics.draw_rect(100, 100, 20, 20, "#38bdf8", 1)
+    graphics.fps(60)
+]</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.3 -->
+                <div id="tab-v43" class="tab-content">
+                    <h2>v4.3 Tutorial: AI/ML Suite, 30+ StdLib Modules & Rust-Style Diagnostics</h2>
+                    <p>Harness deep learning tensors, 30 standard library modules, Rust-style error catalog with <code>--explain</code>, and AI-fix assistant.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Machine Learning & AI Tensors
+get numpy
+get torch
+
+set any; mat = np.array([[1, 2], [3, 4]])
+set any; t = torch.tensor([-1.0, 0.0, 3.0])
+set any; activated = torch.relu(t)
+log("PyTorch ReLU:", activated)
+
+# Terminal Error Explanation
+# python versions/Version_4.3/Interpreter/Corvus.py --explain E0101</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.4 -->
+                <div id="tab-v44" class="tab-content">
+                    <h2>v4.4 Tutorial: Modern Syntax Ergonomics, Universal Dual Brackets & Smart Type Inference</h2>
+                    <p>Experience mainstream developer ergonomics with universal dual syntax: use standard <code>{ ... }</code> blocks and <code>[ ... ]</code> lists or classic syntax, smart type inference (<code>set x = 10</code>), and top-level <code>const</code>.</p>
+                    <div class="code-wrapper">
+                        <pre><code># Smart Type Inference & Constants
+set language = "Corvus"
+const VERSION = 4.4
+set count = 100
+
+# Universal Dual Brackets: standard curly braces for code blocks
+if count == 100 {
+    log("Modern block scoping with curly braces!")
+}
+
+# Universal Dual Brackets: standard square brackets for lists
+set items = [10, 20, 30]
+log("List item:", items[0])
+
+# Modern Pattern Matching with curly braces
+match count {
+    case 100 => {
+        log("Count is exactly 100")
+    }
+    else => log("Other value")
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.5 -->
+                <div id="tab-v45" class="tab-content">
+                    <h2>v4.5 Tutorial: Corvus Bytecode VM &amp; Compact .crvc Binary Compiler</h2>
+                    <p>Experience the high-performance stack-based <code>CorvusVM</code>, binary bytecode compilation into compact <code>.crvc</code> executables, interactive disassembler, and direct VM execution.</p>
+                    <div class="code-wrapper">
+                        <pre><code># 1. Compile Corvus source to binary bytecode (.crvc)
+# corvus compile app.crv -o app.crvc
+
+# 2. Inspect instructions with the interactive disassembler
+# corvus dis app.crvc
+
+# 3. Direct execution on CorvusVM with zero overhead
+# corvus --vm app.crv
+# corvus app.crvc</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.6 -->
+                <div id="tab-v46" class="tab-content">
+                    <h2>v4.6 Tutorial: Enterprise Security Hardening &amp; Robustness Engine</h2>
+                    <p>Explore production-grade security protections: safe non-shell subprocess dispatching, SSRF &amp; memory payload limit guards, SQLite query parameterization, cryptographically secure random bytes, HMAC-SHA256, and VM call stack depth bounds.</p>
+                    <div class="code-wrapper">
+                        <pre><code># 1. Safe Network Request with 10MB payload guard &amp; scheme validation
+get net
+set res = net.get("https://api.github.com/zen")
+
+# 2. Cryptographically secure random tokens &amp; HMAC-SHA256
+get crypto
+set token = crypto.random_bytes(32)
+set signature = crypto.hmac_sha256("app_secret_key", "payload_data")
+
+# 3. Parameterized Safe Database Queries (Zero SQL Injection)
+get sqlite
+set db = sqlite.open("app.db")
+set users = db.query("SELECT * FROM accounts WHERE role = ? AND active = ?", ["admin", 1])
+
+# 4. Run official security hardening test suite
+# python Examples-and-Tests/22_security_hardening_suite.py</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v4.7 -->
+                <div id="tab-v47" class="tab-content">
+                    <h2>v4.7 Tutorial: RavenAI Assistant, Code Explainer, Auto-Fixer &amp; Python Transpiler</h2>
+                    <p>Experience RavenAI: a 100% offline developer assistant built into the Corvus CLI. Ask questions with typo-tolerant fuzzy search, explain script architecture, auto-fix common syntax errors and Pythonisms, or transpile Python code to Corvus.</p>
+                    <div class="code-wrapper">
+                        <pre><code># 1. Ask RavenAI syntax questions (tolerant to typos like "funtion" or "matix")
+corvus ai ask "how to define a funtion?"
+
+# 2. Structural Code Explainer &amp; AST Analysis
+corvus ai explain Examples-and-Tests/01_hello_and_input.crv
+
+# 3. Diagnostic Auto-Fixer (detects print -&gt; log, def -&gt; mk func, etc.)
+corvus ai fix "def greet(name): print('Hello', name)"
+
+# 4. Transpile Python to Corvus
+corvus ai translate script.py &gt; script.crv
+
+# 5. Interactive Assistant REPL
+corvus ai chat</code></pre>
+                    </div>
+                </div>
+
+                <!-- Tab v5.0 -->
+                <div id="tab-v50" class="tab-content">
+                    <h2>v5.0 Tutorial: Enterprise Developer Ecosystem, RavenAI 2.0, CPM, Web Framework, LSP &amp; Wasm</h2>
+                    <p>Corvus v5.0 is the Enterprise Ecosystem Release: introducing <strong>RavenAI 2.0</strong> (automated unit test generator, doc generator, code review/linting, and reverse transpiler), <strong>CPM 2.0</strong> package manager, a <strong>Native Micro Web Framework</strong>, an <strong>Interactive CLI Tour</strong>, a <strong>Language Server Protocol (LSP) Daemon</strong>, and <strong>WebAssembly (Wasm) Text Export</strong>.</p>
+                    <div class="code-wrapper">
+                        <pre><code># 1. RavenAI 2.0 Automated Unit Test Suite Generation
+# corvus ai testgen my_math.crv -o test_my_math.crv
+
+# 2. Automated Markdown Documentation Generator
+# corvus ai doc my_math.crv -o API.md
+
+# 3. Intelligent Code Review &amp; Optimization Linting
+# corvus ai review my_math.crv
+
+# 4. Reverse Transpiler (Corvus -&gt; Python or C99)
+# corvus ai export my_math.crv --target py
+# corvus ai export my_math.crv --target c
+
+# 5. CPM 2.0 Package Manager
+# corvus pkg init my_app
+# corvus pkg add https://github.com/user/lib.git
+# corvus pkg install
+
+# 6. Native Micro Web Framework (StdLib/corvus_web.crv)
+get web
+set any; app = web.server(8080)
+app.route("/", \req -> "Hello from Corvus Web!")
+app.start()
+
+# 7. Interactive Terminal Tutorial (8 lessons)
+# corvus tour
+
+# 8. Language Server Protocol (LSP) Daemon for VS Code / Neovim
+# corvus lsp
+
+# 9. WebAssembly (Wasm) Text Format (.wat) &amp; HTML5 Runner
+# corvus compile app.crv --target wasm -o app.wat</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Quickstart & Install -->
+            <section id="quickstart" class="doc-section">
+                <h1>2. Quickstart & Installation Guide</h1>
+                <p>Corvus requires Python 3.8+ for running the reference compiler drivers, and optional NASM & Clang/GCC for assembling native binaries.</p>
+                <h2>Running Corvus Commands</h2>
+                <div class="code-wrapper">
+                    <pre><code># Launch Interactive REPL Shell (v4.1)
+python versions/Version_4.1/Interpreter/Corvus.py --repl
+
+# Run a Corvus script with the Interpreter
+python versions/Version_4.1/Interpreter/Corvus.py versions/Version_4.1/Examples-and-Tests/13_super_optimization_suite.crv
+
+# Compile script to Standalone 64-bit Windows Executable (.exe)
+python versions/Version_4.1/Compiler_Windows/CorvusC_win64.py versions/Version_4.1/Examples-and-Tests/13_super_optimization_suite.crv</code></pre>
+                </div>
+            </section>
+
+            <!-- 3. Syntax & Variables -->
+            <section id="syntax" class="doc-section">
+                <h1>3. Syntax & Variables</h1>
+                <p>In Corvus, statements are scoped inside square brackets <code>[ ... ]</code>. Variables are declared using <code>var</code> (mutable) or <code>const</code> (immutable).</p>
+                <div class="code-wrapper">
+                    <pre><code># Mutable Variable Declaration
+var score = 100
+set score = score + 50
+
+# Immutable Constant Declaration
+const MAX_USERS = 500
+
+# Native List Literals
+var numbers = {10, 20, 30, 40}
+
+# Tuple Literals & Dictionary Maps
+var user = ("Saatvik", 2026)
+var config = {"host": "localhost", "port": 8080}</code></pre>
+                </div>
+            </section>
+
+            <!-- 4. Control Flow -->
+            <section id="controlflow" class="doc-section">
+                <h1>4. Control Flow</h1>
+                <p>Corvus provides rich control flow structures including conditional branches (<code>if/elsif/else</code>), loops (<code>while</code>, <code>for</code>), and panic-resilient error handling blocks (<code>try/catch</code>).</p>
+                <div class="code-wrapper">
+                    <pre><code>var val = 42
+
+if (val > 50) [
+    log("Value is greater than 50")
+] elsif (val == 42) [
+    log("Answer to life, the universe, and everything!")
+] else [
+    log("Value is smaller")
+]
+
+# While Loop
+var i = 0
+while (i < 5) [
+    log("Iter: " + str(i))
+    set i = i + 1
+]
+
+# Try / Catch Block
+try [
+    var res = 10 / 0
+] catch [
+    log("Caught arithmetic division error safely!")
+]</code></pre>
+                </div>
+            </section>
+
+            <!-- 5. Functions & Lambdas -->
+            <section id="functions" class="doc-section">
+                <h1>5. Functions & Lambdas</h1>
+                <p>Functions are defined using the <code>func</code> keyword and return values using <code>givout</code>.</p>
+                <div class="code-wrapper">
+                    <pre><code>func add(a, b) [
+    givout a + b
+]
+
+func factorial(n) [
+    if (n <= 1) [
+        givout 1
+    ]
+    givout n * factorial(n - 1)
+]
+
+# First-class Lambda Function
+var multiply = lambda (x, y) -> x * y
+log(multiply(6, 7))  # Outputs: 42</code></pre>
+                </div>
+            </section>
+
+            <!-- 6. Object-Oriented Corvus -->
+            <section id="oop" class="doc-section">
+                <h1>6. Object-Oriented Programming (OOP)</h1>
+                <p>Classes in Corvus are declared using <code>class</code>, featuring constructor methods (<code>init</code>) and instance reference binding (<code>self</code>).</p>
+                <div class="code-wrapper">
+                    <pre><code>class Vector2D [
+    func init(x, y) [
+        set self.x = x
+        set self.y = y
+    ]
+
+    func magnitude() [
+        givout math.sqrt(self.x * self.x + self.y * self.y)
+    ]
+]
+
+var vec = Vector2D(3, 4)
+log(vec.magnitude())  # Outputs: 5.0</code></pre>
+                </div>
+            </section>
+
+            <!-- 7. Functional Paradigms -->
+            <section id="functional" class="doc-section">
+                <h1>7. Functional Programming Paradigms</h1>
+                <p>Corvus includes modern functional paradigms such as the Pipeline Operator (<code>|></code>) and Pattern Matching (<code>match ... case</code>).</p>
+                <div class="code-wrapper">
+                    <pre><code># Functional Pipeline Operator (|>)
+var result = 5 |> double |> add_ten
+log(result)
+
+# Pattern Matching (match / case)
+var status_code = 200
+
+match (status_code) [
+    case 200: log("HTTP Success Status Code 200")
+    case 404: log("HTTP Not Found Status Code 404")
+    case 500: log("HTTP Internal Server Error 500")
+    else: log("Unknown Status Code")
+]</code></pre>
+                </div>
+            </section>
+
+            <!-- 8. Memory Ref-Counting -->
+            <section id="memory" class="doc-section">
+                <h1>8. Memory Management & Garbage Collection</h1>
+                <p>Corvus features deterministic heap memory management (<code>mem</code> module) with automatic scope ref-counting and zero-leak cleanup in NASM assembly compilation.</p>
+                <div class="code-wrapper">
+                    <pre><code># Manual & Scope Heap Allocation
+var ptr = mem.alloc(1024)   # Allocate 1024 bytes
+mem.free(ptr)               # Free allocated memory
+
+# Inspect Active Memory Statistics
+var stats = mem.stats()
+log("Allocated Bytes: " + str(stats.allocated))</code></pre>
+                </div>
+            </section>
+
+            <!-- 9. "Murder of Crows" Concurrency Engine -->
+            <section id="concurrency" class="doc-section">
+                <h1>9. "Murder of Crows" ðŸ¦ Concurrency Engine</h1>
+                <p>Corvus includes a built-in multi-threaded concurrency engine called <strong>"Murder of Crows"</strong> (<code>crow</code> module) with asynchronous task spawning (<code>crow.fly</code>), synchronization (<code>crow.flock</code>), and message channels (<code>crow.channel</code>).</p>
+                <div class="code-wrapper">
+                    <pre><code># Spawn concurrent worker tasks
+var t1 = crow.fly(heavy_computation_task, {1000})
+var t2 = crow.fly(heavy_computation_task, {2000})
+
+# Synchronize task execution (Flock)
+var results = crow.flock({t1, t2})
+
+# Thread-safe Channels
+var ch = crow.channel()
+ch.send("Data message from background task")
+var msg = ch.receive()</code></pre>
+                </div>
+            </section>
+
+            <!-- 10. Native C FFI -->
+            <section id="ffi" class="doc-section">
+                <h1>10. Native C Foreign Function Interface (FFI)</h1>
+                <p>The <code>ffi</code> module enables Corvus code to dynamically load external C shared libraries (<code>.dll</code>, <code>.so</code>, <code>.dylib</code>) and invoke native C functions directly.</p>
+                <div class="code-wrapper">
+                    <pre><code># Load dynamic C library (e.g. user32.dll or libc)
+var user32 = ffi.load("user32.dll")
+var MessageBox = ffi.bind(user32, "MessageBoxA", "int", {"int", "str", "str", "int"})
+
+# Invoke native C function directly
+ffi.call(MessageBox, {0, "Hello from Native Corvus C FFI!", "Corvus FFI", 0})</code></pre>
+                </div>
+            </section>
+
+            <!-- 11. Standard Libraries -->
+            <section id="stdlib" class="doc-section">
+                <h1>11. Standard Libraries Reference</h1>
+                <p>Corvus v4.0+ ships with an expanded native standard library suite written directly in Corvus syntax:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Module File</th>
+                            <th>Description</th>
+                            <th>Exported Functions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>math.crv</code></td>
+                            <td>Advanced Mathematical Operations</td>
+                            <td><code>abs</code>, <code>max</code>, <code>min</code>, <code>pow</code>, <code>factorial</code>, <code>clamp</code>, <code>sqrt_approx</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>string.crv</code></td>
+                            <td>String Manipulation Utilities</td>
+                            <td><code>repeat_str</code>, <code>pad_left</code>, <code>pad_right</code>, <code>is_empty</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>file.crv</code></td>
+                            <td>File System I/O Operations</td>
+                            <td><code>read_all</code>, <code>write_all</code>, <code>file_exists</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>sys.crv</code></td>
+                            <td>System Environment Inspection</td>
+                            <td><code>get_platform</code>, <code>get_version</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 12. Compiler Architecture & Super Optimizer -->
+            <section id="compiler" class="doc-section">
+                <h1>12. Compiler Architecture & v4.1 Super Optimizer</h1>
+                <p>The Corvus compiler driver lowers AST into linear Three-Address Code (TAC) Intermediate Representation (IR), passes it through the <strong>v4.1 Super High-Level Optimization Engine</strong>, and emits 64-bit NASM assembly binaries.</p>
+                <div class="callout success">
+                    <div class="callout-title">v4.1 Super Optimizer Passes</div>
+                    <p>
+                        1. <strong>Constant Propagation Pass</strong>: Propagates constant variables across basic blocks.<br>
+                        2. <strong>Strength Reduction & Algebraic Simplification</strong>: <code>x * 0 -> 0</code>, <code>x * 2^n -> x << n</code>, <code>x / 2^n -> x >> n</code>.<br>
+                        3. <strong>Constant Branch Folding</strong>: Evaluates <code>if (1)</code> at compile time.<br>
+                        4. <strong>CFG Jump Threading</strong>: Collapses chained jumps.<br>
+                        5. <strong>Assembly Peephole Pass</strong>: Eliminates redundant store/load sequences in NASM output.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 13. Self-Hosted Architecture -->
+            <section id="selfhosted" class="doc-section">
+                <h1>13. Self-Hosted Architecture</h1>
+                <p>Corvus achieved self-hosting in Version 3.0. The entire compiler frontend and interpreter parser are written directly in native Corvus syntax inside <code>Compiler_SelfHosted/CorvusCompiler.crv</code> and <code>CorvusInterpreter.crv</code>.</p>
+            </section>
+
+            <!-- 14. VS Code & REPL Shell -->
+            <section id="tooling" class="doc-section">
+                <h1>14. VS Code Extension & Interactive REPL Shell</h1>
+                <p>Developer tooling for Corvus includes a dedicated VS Code extension (v0.3.0) and an interactive REPL shell.</p>
+                <h2>Interactive REPL Shell Directives</h2>
+                <div class="code-wrapper">
+                    <pre><code>python versions/Version_4.1/Interpreter/Corvus.py --repl
+
+corvus> .help    # Show REPL directives
+corvus> .vars    # Display active variables & values
+corvus> .funcs   # List declared functions
+corvus> .clear   # Clear terminal screen
+corvus> .reset   # Reset environment state
+corvus> .exit    # Exit REPL</code></pre>
+                </div>
+                <h2>VS Code Extension v0.3.0</h2>
+                <p>Features real-time syntax checking/linter on file save, direct code execution commands, and integrated status bar launcher (<code>â–¶ Run Corvus</code>). Download the extension package: <a href="../../Editor-Extension/corvus-language-support-0.3.0.vsix">corvus-language-support-0.3.0.vsix</a>.</p>
+            </section>
+
+            <!-- 15. Version 4.2 Desktop Graphics & Murder of Crows Engine -->
+            <section id="v42-graphics" class="doc-section">
+                <h1>15. Version 4.2 Desktop 2D Graphics &amp; Expanded Concurrency</h1>
+                <p>Corvus Version 4.2 introduces two flagship <strong>Killer Features</strong> designed to empower developers to write lightweight 2D games and parallel systems applications with <strong>Zero Configuration</strong>!</p>
+
+                <div class="callout success">
+                    <div class="callout-title">Flagship v4.2 Feature Highlights</div>
+                    <p>
+                        1. <strong>Built-in Zero-Config 2D Desktop Graphics (<code>graphics.crv</code> &amp; <code>std_graphics.py</code>)</strong>: Create desktop windows, draw rectangles, circles, lines, polygons, and text with zero external pip dependencies! Full keyboard &amp; mouse input handling with custom frame-rate loop control (<code>graphics.fps(60)</code>).<br>
+                        2. <strong>Expanded "Murder of Crows" Concurrency (<code>std_concurrency.py</code>)</strong>: Includes high-throughput parallel mapping (<code>crow.parallel_map</code>), first-to-finish race conditions (<code>crow.race</code>), non-blocking multi-channel polling (<code>crow.select</code>), periodic event tickers (<code>crow.ticker</code>), and dedicated worker nests (<code>crow.nest</code>).
+                    </p>
+                </div>
+
+                <h2>Zero-Config Desktop Graphics API Reference</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Function Signature</th>
+                            <th>Description</th>
+                            <th>Example Usage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>graphics.init_window(title, w, h, bg)</code></td>
+                            <td>Creates cross-platform desktop window</td>
+                            <td><code>graphics.init_window("Snake Game", 800, 600, "#0f172a")</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>graphics.clear(color)</code></td>
+                            <td>Clears active canvas screen</td>
+                            <td><code>graphics.clear("#0b0f19")</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>graphics.draw_rect(x, y, w, h, color, fill)</code></td>
+                            <td>Draws rectangle or filled box</td>
+                            <td><code>graphics.draw_rect(100, 100, 50, 50, "#ef4444", 1)</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>graphics.draw_circle(x, y, radius, color, fill)</code></td>
+                            <td>Draws circle or disc</td>
+                            <td><code>graphics.draw_circle(400, 300, 15, "#4ade80", 1)</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>graphics.draw_text(text, x, y, size, color)</code></td>
+                            <td>Renders smooth text string</td>
+                            <td><code>graphics.draw_text("SCORE: " + str(score), 20, 20, 20, "#38bdf8")</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>graphics.is_key_pressed(key_name)</code></td>
+                            <td>Queries live key state</td>
+                            <td><code>if (graphics.is_key_pressed("Up")) [ ... ]</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>graphics.fps(target_fps)</code></td>
+                            <td>Regulates frame rate loop</td>
+                            <td><code>graphics.fps(60)</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Playable Showcase Desktop Games &amp; Demos</h2>
+                <ul>
+                    <li><code>versions/Version_4.2/Examples-and-Tests/01_snake_game.crv</code>: Playable Snake desktop game with score counter and food generation.</li>
+                    <li><code>versions/Version_4.2/Examples-and-Tests/02_crow_particles.crv</code>: Multi-threaded particle physics simulator powered by Murder of Crows parallel worker threads.</li>
+                    <li><code>versions/Version_4.2/Examples-and-Tests/03_pong_game.crv</code>: 2-player desktop Pong game with collision bouncing and score tracking.</li>
+                </ul>
+
+                <h2>Version 4.2 Automated Installers</h2>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-card">
+                        <h3>Windows Installer (PowerShell)</h3>
+                        <pre><code>powershell -ExecutionPolicy Bypass -File versions/Version_4.2/install_windows.ps1</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Linux &amp; macOS Installers</h3>
+                        <pre><code>bash versions/Version_4.2/install_linux.sh
+bash versions/Version_4.2/install_macos.sh</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 16. Version 4.3 AI/ML Suite & Diagnostics -->
+            <section id="v43-ai-ml" class="doc-section">
+                <h1>16. Version 4.3 Full Compiler Parity, AI/ML Suite &amp; Modern Toolchain</h1>
+                <p>Version 4.3 is Corvus's flagship ecosystem release: complete 100% compiler-interpreter feature parity, standalone C99 native transpiler with <code>-O3</code> optimizations, first-class Machine Learning stacks, AST optimization engine, and an actionable Rust-style diagnostic engine.</p>
+
+                <div class="callout success">
+                    <div class="callout-title">Flagship v4.3 Capabilities</div>
+                    <p>
+                        1. <strong>100% Compiler-Interpreter Feature Parity</strong>: Run scripts dynamically in the interpreter or compile to standalone native C99/assembly executables with identical execution results.<br>
+                        2. <strong>Native Matrix Multiplication Operator (<code>@</code>)</strong>: Fast 2D matrix multiplication for lists, NumPy, and PyTorch in both interpreted and compiled native modes.<br>
+                        3. <strong>High-Performance C99 Native Transpiler (<code>-O3</code>)</strong>: Transpile Corvus directly to optimized C99 and compile with Clang or GCC.<br>
+                        4. <strong>AST Optimization Engine (<code>--optimize</code>)</strong>: Compile-time constant folding, algebraic simplification (<code>x * 0 &rarr; 0, x * 1 &rarr; x</code>), and dead-branch pruning.<br>
+                        5. <strong>Modern Syntax: F-Strings &amp; Inline Ternaries</strong>: Interpolated formatted strings <code>f"Hello {name}, score: {val * 2}"</code> and inline ternary expressions <code>cond ? true_val : false_val</code>.<br>
+                        6. <strong>High-Precision Benchmarking &amp; AST Profiler</strong>: Built-in <code>corvus bench</code> and <code>corvus profile</code> CLI commands measuring nanosecond execution, ops/sec throughput, peak RAM, and AST breakdown.<br>
+                        7. <strong>Rust-Style Diagnostic Catalog (<code>--explain &lt;CODE&gt;</code>)</strong>: Over 18 cataloged error codes with root-cause diagnostics and verified fixes.<br>
+                        8. <strong>30+ Standard Library Modules</strong>: Spans cryptography, networking, system control, embedded SQLite, and math extensions.
+                    </p>
+                </div>
+
+                <h2>Interactive Code Example: Machine Learning in Corvus</h2>
+                <div class="code-wrapper">
+                    <pre><code>get numpy
+get torch
+
+# NumPy Matrix Operations
+set any; a = np.array([[1, 2], [3, 4]])
+set any; b = np.array([[5, 6], [7, 8]])
+set any; dot_res = np.dot(a, b)
+log("Matrix Product:", dot_res)
+
+# PyTorch Deep Learning Tensors
+set any; weights = torch.randn([2, 2])
+set any; relu_out = torch.relu(weights)
+log("Activated Tensors:", relu_out)</code></pre>
+                </div>
+
+                <h2>Version 4.3 Automated Installers</h2>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-card">
+                        <h3>Windows Master / Direct Installer</h3>
+                        <pre><code>powershell -ExecutionPolicy Bypass -File versions/Version_4.3/install_windows.ps1</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Linux &amp; macOS Installers</h3>
+                        <pre><code>bash versions/Version_4.3/install_linux.sh
+bash versions/Version_4.3/install_macos.sh</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 17. Version 5.1 Flagship Omni-Platform & Real-Time Ecosystem -->
+            <section id="v51-omni-platform" class="doc-section">
+                <h1>17. Version 5.1 Omni-Platform, JIT &amp; Real-Time Ecosystem</h1>
+                <p>Version 5.1 is Corvus's premier Omni-Platform release, introducing dynamic Just-In-Time compilation, typed asynchronous channels, full-duplex WebSockets, 2D physics simulation, active-record SQLite ORM, zero-dependency reactive DataFrames, and RavenAI 3.0 natural language synthesis.</p>
+
+                <div class="callout success">
+                    <div class="callout-title">Flagship Version 5.1 Modules &amp; Capabilities</div>
+                    <p>
+                        1. <strong>Tiered JIT Execution (<code>corvus --jit &lt;file.crv&gt;</code>)</strong>: Automatic hotspot detection that dynamically compiles frequently executed bytecode into native Python/machine instructions for a 10x–50x speed boost.<br>
+                        2. <strong>Typed Concurrency Channels (<code>get channel</code>)</strong>: Go-style thread-safe FIFO message-passing queues with <code>send()</code>, <code>recv()</code>, <code>poll()</code>, and <code>close()</code>.<br>
+                        3. <strong>Full-Duplex WebSockets (<code>web.ws_server()</code>)</strong>: Zero-dependency RFC 6455 compliant WebSocket server supporting real-time streaming, broadcast, and message handling.<br>
+                        4. <strong>RavenAI 3.0 Natural Language Code Generator (<code>corvus ai gen</code>)</strong>: Natural language prompt-to-code synthesis and automated syntax refactoring toolchain.<br>
+                        5. <strong>GameKit 2D Rigid-Body Physics &amp; Synthesizer (<code>get gamekit; get audio</code>)</strong>: Velocity, acceleration, restitution, friction, bounding volumes, and circle-box AABB collision detection.<br>
+                        6. <strong>Active-Record SQLite ORM (<code>get orm</code>)</strong>: Declarative schema migrations, fluent query builder, parameterized conditions, and CRUD persistence.<br>
+                        7. <strong>Zero-Dependency Reactive DataFrames (<code>get dataframe</code>)</strong>: Tabular filtering, aggregations, projections, and CSV import/export without external dependencies.
+                    </p>
+                </div>
+
+                <h2>Version 5.1 Automated Installers</h2>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-card">
+                        <h3>Windows Master Installer (Version 5.1 Default)</h3>
+                        <pre><code>powershell -ExecutionPolicy Bypass -File install_windows.ps1</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Linux &amp; macOS Installers</h3>
+                        <pre><code>bash install_linux.sh
+bash install_macos.sh</code></pre>
+                    </div>
+                </div>
+            </section>
+            <!-- 18. Version 5.2 Deep Learning Neural AI & Cognitive Ecosystem -->
+            <section id="v52-neural-ai" class="doc-section">
+                <h1>18. Version 5.2 Deep Learning Neural AI Ecosystem &amp; RavenLM</h1>
+                <p>Version 5.2 marks a historic milestone for Corvus: the integration of a custom deep learning neural transformer language model (<strong>RavenLM</strong>) directly into the compiler toolchain, powering <strong>RavenAI 4.0</strong> with zero-dependency dual-runtime inference.</p>
+
+                <div class="callout success">
+                    <div class="callout-title">Flagship Version 5.2 Neural Capabilities</div>
+                    <p>
+                        1. <strong>RavenLM Transformer Architecture (<code>raven_model.py</code>)</strong>: A 3-layer, 4-head causal self-attention transformer (<code>d_model = 64</code>, GELU MLP, RMS/LayerNorm, learned positional embeddings) with 166,464 parameters trained directly on the Corvus grammar corpus to a cross-entropy loss of 0.8796.<br>
+                        2. <strong>Zero-Dependency Dual-Runtime Inference</strong>: Blazing-fast GPU/CPU tensor execution via PyTorch, alongside a pure NumPy linear algebra engine (<code>NumPyRavenLM</code>) enabling standalone binary releases (<code>corvus.exe</code>) to run neural autocompletion without PyTorch.<br>
+                        3. <strong>Neural Code Autocompletion (<code>corvus ai complete &quot;&lt;prefix&gt;&quot;</code>)</strong>: High-speed next-token and next-expression neural prediction for Corvus functions, loops, and control flow.<br>
+                        4. <strong>Cognitive Assistant &amp; Model Telemetry (<code>corvus ai model</code>)</strong>: Real-time inspection of active model weights, layer counts, active device (CUDA/CPU/NumPy fallback), parameter counts, and vocabulary size.<br>
+                        5. <strong>On-Device Corpus Retraining (<code>corvus ai train [--epochs N]</code>)</strong>: Single-command local corpus extraction and transformer training directly from Corvus files and test suites.<br>
+                        6. <strong>100% Backward Compatibility</strong>: All 24 comprehensive test suites, negative syntax tests, Bytecode VM, and native C99 transpilation remain rock-solid.
+                    </p>
+                </div>
+
+                <h2>Interactive Code Example: RavenAI Neural CLI Toolchain</h2>
+                <div class="code-wrapper">
+                    <pre><code># 1. Inspect RavenLM Neural Architecture
+corvus ai model
+
+# 2. Neural Autocomplete Corvus Code
+corvus ai complete "mk func fibonacci(n) ["
+
+# 3. Natural Language Code Synthesis
+corvus ai gen "Create a fast matrix multiplier function using @"
+
+# 4. Retrain RavenLM on Custom Corvus Codebase
+corvus ai train --epochs 25</code></pre>
+                </div>
+
+                <h2>Version 5.2 Automated Installers</h2>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-card">
+                        <h3>Windows Master Installer (Version 5.2 Default)</h3>
+                        <pre><code>powershell -ExecutionPolicy Bypass -File install_windows.ps1</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Linux &amp; macOS Installers</h3>
+                        <pre><code>bash install_linux.sh
+bash install_macos.sh</code></pre>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <script src="wasm_playground.js"></script>
+</body>
+</html>
+

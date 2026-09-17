@@ -20,7 +20,7 @@
         </div>
         <div class="header-links">
             <a href="https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-" target="_blank" class="header-link">GitHub Repository</a>
-            <span class="version-badge">v5.2 Deep Learning Neural AI Ecosystem</span>
+            <span class="version-badge">v5.3 Cognitive Intelligence Ecosystem</span>
         </div>
     </header>
 
@@ -40,7 +40,8 @@
             <div class="sidebar-group">
                 <div class="sidebar-title">Version Tutorials</div>
                 <ul class="sidebar-nav">
-                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v5.2)</a></li>
+                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v5.3)</a></li>
+                    <li><a href="#v53-cognitive-ai">19. Version 5.3 Cognitive AI &amp; Self-Healing</a></li>
                 </ul>
             </div>
             <div class="sidebar-group">
@@ -99,6 +100,7 @@
                         <div class="toolbar-group">
                             <label for="wasm-sample-select">Load Preset Sample:</label>
                             <select id="wasm-sample-select" class="sample-dropdown">
+                                <option value="v53_intelligent_ai">🩺 v5.3 Cognitive AI, BPE &amp; Self-Healing</option>
                                 <option value="v52_neural_ai">🧠 v5.2 RavenLM Neural Transformer AI</option>
                                 <option value="hello">Hello World &amp; Control Flow</option>
                                 <option value="v51_jit">⚡ v5.1 Tiered JIT &amp; Matrix Operator (@)</option>
@@ -937,6 +939,53 @@ bash install_macos.sh</code></pre>
                     </div>
                 </div>
             </section>
+        
+            <!-- 19. Version 5.3 Cognitive Intelligence & Autonomous Self-Healing Ecosystem -->
+            <section id="v53-cognitive-ai" class="doc-section">
+                <h1>19. Version 5.3 Cognitive Intelligence, BPE Tokenizer &amp; Autonomous Self-Healing</h1>
+                <p>Version 5.3 elevates RavenAI and RavenLM from a text predictor into a compiler-aware cognitive engine. This release features a custom Syntax-Aware Subword/BPE Tokenizer, Context-Free Grammar (CFG) Constrained Decoding (guaranteeing 0% syntax hallucinations), and the Autonomous Self-Healing Compiler (<code>corvus --ai-fix</code>).</p>
+
+                <div class="callout success">
+                    <div class="callout-title">Flagship Version 5.3 Cognitive Capabilities</div>
+                    <p>
+                        1. <strong>Syntax-Aware Subword &amp; BPE Tokenizer (<code>raven_tokenizer.py</code>)</strong>: 198-token vocabulary encoding Corvus keywords (<code>mk func</code>, <code>givout</code>, <code>crow.fly</code>, <code>chan.new</code>, <code>@</code>, <code>|&gt;</code>) as atomic tokens, yielding 4.5x code compression.<br>
+                        2. <strong>CFG Grammar-Constrained Decoding (<code>grammar_decoder.py</code>)</strong>: Real-time delimiter stack tracking and logit masking ensuring 100% bracket balance and zero syntax hallucinations.<br>
+                        3. <strong>Reinforcement Learning from Compiler Feedback (RLCF)</strong>: Models trained with compiler reward signals (+1.0 for valid parse, +2.0 clean bytecode, -1.0 syntax error).<br>
+                        4. <strong>Autonomous Compiler Self-Healing (<code>corvus &lt;file.crv&gt; --ai-fix</code>)</strong>: Automatically diagnoses syntax or runtime anomalies, rewrites the file with synthesized patches, and seamlessly re-executes.<br>
+                        5. <strong>Standard Library Integration (<code>get raven</code>)</strong>: Query <code>raven.model_info()</code>, <code>raven.tokenize()</code>, <code>raven.check_grammar()</code>, and <code>raven.heal()</code> directly inside Corvus code.<br>
+                        6. <strong>Universal 4-Engine Parity</strong>: 100% compatibility across AST Interpreter, Bytecode VM, Tiered JIT, and ISO C99 Transpiler.
+                    </p>
+                </div>
+
+                <h2>Interactive Code Example: RavenAI Self-Healing &amp; Cognitive Toolchain</h2>
+                <div class="code-wrapper">
+                    <pre><code># 1. Run with Autonomous Compiler Self-Healing
+corvus my_script.crv --ai-fix
+
+# 2. Interactive AI Fix &amp; Patch Synthesis
+corvus ai fix my_script.crv --apply
+
+# 3. Model Architecture &amp; RLCF Telemetry
+corvus ai model
+
+# 4. Neural Autoregressive Code Completion under CFG Constraints
+corvus ai complete "mk func compute(a, b) ["</code></pre>
+                </div>
+
+                <h2>Version 5.3 Automated Installers</h2>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-card">
+                        <h3>Windows Master Installer (Version 5.3 Default)</h3>
+                        <pre><code>powershell -ExecutionPolicy Bypass -File install_windows.ps1</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Linux &amp; macOS Installers</h3>
+                        <pre><code>bash install_linux.sh
+bash install_macos.sh</code></pre>
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
 

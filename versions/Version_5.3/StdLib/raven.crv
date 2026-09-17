@@ -1,0 +1,31 @@
+// raven.crv
+// Corvus Standard Library: RavenLM Neural AI & Cognitive Assistant Module
+// Enables direct in-language neural inference, completion, and tokenization.
+
+mk func model_info() [
+    givout raven.model_info()
+]
+
+mk func complete(prompt, max_tokens, temperature) [
+    givout raven.complete(prompt, max_tokens, temperature)
+]
+
+mk func predict(prompt) [
+    givout raven.predict(prompt)
+]
+
+mk func tokenize(text) [
+    givout raven.tokenize(text)
+]
+
+mk func detokenize(token_ids) [
+    givout raven.detokenize(token_ids)
+]
+
+mk func gen(prompt) [
+    givout raven.gen(prompt)
+]
+
+mk func ask(question) [
+    givout raven.ask(question)
+]

@@ -1,0 +1,75 @@
+// Corvus Micro Web Framework (StdLib)
+get web
+
+mk func server() [
+    givout web.server()
+]
+
+mk func ws_server(port) [
+    givout web.ws_server(port)
+]
+
+cls App() [
+    set any; _srv
+
+    mk func init() [
+        self._srv = web.server()
+    ]
+
+    mk func route(path, handler) [
+        self._srv.route(path, handler)
+        givout self
+    ]
+
+    mk func get(path, handler) [
+        self._srv.get(path, handler)
+        givout self
+    ]
+
+    mk func post(path, handler) [
+        self._srv.post(path, handler)
+        givout self
+    ]
+
+    mk func listen(port) [
+        self._srv.listen(port)
+        givout true
+    ]
+]
+
+cls WebSocketApp(port) [
+    set any; _ws
+
+    mk func init(port) [
+        self._ws = web.ws_server(port)
+    ]
+
+    mk func on_connect(handler) [
+        self._ws.on_connect(handler)
+        givout self
+    ]
+
+    mk func on_message(handler) [
+        self._ws.on_message(handler)
+        givout self
+    ]
+
+    mk func on_close(handler) [
+        self._ws.on_close(handler)
+        givout self
+    ]
+
+    mk func broadcast(message) [
+        givout self._ws.broadcast(message)
+    ]
+
+    mk func start() [
+        self._ws.start()
+        givout true
+    ]
+
+    mk func stop() [
+        self._ws.stop()
+        givout true
+    ]
+]

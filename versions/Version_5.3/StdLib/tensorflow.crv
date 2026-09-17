@@ -1,0 +1,41 @@
+# Corvus Native TensorFlow Deep Learning Module
+
+func tensor(data) [
+    givout tf_engine.tensor(data)
+]
+
+func zeros(shape) [
+    givout tf_engine.zeros(shape)
+]
+
+func ones(shape) [
+    givout tf_engine.ones(shape)
+]
+
+func add(a, b) [
+    givout tf_engine.add(a, b)
+]
+
+func matmul(a, b) [
+    givout tf_engine.matmul(a, b)
+]
+
+func relu(x) [
+    givout tf_engine.relu(x)
+]
+
+func sigmoid(x) [
+    givout tf_engine.sigmoid(x)
+]
+
+func softmax(x) [
+    givout tf_engine.softmax(x)
+]
+
+func dense(inputs, units, weights, bias) [
+    givout tf_engine.dense(inputs, units, weights, bias)
+]
+
+func predict(model, inputs) [
+    givout tf_engine.predict(model, inputs)
+]

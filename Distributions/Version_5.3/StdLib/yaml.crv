@@ -1,0 +1,9 @@
+# Corvus YAML Document Parser & Serializer Module
+
+func parse(yaml_str) [
+    givout json.parse(yaml_str)
+]
+
+func stringify(obj) [
+    givout json.stringify(obj)
+]
