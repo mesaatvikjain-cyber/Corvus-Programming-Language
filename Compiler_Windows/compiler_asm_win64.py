@@ -602,6 +602,8 @@ class AsmGeneratorWin64:
                 self.imported_modules = set()
             if mod_name and mod_name not in self.imported_modules:
                 self.imported_modules.add(mod_name)
+                if ".." in mod_name:
+                    raise Exception("Invalid file path")
                 candidates = [
                     f"{mod_name}.crv",
                     os.path.join("StdLib", f"{mod_name}.crv"),

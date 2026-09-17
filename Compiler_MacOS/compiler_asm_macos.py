@@ -588,7 +588,14 @@ class AsmGeneratorMacOS:
                 for cand in candidates:
                     if os.path.isfile(cand):
                         try:
-                            with open(cand, "r", encoding="utf-8") as f:
+                            cand_real = os.path.realpath(cand)
+                            base_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
+                            try:
+                                if os.path.commonpath([base_dir, cand_real]) != base_dir:
+                                    continue
+                            except ValueError:
+                                continue
+                            with open(cand_real, "r", encoding="utf-8") as f:
                                 mod_code = f.read()
                             mod_tokens = tokenize(mod_code)
                             mod_ast = Parser(mod_tokens).parse()

@@ -55,6 +55,8 @@ def compile_windows(source_path, output_path=None, run_after=False, keep_asm=Fal
     exe_file = output_path if output_path else f"{base_name}.exe"
 
     print(f"[Windows Target] Compiling '{source_path}' -> Assembly (Win64)...")
+    if ".." in source_path:
+        raise Exception("Invalid file path")
     with open(source_path, "r", encoding="utf-8") as f:
         code = f.read()
 

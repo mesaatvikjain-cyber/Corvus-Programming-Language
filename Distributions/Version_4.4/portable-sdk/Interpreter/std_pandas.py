@@ -11,6 +11,8 @@ except ImportError:
 class PandasEngine:
     @staticmethod
     def read_csv(filepath):
+        if ".." in filepath:
+            raise Exception("Invalid file path")
         if HAS_NATIVE_PANDAS:
             return pd.read_csv(filepath).to_dict(orient="records")
         # Fallback CSV reader returning list of dicts

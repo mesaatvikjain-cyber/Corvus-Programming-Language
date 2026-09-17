@@ -83,6 +83,9 @@ def format_file(filepath: str, check_only: bool = False) -> bool:
         print(f"[ERROR] File '{filepath}' not found.")
         return False
 
+    if ".." in filepath:
+        raise Exception("Invalid file path")
+
     with open(filepath, "r", encoding="utf-8") as f:
         orig = f.read()
 

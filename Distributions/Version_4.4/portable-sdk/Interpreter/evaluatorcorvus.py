@@ -978,16 +978,22 @@ class Evaluator:
                     return f.read()
 
             def file_write(path, content):
+                if ".." in path:
+                    raise Exception("Invalid file path")
                 with open(path, "w", encoding="utf-8") as f:
                     f.write(str(content))
                 return True
 
             def file_append(path, content):
+                if ".." in path:
+                    raise Exception("Invalid file path")
                 with open(path, "a", encoding="utf-8") as f:
                     f.write(str(content))
                 return True
 
             def file_lines(path):
+                if ".." in path:
+                    raise Exception("Invalid file path")
                 with open(path, "r", encoding="utf-8") as f:
                     return [line.rstrip("\n") for line in f]
 
@@ -1148,6 +1154,8 @@ class Evaluator:
 
             if package_dir:
                 manifest_path = os.path.join(package_dir, "corvus.json")
+                if ".." in manifest_path:
+                    raise Exception("Invalid file path")
                 if os.path.exists(manifest_path):
                     try:
                         with open(manifest_path, "r", encoding="utf-8") as f:
@@ -1168,6 +1176,8 @@ class Evaluator:
             return False
 
         try:
+            if ".." in entry_file:
+                raise Exception("Invalid file path")
             with open(entry_file, "r", encoding="utf-8") as f:
                 code = f.read()
 

@@ -32,6 +32,8 @@ def compile_macos(source_path, output_path=None, run_after=False, keep_asm=False
     exe_file = output_path if output_path else base_name
 
     print(f"[macOS Target] Compiling '{source_path}' -> Assembly (Mach-O)...")
+    if ".." in source_path:
+        raise Exception("Invalid file path")
     with open(source_path, "r", encoding="utf-8") as f:
         code = f.read()
 
@@ -41,6 +43,8 @@ def compile_macos(source_path, output_path=None, run_after=False, keep_asm=False
     generator = AsmGeneratorMacOS()
     generator.generate(ast)
 
+    if ".." in asm_file:
+        raise Exception("Invalid file path")
     with open(asm_file, "w", encoding="utf-8") as out:
         out.write(generator.build_full_asm())
 
