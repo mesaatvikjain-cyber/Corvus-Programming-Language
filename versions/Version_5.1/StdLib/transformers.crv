@@ -1,0 +1,9 @@
+# Corvus Native Transformers NLP Module
+
+func pipeline(task_name) [
+    givout transformers_engine.pipeline(task_name)
+]
+
+func generate(prompt, max_length) [
+    givout transformers_engine.generate(prompt, max_length)
+]

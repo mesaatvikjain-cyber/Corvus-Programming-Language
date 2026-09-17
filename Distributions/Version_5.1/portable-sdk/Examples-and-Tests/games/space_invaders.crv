@@ -1,0 +1,49 @@
+// space_invaders.crv
+// Corvus GameKit: Space Invaders Retro Shooter Demo
+get gamekit
+
+log("=== Launching Space Invaders (Corvus GameKit) ===")
+
+set world = gamekit.PhysicsWorld(0, 0) // Zero gravity in space
+
+// Player spaceship at bottom center
+set player = world.create_box(400, 550, 40, 20, false)
+player.tag = "player"
+
+// Alien fleet (row of invaders)
+set aliens = [
+    world.create_box(200, 100, 30, 20, true),
+    world.create_box(300, 100, 30, 20, true),
+    world.create_box(400, 100, 30, 20, true),
+    world.create_box(500, 100, 30, 20, true),
+    world.create_box(600, 100, 30, 20, true)
+]
+
+set bullets = []
+set score = 0
+
+// Fire bullet from player ship upward
+set bullet = world.create_body(player.x, player.y - 15, 4, false)
+bullet.set_velocity(0, -300) // Fast upward velocity
+bullets.add(bullet)
+log("Player fired laser bullet towards alien fleet!")
+
+// Simulate 10 frames
+set t = 0
+while (t < 10) [
+    world.step(0.016)
+
+    // Check laser hit against aliens
+    for (b in bullets) [
+        for (alien in aliens) [
+            if (b.collides_with(alien)) [
+                score = score + 100
+                log(f"Tick {t}: [DIRECT HIT!] Alien destroyed! Score: {score}")
+            ]
+        ]
+    ]
+
+    t = t + 1
+]
+
+log("Space Invaders game simulation complete. Total score:", score)

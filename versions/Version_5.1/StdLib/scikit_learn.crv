@@ -1,0 +1,9 @@
+# Corvus Native scikit-learn Machine Learning Module
+
+func linear_regression() [
+    givout sklearn_engine.linear_regression()
+]
+
+func mean_squared_error(y_true, y_pred) [
+    givout sklearn_engine.mean_squared_error(y_true, y_pred)
+]

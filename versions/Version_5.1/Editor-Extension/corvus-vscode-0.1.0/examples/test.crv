@@ -1,0 +1,36 @@
+?{
+    Corvus 0.1 example for VS Code syntax highlighting
+}
+
+get math
+
+set int; age = 15
+set str; name = "Saatvik"
+set flo; pi = 3.14159
+set bool; learning = true
+set lis; numbers = {1, 2, 3, 4, 5}
+set tup; coordinates = ([10.5, 42.8])
+
+mk func square(x) [
+    givout x ** 2
+]
+
+set lmb; square_fn = lmb[n] => n ** 2
+
+if (age >= 13) [
+    log("Teenager")
+] else [
+    log("Not a teenager")
+]
+
+for (item in numbers) [
+    log(item)
+]
+
+try [
+    set int; result = 10 / 0
+] error(e) [
+    log("Caught error: " + e.message)
+] final [
+    log("Execution complete.")
+]

@@ -1,0 +1,17 @@
+?{ =================================================
+   Corvus Example 1: Hello World & Native User Input
+   ================================================= }
+
+log("=== Welcome to Corvus ===")
+
+set str; name = input("Enter your name: ")
+set int; age = input("Enter your age: ")
+
+log("Hello,", name)
+log("Your age is:", age)
+
+if (age >= 18) [
+    log("Status: Adult")
+] else [
+    log("Status: Youth")
+]

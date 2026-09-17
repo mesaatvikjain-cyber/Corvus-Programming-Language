@@ -1,0 +1,2 @@
+// Matrix multiplication operator @ on non-matrix scalars
+set res = 10 @ 20

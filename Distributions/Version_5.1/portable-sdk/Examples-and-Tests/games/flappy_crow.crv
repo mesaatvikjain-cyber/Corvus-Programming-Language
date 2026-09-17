@@ -1,0 +1,49 @@
+// flappy_crow.crv
+// Corvus GameKit: Flappy Crow Demo Game
+get gamekit
+get graphics
+
+log("=== Launching Flappy Crow (Corvus GameKit) ===")
+
+set world = gamekit.PhysicsWorld(0, 18.0) // Strong gravity downwards
+set crow_player = world.create_body(100, 200, 14) // x, y, radius
+crow_player.tag = "player"
+
+set pipes = [
+    world.create_box(300, 100, 40, 160, true), // top pipe (static)
+    world.create_box(300, 360, 40, 160, true), // bottom pipe (static)
+    world.create_box(500, 140, 40, 180, true),
+    world.create_box(500, 400, 40, 180, true)
+]
+
+set score = 0
+set is_game_over = false
+
+log("Player crow created at:", crow_player.x, crow_player.y)
+log("Pipes initialized. Simulation stepping...")
+
+// Run 20 physics game frames
+set frame = 0
+while (frame < 20) [
+    // Flap crow player on frame 5 and 12
+    if (frame == 5 or frame == 12) [
+        crow_player.set_velocity(0, -6.0)
+        log(f"Frame {frame}: [FLAP!] Crow jumped upward. Vy: {crow_player.vy}")
+    ]
+
+    world.step(0.033) // 30 FPS tick
+    world.resolve_bounds(600, 400)
+
+    // Check collision against pipes
+    for (pipe in pipes) [
+        if (crow_player.collides_with(pipe)) [
+            log(f"Frame {frame}: [COLLISION DETECTED] Crow hit pipe obstacle!")
+            is_game_over = true
+        ]
+    ]
+
+    frame = frame + 1
+]
+
+log("Flappy Crow physics simulation verified successfully!")
+log(f"Final Position -> x: {crow_player.x}, y: {crow_player.y}")

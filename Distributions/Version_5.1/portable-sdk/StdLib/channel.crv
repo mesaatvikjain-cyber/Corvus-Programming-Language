@@ -1,0 +1,10 @@
+// channel.crv
+// Corvus Standard Library: Async Channels & Concurrency Queues
+
+mk func new_channel(capacity) [
+    givout chan.new(capacity)
+]
+
+mk func make_chan() [
+    givout chan.new(0)
+]

@@ -1,0 +1,8 @@
+// orm.crv
+// Corvus Standard Library: SQLite Active-Record ORM
+
+get orm
+
+mk func create_model(name) [
+    givout orm.create_model_class(name)
+]

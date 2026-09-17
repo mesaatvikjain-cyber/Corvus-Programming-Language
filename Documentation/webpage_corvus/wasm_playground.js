@@ -103,6 +103,104 @@ graphics.draw_text("Corvus v4.2 Desktop Graphics Active!", 220, 30, 20, "#38bdf8
 graphics.draw_text("Playable Snake, Pong & Multi-Threaded Particles Included!", 140, 70, 16, "#94a3b8")
 
 log("[Graphics Engine]: Canvas rendered successfully.")
+`,
+    "v51_jit": `// Corvus v5.1 Tiered JIT Compiler & Matrix Math Demo
+log("=== Corvus v5.1 JIT & Vector Computation ===")
+
+// High-speed native matrix dot-product operator @
+set A = [
+    [1, 2, 3],
+    [4, 5, 6]
+]
+set B = [
+    [7, 8],
+    [9, 1],
+    [2, 3]
+]
+
+set C = A @ B
+log("Matrix A (2x3) @ Matrix B (3x2) -> Result:")
+for (row in C) [
+    log("  Row:", row)
+]
+
+// Loop execution optimized dynamically
+set sum = 0
+set i = 0
+while (i < 100) [
+    sum = sum + i
+    i = i + 1
+]
+log("JIT Optimized Loop Accumulation (0..99):", sum)
+`,
+    "v51_channels": `// Corvus v5.1 Go-Style Typed Concurrency Channels
+get channel
+
+log("=== Corvus v5.1 Asynchronous Channels ===")
+set ch = channel.new(3) // Buffer size 3
+
+ch.send("Packet 1: Handshake")
+ch.send("Packet 2: Streaming Payload")
+ch.send("Packet 3: Close Frame")
+
+log("Channel Polling:")
+log("  Received ->", ch.recv())
+log("  Received ->", ch.recv())
+log("  Received ->", ch.recv())
+
+ch.close()
+log("Channel safely terminated. Is closed:", ch.is_closed())
+`,
+    "v51_gamekit": `// Corvus v5.1 GameKit 2D Rigid-Body Physics
+get gamekit
+
+log("=== Corvus GameKit 2D Physics Simulator ===")
+set world = gamekit.PhysicsWorld(0, 9.8) // Earth gravity
+
+// Create player circular body and static floor platform
+set player = world.create_body(100, 50, 15, false)
+player.set_velocity(25, -10) // Launch upward-right
+set platform = world.create_box(100, 120, 200, 20, true)
+
+set frame = 0
+while (frame < 5) [
+    world.step(0.016)
+    world.resolve_bounds(800, 600)
+    log(f"Frame {frame} -> Player Position: ({player.x:.1f}, {player.y:.1f})")
+    frame = frame + 1
+]
+log("Platform collision check:", player.collides_with(platform))
+`,
+    "v51_orm_dataframe": `// Corvus v5.1 Active-Record SQLite ORM & DataFrames
+get orm
+get dataframe
+
+log("=== Corvus ORM & Reactive DataFrames ===")
+
+// 1. SQLite Active-Record Model
+set User = orm.create_model_class("users", {
+    "name": "TEXT",
+    "role": "TEXT",
+    "points": "INTEGER"
+}, ":memory:")
+
+User.create({"name": "Saatvik", "role": "Maintainer", "points": 950})
+User.create({"name": "Raven", "role": "AI Architect", "points": 1000})
+
+set devs = User.where("points >= 900").to_list()
+log("High-scoring Developers from ORM:")
+for (d in devs) [
+    log(f"  -> {d.name} ({d.role}): {d.points} pts")
+]
+
+// 2. Tabular DataFrames
+set df = dataframe.from_records([
+    {"engine": "JIT", "speedup": "25x"},
+    {"engine": "CorvusVM", "speedup": "8x"},
+    {"engine": "Interpreter", "speedup": "1x"}
+])
+log("DataFrames Schema:", df.columns())
+log("DataFrames Dimensions:", df.shape())
 `
 };
 

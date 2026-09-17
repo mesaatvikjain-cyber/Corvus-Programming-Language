@@ -1,0 +1,12 @@
+// gamekit.crv
+// Corvus Standard Library: 2D GameKit & Physics Simulation
+
+get gamekit
+
+mk func PhysicsWorld(gx, gy) [
+    givout gamekit.create_world(gx, gy)
+]
+
+mk func create_world() [
+    givout gamekit.create_world(0.0, 9.8)
+]

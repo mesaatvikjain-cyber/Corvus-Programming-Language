@@ -20,7 +20,7 @@
         </div>
         <div class="header-links">
             <a href="https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-" target="_blank" class="header-link">GitHub Repository</a>
-            <span class="version-badge">v5.0 Enterprise Ecosystem</span>
+            <span class="version-badge">v5.1 Omni-Platform Ecosystem</span>
         </div>
     </header>
 
@@ -40,7 +40,7 @@
             <div class="sidebar-group">
                 <div class="sidebar-title">Version Tutorials</div>
                 <ul class="sidebar-nav">
-                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v5.0)</a></li>
+                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v5.1)</a></li>
                 </ul>
             </div>
             <div class="sidebar-group">
@@ -84,7 +84,7 @@
                     <div class="callout-title">The Story Behind Corvus</div>
                     <p><em>"I got inspired to build my own programming language after watching a video about a programmer who created G# and C#, and a video by AstroSam. Since I already knew Python, I decided to take on the challenge and build my very own programming language from scratch!"</em><br>â€” <strong>Saatvik Jain</strong> (Creator of Corvus)</p>
                 </div>
-                <p>Corvus introduces a distinctive syntax using <strong>square brackets <code>[ ... ]</code> for code blocks</strong> and reserving <strong>curly braces <code>{ ... }</code> for native lists</strong>. Over 6 major release iterations (v1.1 to v4.1), Corvus has evolved from an interpreted prototype into a multi-platform systems language featuring Three-Address Code (TAC) IR optimization, a self-hosted compiler, native C FFI, scope memory ref-counting, and a native assembly compiler generating 64-bit binaries for Windows, Linux, and macOS!</p>
+                <p>Corvus introduces a distinctive syntax using <strong>square brackets <code>[ ... ]</code> for code blocks</strong> and reserving <strong>curly braces <code>{ ... }</code> for native lists</strong>. Over 7 major release iterations (v1.1 to v5.1), Corvus has evolved from an interpreted prototype into a multi-platform systems language featuring Three-Address Code (TAC) IR optimization, a self-hosted compiler, native C FFI, scope memory ref-counting, Bytecode VM, tiered JIT compiler, real-time WebSockets, GameKit 2D physics, SQLite ORM, and reactive DataFrames!</p>
             </section>
 
             <!-- Interactive WebAssembly (Wasm) Playground -->
@@ -98,6 +98,10 @@
                             <label for="wasm-sample-select">Load Preset Sample:</label>
                             <select id="wasm-sample-select" class="sample-dropdown">
                                 <option value="hello">Hello World &amp; Control Flow</option>
+                                <option value="v51_jit">⚡ v5.1 Tiered JIT &amp; Matrix Operator (@)</option>
+                                <option value="v51_channels">🗄️ v5.1 Typed Async Channels</option>
+                                <option value="v51_gamekit">🎮 v5.1 GameKit 2D Physics Simulator</option>
+                                <option value="v51_orm_dataframe">📊 v5.1 SQLite ORM &amp; DataFrames</option>
                                 <option value="factorial">Recursion &amp; Factorial</option>
                                 <option value="stdlib">Standard Library (Math &amp; String)</option>
                                 <option value="pipeline">Pipeline (|&gt;) &amp; Pattern Matching</option>
@@ -850,6 +854,38 @@ log("Activated Tensors:", relu_out)</code></pre>
                         <h3>Linux &amp; macOS Installers</h3>
                         <pre><code>bash versions/Version_4.3/install_linux.sh
 bash versions/Version_4.3/install_macos.sh</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 17. Version 5.1 Flagship Omni-Platform & Real-Time Ecosystem -->
+            <section id="v51-omni-platform" class="doc-section">
+                <h1>17. Version 5.1 Omni-Platform, JIT &amp; Real-Time Ecosystem</h1>
+                <p>Version 5.1 is Corvus's premier Omni-Platform release, introducing dynamic Just-In-Time compilation, typed asynchronous channels, full-duplex WebSockets, 2D physics simulation, active-record SQLite ORM, zero-dependency reactive DataFrames, and RavenAI 3.0 natural language synthesis.</p>
+
+                <div class="callout success">
+                    <div class="callout-title">Flagship Version 5.1 Modules &amp; Capabilities</div>
+                    <p>
+                        1. <strong>Tiered JIT Execution (<code>corvus --jit &lt;file.crv&gt;</code>)</strong>: Automatic hotspot detection that dynamically compiles frequently executed bytecode into native Python/machine instructions for a 10x–50x speed boost.<br>
+                        2. <strong>Typed Concurrency Channels (<code>get channel</code>)</strong>: Go-style thread-safe FIFO message-passing queues with <code>send()</code>, <code>recv()</code>, <code>poll()</code>, and <code>close()</code>.<br>
+                        3. <strong>Full-Duplex WebSockets (<code>web.ws_server()</code>)</strong>: Zero-dependency RFC 6455 compliant WebSocket server supporting real-time streaming, broadcast, and message handling.<br>
+                        4. <strong>RavenAI 3.0 Natural Language Code Generator (<code>corvus ai gen</code>)</strong>: Natural language prompt-to-code synthesis and automated syntax refactoring toolchain.<br>
+                        5. <strong>GameKit 2D Rigid-Body Physics &amp; Synthesizer (<code>get gamekit; get audio</code>)</strong>: Velocity, acceleration, restitution, friction, bounding volumes, and circle-box AABB collision detection.<br>
+                        6. <strong>Active-Record SQLite ORM (<code>get orm</code>)</strong>: Declarative schema migrations, fluent query builder, parameterized conditions, and CRUD persistence.<br>
+                        7. <strong>Zero-Dependency Reactive DataFrames (<code>get dataframe</code>)</strong>: Tabular filtering, aggregations, projections, and CSV import/export without external dependencies.
+                    </p>
+                </div>
+
+                <h2>Version 5.1 Automated Installers</h2>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-card">
+                        <h3>Windows Master Installer (Version 5.1 Default)</h3>
+                        <pre><code>powershell -ExecutionPolicy Bypass -File install_windows.ps1</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Linux &amp; macOS Installers</h3>
+                        <pre><code>bash install_linux.sh
+bash install_macos.sh</code></pre>
                     </div>
                 </div>
             </section>

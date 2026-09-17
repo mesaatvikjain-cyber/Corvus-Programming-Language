@@ -1,0 +1,19 @@
+# Corvus High-Performance StringBuilder Module
+
+cls StringBuilder() [
+    var buffer = ""
+
+    func append(text) [
+        set self.buffer = self.buffer + str(text)
+        givout self
+    ]
+
+    func to_string() [
+        givout self.buffer
+    ]
+
+    func clear() [
+        set self.buffer = ""
+        givout self
+    ]
+]

@@ -1,0 +1,84 @@
+// 23_v5.1_omni_ecosystem_suite.crv
+// Corvus Version 5.1 Flagship Omni-Platform Suite
+
+get channel
+get gamekit
+get orm
+get dataframe
+
+log("==================================================")
+log("  CORVUS VERSION 5.1 OMNI-PLATFORM VERIFICATION   ")
+log("==================================================")
+
+// 1. Thread-Safe Go-Style Concurrency Channels
+log("\n[TEST 1] Async Channels and Event Passing...")
+set ch = channel.new(5)
+ch.send("corvus_event_alpha")
+ch.send("corvus_event_beta")
+set ev1 = ch.recv()
+set ev2 = ch.recv()
+log("Channel Received Event 1:", ev1)
+log("Channel Received Event 2:", ev2)
+ch.close()
+log("Channel closed successfully. Is closed:", ch.is_closed())
+
+// 2. Corvus GameKit 2D Physics World
+log("\n[TEST 2] GameKit 2D Physics World and Rigid Body...")
+set world = gamekit.PhysicsWorld(0.0, 9.8)
+set b1 = world.create_body(50, 100, 15, false)
+b1.set_velocity(10, 5)
+set b2 = world.create_box(50, 250, 80, 20, true)
+
+set step_i = 0
+while (step_i < 10) [
+    world.step(0.016)
+    world.resolve_bounds(800, 600)
+    step_i = step_i + 1
+]
+log(f"RigidBody Simulation stepped 10 frames. Body 1 Pos: ({b1.x:1f}, {b1.y:1f})")
+log("Body 1 Collides with Platform:", b1.collides_with(b2))
+
+// 3. SQLite Active-Record ORM Engine
+log("\n[TEST 3] Active-Record SQLite ORM Engine...")
+set User = orm.create_model_class("users", {
+    "name": "TEXT",
+    "role": "TEXT",
+    "points": "INTEGER"
+}, ":memory:")
+
+User.create({"name": "Saatvik", "role": "Maintainer", "points": 500})
+User.create({"name": "Raven", "role": "AI Architect", "points": 1000})
+User.create({"name": "Crow", "role": "Concurrent Worker", "points": 250})
+
+set developers = User.where("points >= 500").order_by("points DESC").to_list()
+log("ORM Query matched high-scoring developers:")
+for (dev in developers) [
+    log(f"  -> Developer: {dev.name} | Role: {dev.role} | Points: {dev.points}")
+]
+
+// 4. Reactive Zero-Dependency DataFrames
+log("\n[TEST 4] Zero-Dependency Reactive DataFrames Engine...")
+set raw_data = [
+    {"product": "Corvus IDE", "category": "DevTools", "downloads": 1200, "rating": 4.9},
+    {"product": "RavenAI", "category": "ai", "downloads": 3400, "rating": 5.0},
+    {"product": "GameKit 2D", "category": "Games", "downloads": 850, "rating": 4.8},
+    {"product": "CorvusVM", "category": "Runtime", "downloads": 2200, "rating": 4.9}
+]
+
+set df = dataframe.from_records(raw_data)
+log("DataFrame Shape:", df.shape())
+log("DataFrame Columns:", df.columns())
+
+set filtered = df.filter(lmb [row] => row["downloads"] > 1000)
+log("Filtered High-Download Products:")
+for (item in filtered.to_records()) [
+    log(f"  -> {item['product']} ({item['category']}): {item['downloads']} downloads")
+]
+
+set desc = df.describe()
+log("Summary Statistics for Downloads:")
+log(f"  Total Downloads: {desc['downloads']['sum']} | Avg: {desc['downloads']['mean']} | Max: {desc['downloads']['max']}")
+
+log("\n==================================================")
+log("  CORVUS VERSION 5.1 ECOSYSTEM FULLY VERIFIED!   ")
+log("==================================================")

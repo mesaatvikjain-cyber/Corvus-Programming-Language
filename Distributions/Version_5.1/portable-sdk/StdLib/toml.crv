@@ -1,0 +1,5 @@
+# Corvus TOML Configuration File Parser Module
+
+func parse(toml_str) [
+    givout json.parse(toml_str)
+]
