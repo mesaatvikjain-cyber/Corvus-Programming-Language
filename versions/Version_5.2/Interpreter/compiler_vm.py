@@ -7,7 +7,8 @@ from astnodes import (
     ListNode, TupleNode, DictNode, IndexAccessNode, MethodCallNode,
     VarDeclNode, ConstDeclNode, AssignmentNode, BlockNode, IfNode,
     WhileNode, ForNode, BreakNode, ContinueNode, PassNode, GivoutNode,
-    FuncDeclNode, LambdaNode, FuncCallNode, TernaryNode, FStringNode, MatchNode
+    FuncDeclNode, LambdaNode, FuncCallNode, TernaryNode, FStringNode, MatchNode,
+    GetNode, PipelineNode, TryErrorNode
 )
 from bytecode import CodeObject, OpCode
 
@@ -19,10 +20,15 @@ class BytecodeCompiler:
 
     def compile(self, ast: ProgramNode) -> CodeObject:
         for stmt in ast.statements:
-            self.visit(stmt)
+            self.visit_statement(stmt)
         self.code.emit(OpCode.LOAD_CONST, self.code.add_const(None))
         self.code.emit(OpCode.RETURN)
         return self.code
+
+    def visit_statement(self, stmt):
+        self.visit(stmt)
+        if isinstance(stmt, (FuncCallNode, MethodCallNode, BinOpNode, UnaryOpNode, LiteralNode, IdentifierNode, PipelineNode)):
+            self.code.emit(OpCode.POP)
 
     def visit(self, node):
         method_name = f"visit_{type(node).__name__}"
@@ -142,7 +148,7 @@ class BytecodeCompiler:
 
     def visit_BlockNode(self, node: BlockNode):
         for stmt in node.statements:
-            self.visit(stmt)
+            self.visit_statement(stmt)
 
     def visit_IfNode(self, node: IfNode):
         exit_jumps = []
@@ -282,3 +288,28 @@ class BytecodeCompiler:
         match_end = len(self.code.instructions)
         for j in exit_jumps:
             self.code.instructions[j].arg = match_end
+
+    def visit_GetNode(self, node: GetNode):
+        mod_name = node.module_name
+        name_idx = self.code.add_name(mod_name)
+        # Load module from builtins/globals and bind to local variable mod_name
+        self.code.emit(OpCode.LOAD_VAR, name_idx)
+        self.code.emit(OpCode.STORE_VAR, name_idx)
+
+    def visit_PipelineNode(self, node: PipelineNode):
+        if isinstance(node.right, FuncCallNode):
+            call_args = [node.left] + list(node.right.args)
+            for a in call_args:
+                self.visit(a)
+            self.visit(node.right.callee)
+            self.code.emit(OpCode.CALL_FUNC, len(call_args))
+        elif isinstance(node.right, IdentifierNode):
+            self.visit(node.left)
+            self.visit(node.right)
+            self.code.emit(OpCode.CALL_FUNC, 1)
+
+    def visit_TryErrorNode(self, node: TryErrorNode):
+        if node.try_block:
+            self.visit(node.try_block)
+        if node.final_block:
+            self.visit(node.final_block)

@@ -24,6 +24,20 @@ class VMFunction:
     def __repr__(self):
         return f"<VMFunction {self.name}({', '.join(self.params)})>"
 
+class VMModule:
+    """Namespace for modules in CorvusVM."""
+    def __init__(self, name: str, exports: Dict[str, Any]):
+        self._name = name
+        self._exports = exports
+        for k, v in exports.items():
+            setattr(self, k, v)
+
+    def __getitem__(self, item):
+        return self._exports[item]
+
+    def __repr__(self):
+        return f"<VMModule {self._name}>"
+
 class Frame:
     """Activation call frame in CorvusVM."""
     def __init__(self, code: CodeObject, locals_dict: Optional[Dict[str, Any]] = None):
@@ -63,7 +77,7 @@ class CorvusVM:
         self.setup_builtins()
 
     def setup_builtins(self):
-        """Register built-in Corvus functions into VM builtins table."""
+        """Register built-in Corvus functions and modules into VM builtins table."""
         self.builtins = {
             "log": print,
             "print": print,
@@ -85,6 +99,113 @@ class CorvusVM:
             "reversed": reversed,
             "sorted": sorted,
         }
+
+        # 1. Math and Statistics Module
+        import math
+        math_exports = {
+            "sqrt": math.sqrt,
+            "sin": math.sin,
+            "cos": math.cos,
+            "tan": math.tan,
+            "abs": abs,
+            "floor": math.floor,
+            "ceil": math.ceil,
+            "radians": math.radians,
+            "degrees": math.degrees,
+            "pi": math.pi,
+            "e": math.e,
+            "mean": lambda arr: sum(arr) / len(arr) if arr else 0,
+            "median": lambda arr: sorted(arr)[len(arr) // 2] if arr else 0,
+            "variance": lambda arr: sum((x - (sum(arr)/len(arr)))**2 for x in arr) / len(arr) if arr else 0,
+            "std_dev": lambda arr: math.sqrt(sum((x - (sum(arr)/len(arr)))**2 for x in arr) / len(arr)) if arr else 0,
+        }
+        self.builtins["math"] = VMModule("math", math_exports)
+        self.builtins["math_ext"] = VMModule("math_ext", math_exports)
+
+        # 2. String Module
+        string_exports = {
+            "upper": lambda s: str(s).upper(),
+            "lower": lambda s: str(s).lower(),
+            "trim": lambda s: str(s).strip(),
+            "len": lambda s: len(str(s)),
+            "is_empty": lambda s: len(str(s)) == 0,
+            "split": lambda s, d=" ": str(s).split(d),
+            "join": lambda d, arr: str(d).join(str(x) for x in arr),
+            "contains": lambda s, sub: str(sub) in str(s),
+        }
+        self.builtins["string"] = VMModule("string", string_exports)
+
+        # 3. Chrono Module
+        import time
+        chrono_exports = {
+            "now": lambda: time.time(),
+            "sleep": lambda ms: time.sleep(float(ms) / 1000.0),
+            "format_date": lambda ts=None: time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts) if ts else time.localtime()),
+        }
+        self.builtins["chrono"] = VMModule("chrono", chrono_exports)
+
+        # 4. Async Channels Module
+        try:
+            from std_channel import channel_new
+        except ImportError:
+            try:
+                from Interpreter.std_channel import channel_new
+            except ImportError:
+                channel_new = lambda cap=0: []
+        self.builtins["channel"] = VMModule("channel", {"new": channel_new})
+        self.builtins["chan"] = VMModule("chan", {"new": channel_new})
+
+        # 5. Cryptography Module
+        import hashlib, base64
+        crypto_exports = {
+            "md5": lambda s: hashlib.md5(str(s).encode('utf-8')).hexdigest(),
+            "sha256": lambda s: hashlib.sha256(str(s).encode('utf-8')).hexdigest(),
+            "base64_encode": lambda s: base64.b64encode(str(s).encode('utf-8')).decode('utf-8'),
+            "base64_decode": lambda s: base64.b64decode(str(s).encode('utf-8')).decode('utf-8', errors='ignore'),
+        }
+        self.builtins["crypto"] = VMModule("crypto", crypto_exports)
+
+        # 6. JSON Module
+        import json as _py_json
+        json_exports = {
+            "parse": lambda s: _py_json.loads(s),
+            "stringify": lambda obj: _py_json.dumps(obj),
+        }
+        self.builtins["json"] = VMModule("json", json_exports)
+
+        # 7. Process Module
+        import platform, os
+        process_exports = {
+            "get_platform": lambda: platform.system().lower(),
+            "get_arch": lambda: platform.machine().lower(),
+            "get_env": lambda k, d="": os.environ.get(str(k), str(d)),
+        }
+        self.builtins["process"] = VMModule("process", process_exports)
+
+        # 8. RavenLM Neural AI Module (v5.2)
+        try:
+            from std_raven import _global_raven_engine
+            raven_exports = {
+                "model_info": _global_raven_engine.model_info,
+                "complete": _global_raven_engine.complete,
+                "predict": _global_raven_engine.predict,
+                "tokenize": _global_raven_engine.tokenize,
+                "detokenize": _global_raven_engine.detokenize,
+                "gen": _global_raven_engine.gen,
+                "ask": _global_raven_engine.ask,
+            }
+        except Exception:
+            raven_exports = {
+                "model_info": lambda: {"name": "RavenLM-4.0", "parameters": 166464, "status": "fallback"},
+                "complete": lambda p, m=32, t=0.7: f"{p}\n    givout 0\n]",
+                "predict": lambda p: "givout",
+                "tokenize": lambda s: [ord(c) for c in str(s)],
+                "detokenize": lambda ids: "".join(chr(int(x)) for x in ids),
+                "gen": lambda p: f"// Gen: {p}\n",
+                "ask": lambda q: "[RavenAI]: Corvus Virtual Machine is active.",
+            }
+        self.builtins["raven"] = VMModule("raven", raven_exports)
+        self.builtins["ai"] = VMModule("ai", raven_exports)
 
     def push(self, val: Any):
         if len(self.stack) >= self.MAX_STACK_SIZE:
@@ -317,10 +438,13 @@ class CorvusVM:
                         raise VMError(
                             f"TypeError: {callee.name}() takes {len(callee.params)} arguments but {len(args)} were given (line {instr.line})"
                         )
-                    # Tiered JIT Acceleration
+                    # Tiered JIT & Neuro-JIT Acceleration
                     if self.enable_jit and self.jit_engine:
                         callee.call_count += 1
-                        if callee.jit_compiled_fn is None and callee.call_count >= self.jit_engine.threshold:
+                        should_jit = callee.call_count >= self.jit_engine.threshold or (
+                            hasattr(self.jit_engine, "should_eager_jit") and self.jit_engine.should_eager_jit(callee.code)
+                        )
+                        if callee.jit_compiled_fn is None and should_jit:
                             callee.jit_compiled_fn = self.jit_engine.compile_function(callee.code, self.globals, self.builtins)
                         if callee.jit_compiled_fn:
                             try:
@@ -358,6 +482,13 @@ class CorvusVM:
                     meth = getattr(target, method_name)
                     try:
                         res = meth(*args)
+                        self.push(res)
+                    except Exception as e:
+                        raise VMError(f"Error calling method '{method_name}': {e} (line {instr.line})")
+                elif isinstance(target, dict) and method_name in target:
+                    meth = target[method_name]
+                    try:
+                        res = meth(*args) if callable(meth) else meth
                         self.push(res)
                     except Exception as e:
                         raise VMError(f"Error calling method '{method_name}': {e} (line {instr.line})")

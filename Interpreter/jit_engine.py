@@ -29,8 +29,27 @@ class JITEngine:
             "functions_jitted": 0,
             "loops_jitted": 0,
             "tier1_fallbacks": 0,
-            "tier2_native": 0
+            "tier2_native": 0,
+            "neuro_jit_accelerations": 0
         }
+
+    def should_eager_jit(self, code: CodeObject) -> bool:
+        """
+        Neuro-JIT Analysis: Inspects bytecode instructions for computational hotspots
+        (such as matrix math, tight loops, or vector arithmetic) to eagerly JIT
+        on invocation 1 without waiting for call thresholds.
+        """
+        if not self.enabled:
+            return False
+
+        has_matmul = any(instr.opcode == OpCode.MATMUL for instr in code.instructions)
+        has_loop = any(instr.opcode in (OpCode.JUMP, OpCode.FOR_ITER) for instr in code.instructions)
+        heavy_ops = sum(1 for instr in code.instructions if instr.opcode in (OpCode.MUL, OpCode.DIV, OpCode.POW, OpCode.MATMUL))
+
+        if has_matmul or (has_loop and heavy_ops >= 3):
+            self.stats["neuro_jit_accelerations"] += 1
+            return True
+        return False
 
     def _detect_c_compiler(self) -> Optional[str]:
         for cc in ["gcc", "clang"]:
@@ -203,7 +222,13 @@ class JITEngine:
                 py_lines.append(f"            _args = [_pop() for _ in range({a_count})]")
                 py_lines.append("            _args.reverse()")
                 py_lines.append("            _obj = _pop()")
-                py_lines.append(f"            _push(getattr(_obj, '{m_name}')(*_args))")
+                py_lines.append(f"            if hasattr(_obj, '{m_name}'):")
+                py_lines.append(f"                _push(getattr(_obj, '{m_name}')(*_args))")
+                py_lines.append(f"            elif isinstance(_obj, dict) and '{m_name}' in _obj:")
+                py_lines.append(f"                _m = _obj['{m_name}']")
+                py_lines.append("                _push(_m(*_args) if callable(_m) else _m)")
+                py_lines.append("            else:")
+                py_lines.append(f"                raise AttributeError(f\"'{{type(_obj).__name__}}' has no attribute '{m_name}'\")")
                 py_lines.append("            _ip += 1")
             elif op == OpCode.RETURN:
                 py_lines.append("            return _pop() if _stack else None")

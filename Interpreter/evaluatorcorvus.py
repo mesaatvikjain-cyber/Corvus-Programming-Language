@@ -29,6 +29,7 @@ try:
     from std_sklearn import _global_sklearn_engine
     from std_transformers import _global_transformers_engine
     from std_web import create_server
+    from std_raven import _global_raven_engine
 except ImportError:
     from .std_memory import _global_mem_manager
     from .std_ffi import FFIEngine
@@ -50,6 +51,10 @@ except ImportError:
     from .std_sklearn import _global_sklearn_engine
     from .std_transformers import _global_transformers_engine
     from .std_web import create_server
+    try:
+        from .std_raven import _global_raven_engine
+    except ImportError:
+        from std_raven import _global_raven_engine
 from astnodes import (
     ProgramNode, LiteralNode, IdentifierNode, ListNode, TupleNode, DictNode,
     BinOpNode, UnaryOpNode, SafeNavNode, IndexAccessNode, MethodCallNode,
@@ -429,6 +434,19 @@ class Evaluator:
         self.global_env.define("sklearn", _global_sklearn_engine, "module")
         self.global_env.define("scikit_learn", _global_sklearn_engine, "module")
         self.global_env.define("transformers", _global_transformers_engine, "module")
+
+        # Corvus Native RavenLM Neural AI & Cognitive Assistant Module (v5.2)
+        raven_dict = {
+            "model_info": lambda *args: _global_raven_engine.model_info(),
+            "complete": lambda *args: _global_raven_engine.complete(*args),
+            "predict": lambda *args: _global_raven_engine.predict(*args),
+            "tokenize": lambda *args: _global_raven_engine.tokenize(*args),
+            "detokenize": lambda *args: _global_raven_engine.detokenize(*args),
+            "gen": lambda *args: _global_raven_engine.gen(*args),
+            "ask": lambda *args: _global_raven_engine.ask(*args)
+        }
+        self.global_env.define("raven", ModuleNamespace("raven", raven_dict), "any")
+        self.global_env.define("ai", ModuleNamespace("ai", raven_dict), "any")
 
 
     def evaluate(self, node):
