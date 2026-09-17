@@ -20,7 +20,7 @@
         </div>
         <div class="header-links">
             <a href="https://github.com/mesaatvikjain-cyber/Corvus-Programming-Language-" target="_blank" class="header-link">GitHub Repository</a>
-            <span class="version-badge">v5.1 Omni-Platform Ecosystem</span>
+            <span class="version-badge">v5.2 Deep Learning Neural AI Ecosystem</span>
         </div>
     </header>
 
@@ -40,7 +40,7 @@
             <div class="sidebar-group">
                 <div class="sidebar-title">Version Tutorials</div>
                 <ul class="sidebar-nav">
-                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v5.1)</a></li>
+                    <li><a href="#version-tutorials">Version Tutorials (v1.1 - v5.2)</a></li>
                 </ul>
             </div>
             <div class="sidebar-group">
@@ -70,6 +70,8 @@
                     <li><a href="#tooling">14. VS Code &amp; REPL Shell</a></li>
                     <li><a href="#v42-graphics" style="color: var(--accent-orange); font-weight: 600;">15. v4.2 Graphics &amp; Crows Engine</a></li>
                     <li><a href="#v43-ai-ml" style="color: var(--accent-green); font-weight: 600;">16. v4.3 AI/ML Suite &amp; Diagnostics</a></li>
+                    <li><a href="#v51-omni-platform" style="color: var(--accent-blue); font-weight: 600;">17. v5.1 Omni-Platform &amp; JIT</a></li>
+                    <li><a href="#v52-neural-ai" style="color: var(--accent-purple); font-weight: 600;">18. v5.2 Deep Learning Neural AI</a></li>
                 </ul>
             </div>
         </sidebar>
@@ -84,7 +86,7 @@
                     <div class="callout-title">The Story Behind Corvus</div>
                     <p><em>"I got inspired to build my own programming language after watching a video about a programmer who created G# and C#, and a video by AstroSam. Since I already knew Python, I decided to take on the challenge and build my very own programming language from scratch!"</em><br>â€” <strong>Saatvik Jain</strong> (Creator of Corvus)</p>
                 </div>
-                <p>Corvus introduces a distinctive syntax using <strong>square brackets <code>[ ... ]</code> for code blocks</strong> and reserving <strong>curly braces <code>{ ... }</code> for native lists</strong>. Over 7 major release iterations (v1.1 to v5.1), Corvus has evolved from an interpreted prototype into a multi-platform systems language featuring Three-Address Code (TAC) IR optimization, a self-hosted compiler, native C FFI, scope memory ref-counting, Bytecode VM, tiered JIT compiler, real-time WebSockets, GameKit 2D physics, SQLite ORM, and reactive DataFrames!</p>
+                <p>Corvus introduces a distinctive syntax using <strong>square brackets <code>[ ... ]</code> for code blocks</strong> and reserving <strong>curly braces <code>{ ... }</code> for native lists</strong>. Over 8 major release iterations (v1.1 to v5.2), Corvus has evolved from an interpreted prototype into a multi-platform systems language featuring Three-Address Code (TAC) IR optimization, a self-hosted compiler, native C FFI, scope memory ref-counting, Bytecode VM, tiered JIT compiler, real-time WebSockets, GameKit 2D physics, SQLite ORM, reactive DataFrames, and RavenLM Deep Learning Neural Transformers!</p>
             </section>
 
             <!-- Interactive WebAssembly (Wasm) Playground -->
@@ -97,6 +99,7 @@
                         <div class="toolbar-group">
                             <label for="wasm-sample-select">Load Preset Sample:</label>
                             <select id="wasm-sample-select" class="sample-dropdown">
+                                <option value="v52_neural_ai">🧠 v5.2 RavenLM Neural Transformer AI</option>
                                 <option value="hello">Hello World &amp; Control Flow</option>
                                 <option value="v51_jit">⚡ v5.1 Tiered JIT &amp; Matrix Operator (@)</option>
                                 <option value="v51_channels">🗄️ v5.1 Typed Async Channels</option>
@@ -880,6 +883,51 @@ bash versions/Version_4.3/install_macos.sh</code></pre>
                 <div class="cheatsheet-grid">
                     <div class="cheat-card">
                         <h3>Windows Master Installer (Version 5.1 Default)</h3>
+                        <pre><code>powershell -ExecutionPolicy Bypass -File install_windows.ps1</code></pre>
+                    </div>
+                    <div class="cheat-card">
+                        <h3>Linux &amp; macOS Installers</h3>
+                        <pre><code>bash install_linux.sh
+bash install_macos.sh</code></pre>
+                    </div>
+                </div>
+            </section>
+            <!-- 18. Version 5.2 Deep Learning Neural AI & Cognitive Ecosystem -->
+            <section id="v52-neural-ai" class="doc-section">
+                <h1>18. Version 5.2 Deep Learning Neural AI Ecosystem &amp; RavenLM</h1>
+                <p>Version 5.2 marks a historic milestone for Corvus: the integration of a custom deep learning neural transformer language model (<strong>RavenLM</strong>) directly into the compiler toolchain, powering <strong>RavenAI 4.0</strong> with zero-dependency dual-runtime inference.</p>
+
+                <div class="callout success">
+                    <div class="callout-title">Flagship Version 5.2 Neural Capabilities</div>
+                    <p>
+                        1. <strong>RavenLM Transformer Architecture (<code>raven_model.py</code>)</strong>: A 3-layer, 4-head causal self-attention transformer (<code>d_model = 64</code>, GELU MLP, RMS/LayerNorm, learned positional embeddings) with 166,464 parameters trained directly on the Corvus grammar corpus to a cross-entropy loss of 0.8796.<br>
+                        2. <strong>Zero-Dependency Dual-Runtime Inference</strong>: Blazing-fast GPU/CPU tensor execution via PyTorch, alongside a pure NumPy linear algebra engine (<code>NumPyRavenLM</code>) enabling standalone binary releases (<code>corvus.exe</code>) to run neural autocompletion without PyTorch.<br>
+                        3. <strong>Neural Code Autocompletion (<code>corvus ai complete &quot;&lt;prefix&gt;&quot;</code>)</strong>: High-speed next-token and next-expression neural prediction for Corvus functions, loops, and control flow.<br>
+                        4. <strong>Cognitive Assistant &amp; Model Telemetry (<code>corvus ai model</code>)</strong>: Real-time inspection of active model weights, layer counts, active device (CUDA/CPU/NumPy fallback), parameter counts, and vocabulary size.<br>
+                        5. <strong>On-Device Corpus Retraining (<code>corvus ai train [--epochs N]</code>)</strong>: Single-command local corpus extraction and transformer training directly from Corvus files and test suites.<br>
+                        6. <strong>100% Backward Compatibility</strong>: All 24 comprehensive test suites, negative syntax tests, Bytecode VM, and native C99 transpilation remain rock-solid.
+                    </p>
+                </div>
+
+                <h2>Interactive Code Example: RavenAI Neural CLI Toolchain</h2>
+                <div class="code-wrapper">
+                    <pre><code># 1. Inspect RavenLM Neural Architecture
+corvus ai model
+
+# 2. Neural Autocomplete Corvus Code
+corvus ai complete "mk func fibonacci(n) ["
+
+# 3. Natural Language Code Synthesis
+corvus ai gen "Create a fast matrix multiplier function using @"
+
+# 4. Retrain RavenLM on Custom Corvus Codebase
+corvus ai train --epochs 25</code></pre>
+                </div>
+
+                <h2>Version 5.2 Automated Installers</h2>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-card">
+                        <h3>Windows Master Installer (Version 5.2 Default)</h3>
                         <pre><code>powershell -ExecutionPolicy Bypass -File install_windows.ps1</code></pre>
                     </div>
                     <div class="cheat-card">

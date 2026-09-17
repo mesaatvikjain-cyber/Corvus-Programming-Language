@@ -1,0 +1,103 @@
+import re
+from dataclasses import dataclass
+
+@dataclass
+class Token:
+    type: str
+    value: str
+    line: int = 1
+    column: int = 1
+
+RULES = [
+    # Comments: ?{ ... }, // ..., # ...
+    ('COMMENT',    r'\?\{[\s\S]*?\}|//[^\n]*|#[^\n]*'),
+
+    # Whitespace
+    ('NEWLINE',    r'\n'),
+    ('SKIP',       r'[ \t\r]+'),
+
+    # Literals
+    ('NUMBER',     r'\d+(\.\d+)?'),
+    ('FSTRING',    r'f"[^"\n]*"|f\'[^\'\n]*\''),
+    ('STRING',     r'"[^"\n]*"|\'[^\'\n]*\''),
+
+    # Keywords
+    ('KEYWORD',    r'\b(set|const|mk|givout|if|elsif|else|for|in|while|brk|con|try|error|final|true|fal|null|and|or|not|xor|async|awt|cls|global|pass|get|input|match|case)\b'),
+
+    # Data Types
+    ('TYPE',       r'\b(int|flo|str|bool|lis|tup|dic|func|lmb)\b'),
+
+    # Compound operators
+    ('TUP_OPEN',   r'\(\['),
+    ('TUP_CLOSE',  r'\]\)'),
+    ('FAT_ARROW',  r'=>'),
+    ('PIPELINE',   r'\|>'),
+    ('SAFE_NAV',   r'\?\.'),
+
+    ('NULL_COAL',  r'\?\?'),
+    ('POWER',      r'\*\*'),
+    ('EQ',         r'=='),
+    ('NEQ',        r'!='),
+    ('LTE',        r'<='),
+    ('GTE',        r'>='),
+
+    # Single-character operators & punctuation
+    ('ASSIGN',     r'='),
+    ('PLUS',       r'\+'),
+    ('MINUS',      r'-'),
+    ('STAR',       r'\*'),
+    ('SLASH',      r'/'),
+    ('MOD',        r'%'),
+    ('AT',         r'@'),
+    ('LT',         r'<'),
+    ('GT',         r'>'),
+    ('QUESTION',   r'\?'),
+    ('DOT',        r'\.'),
+    ('COLON',      r':'),
+    ('SEMI',       r';'),
+    ('COMMA',      r','),
+    ('LBRACKET',   r'\['),
+    ('RBRACKET',   r'\]'),
+    ('LBRACE',     r'\{'),
+    ('RBRACE',     r'\}'),
+    ('LPAREN',     r'\('),
+    ('RPAREN',     r'\)'),
+
+    # Identifiers
+    ('ID',         r'[A-Za-z_][A-Za-z0-9_]*'),
+
+    # Catch-all
+    ('MISMATCH',   r'.'),
+]
+
+
+def tokenize(code: str):
+    code = code.lstrip('\ufeff')
+    master_regex = '|'.join(f'(?P<{name}>{pattern})' for name, pattern in RULES)
+
+    tokens = []
+    line_num = 1
+    line_start = 0
+
+    for match in re.finditer(master_regex, code):
+        kind = match.lastgroup
+        value = match.group()
+        column = match.start() - line_start + 1
+
+        if kind == 'NEWLINE':
+            line_num += 1
+            line_start = match.end()
+            continue
+        elif kind == 'SKIP':
+            continue
+        elif kind == 'COMMENT':
+            line_num += value.count('\n')
+            if '\n' in value:
+                line_start = match.end() - (len(value) - value.rfind('\n') - 1)
+            continue
+        elif kind == 'MISMATCH':
+            raise SyntaxError(f"Unexpected character '{value}' at line {line_num}, column {column}")
+
+        tokens.append(Token(type=kind, value=value, line=line_num, column=column))
+
+    return tokens

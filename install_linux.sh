@@ -7,31 +7,32 @@ echo "=========================================================="
 
 echo ""
 echo "Select Corvus Installation Package:"
-echo "  [0] Standalone Native Binaries v5.1 (Zero Python Required) [RECOMMENDED]"
-echo "  [1] Version 5.1 (Omni-Platform Ecosystem: JIT, WebSockets, Channels, GameKit, ORM, DataFrames) [DEFAULT]"
-echo "  [2] Version 5.0 (Enterprise Ecosystem: RavenAI 2.0, CPM, Web, Tour, LSP, Wasm)"
-echo "  [3] Version 4.7 (RavenAI Assistant, Transpiler & Hardened VM)"
-echo "  [4] Version 4.6 (Security Hardened, Bytecode VM & .crvc Compiler)"
-echo "  [5] Version 4.5 (Corvus Bytecode VM & .crvc Compiler)"
-echo "  [6] Version 4.4 (Universal Dual Syntax & Smart Type Inference)"
-echo "  [7] Version 4.3 (Latest Features & Diagnostics)"
-echo "  [8] Version 4.2 (Desktop 2D Graphics & Concurrency)"
-echo "  [9] Version 4.1 (Super Optimizer Engine)"
-echo " [10] Version 4.0 (Native StdLib Expansion & REPL)"
-echo " [11] Version 3.1 (Enterprise Error Resilience)"
-echo " [12] Version 3.0 (Self-Hosted Compiler & Concurrency)"
-echo " [13] Version 2.0 (Multi-Platform Native Assembly)"
-echo " [14] Version 1.1 (AST Visitor Interpreter)"
+echo "  [0] Standalone Native Binaries v5.2 (Zero Python Required) [RECOMMENDED]"
+echo "  [1] Version 5.2 (Neural AI Ecosystem: RavenLM Transformer, Code Completion & Fine-Tuning) [DEFAULT]"
+echo "  [2] Version 5.1 (Omni-Platform: JIT Engine, WebSockets, Channels, GameKit, ORM, DataFrames)"
+echo "  [3] Version 5.0 (Enterprise Ecosystem: RavenAI 2.0, CPM, Web, Tour, LSP, Wasm)"
+echo "  [4] Version 4.7 (RavenAI Assistant, Transpiler & Hardened VM)"
+echo "  [5] Version 4.6 (Security Hardened, Bytecode VM & .crvc Compiler)"
+echo "  [6] Version 4.5 (Corvus Bytecode VM & .crvc Compiler)"
+echo "  [7] Version 4.4 (Universal Dual Syntax & Smart Type Inference)"
+echo "  [8] Version 4.3 (Latest Features & Diagnostics)"
+echo "  [9] Version 4.2 (Desktop 2D Graphics & Concurrency)"
+echo " [10] Version 4.1 (Super Optimizer Engine)"
+echo " [11] Version 4.0 (Native StdLib Expansion & REPL)"
+echo " [12] Version 3.1 (Enterprise Error Resilience)"
+echo " [13] Version 3.0 (Self-Hosted Compiler & Concurrency)"
+echo " [14] Version 2.0 (Multi-Platform Native Assembly)"
+echo " [15] Version 1.1 (AST Visitor Interpreter)"
 
-read -p "Enter selection (0-14) [Default: 1]: " CHOICE
+read -p "Enter selection (0-15) [Default: 1]: " CHOICE
 CHOICE=${CHOICE:-1}
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 if [ "$CHOICE" == "0" ]; then
-    STANDALONE_INSTALLER="$SCRIPT_DIR/Distributions/Version_5.1/install_standalone_linux.sh"
+    STANDALONE_INSTALLER="$SCRIPT_DIR/Distributions/Version_5.2/install_standalone_linux.sh"
     if [ ! -f "$STANDALONE_INSTALLER" ]; then
-        STANDALONE_INSTALLER="$SCRIPT_DIR/Distributions/Version_5.0/install_standalone_linux.sh"
+        STANDALONE_INSTALLER="$SCRIPT_DIR/Distributions/Version_5.1/install_standalone_linux.sh"
     fi
     if [ -f "$STANDALONE_INSTALLER" ]; then
         echo "[EXECUTING] Launching Standalone Native Binaries Installer..."
@@ -47,21 +48,22 @@ if ! command -v python3 &> /dev/null; then
 fi
 
 case $CHOICE in
-    1) VER_FOLDER="Version_5.1" ;;
-    2) VER_FOLDER="Version_5.0" ;;
-    3) VER_FOLDER="Version_4.7" ;;
-    4) VER_FOLDER="Version_4.6" ;;
-    5) VER_FOLDER="Version_4.5" ;;
-    6) VER_FOLDER="Version_4.4" ;;
-    7) VER_FOLDER="Version_4.3" ;;
-    8) VER_FOLDER="Version_4.2" ;;
-    9) VER_FOLDER="Version_4.1" ;;
-    10) VER_FOLDER="Version_4.0" ;;
-    11) VER_FOLDER="Version_3.1" ;;
-    12) VER_FOLDER="Version_3.0" ;;
-    13) VER_FOLDER="Version_2.0" ;;
-    14) VER_FOLDER="Version_1.1" ;;
-    *) VER_FOLDER="Version_5.1" ;;
+    1) VER_FOLDER="Version_5.2" ;;
+    2) VER_FOLDER="Version_5.1" ;;
+    3) VER_FOLDER="Version_5.0" ;;
+    4) VER_FOLDER="Version_4.7" ;;
+    5) VER_FOLDER="Version_4.6" ;;
+    6) VER_FOLDER="Version_4.5" ;;
+    7) VER_FOLDER="Version_4.4" ;;
+    8) VER_FOLDER="Version_4.3" ;;
+    9) VER_FOLDER="Version_4.2" ;;
+    10) VER_FOLDER="Version_4.1" ;;
+    11) VER_FOLDER="Version_4.0" ;;
+    12) VER_FOLDER="Version_3.1" ;;
+    13) VER_FOLDER="Version_3.0" ;;
+    14) VER_FOLDER="Version_2.0" ;;
+    15) VER_FOLDER="Version_1.1" ;;
+    *) VER_FOLDER="Version_5.2" ;;
 esac
 
 TARGET_INSTALLER="$SCRIPT_DIR/versions/$VER_FOLDER/install_linux.sh"

@@ -1,0 +1,31 @@
+?{ =================================================
+   Corvus Example 5: Universal Module Bridge
+   ================================================= }
+
+get math
+get random
+get time
+get file
+get json
+
+log("=== 1. Math Module ===")
+log("Square root of 16:", math.sqrt(16))
+log("Pi constant:", math.pi)
+
+log("=== 2. Random Module ===")
+set int; die_roll = random.randint(1, 6)
+log("Dice roll:", die_roll)
+
+log("=== 3. Time Module ===")
+log("Current timestamp:", time.stamp())
+
+log("=== 4. File Module ===")
+file.write("test_output.txt", "Corvus File I/O Test Successful!")
+set str; content = file.read("test_output.txt")
+log("Read file content:", content)
+file.remove("test_output.txt")
+
+log("=== 5. Universal Python Module Bridge (get os) ===")
+get os
+log("OS Name:", os.name)
+log("Current Dir:", os.getcwd())

@@ -1,0 +1,11 @@
+?{ =================================================
+   Corvus Example 3: First-Class Lambdas & Lists
+   ================================================= }
+
+set lis; numbers = {1, 2, 3, 4, 5}
+log("Original list:", numbers)
+
+set lmb; double_fn = lmb[x] => x * 2
+set lis; doubled = numbers.map(double_fn)
+
+log("Doubled list:", doubled)

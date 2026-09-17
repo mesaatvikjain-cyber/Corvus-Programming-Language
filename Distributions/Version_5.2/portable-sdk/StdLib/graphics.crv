@@ -1,0 +1,49 @@
+# Corvus Built-in Zero-Config Graphics Standard Library Module (Version 4.2)
+
+func init(title, width, height, bg_color) [
+    givout graphics.init_window(title, width, height, bg_color)
+]
+
+func clear(color) [
+    givout graphics.clear(color)
+]
+
+func draw_rect(x, y, w, h, color, fill) [
+    givout graphics.draw_rect(x, y, w, h, color, fill)
+]
+
+func draw_circle(x, y, radius, color, fill) [
+    givout graphics.draw_circle(x, y, radius, color, fill)
+]
+
+func draw_line(x1, y1, x2, y2, color, thickness) [
+    givout graphics.draw_line(x1, y1, x2, y2, color, thickness)
+]
+
+func draw_text(text, x, y, font_size, color) [
+    givout graphics.draw_text(text, x, y, font_size, color)
+]
+
+func is_open() [
+    givout graphics.is_open()
+]
+
+func update() [
+    givout graphics.update()
+]
+
+func is_key_pressed(key) [
+    givout graphics.is_key_pressed(key)
+]
+
+func sleep(seconds) [
+    givout graphics.sleep(seconds)
+]
+
+func fps(target_fps) [
+    givout graphics.fps(target_fps)
+]
+
+func close() [
+    givout graphics.close()
+]

@@ -1,0 +1,17 @@
+# Corvus Native Pandas Data Analysis Module
+
+func read_csv(filepath) [
+    givout pandas_engine.read_csv(filepath)
+]
+
+func head(data, n) [
+    givout pandas_engine.head(data, n)
+]
+
+func describe(data) [
+    givout pandas_engine.describe(data)
+]
+
+func filter_by(data, col, val) [
+    givout pandas_engine.filter_by(data, col, val)
+]

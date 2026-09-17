@@ -32,16 +32,16 @@ The Corvus compiler and runtime ecosystem follows a modern Tri-Engine design:
 
 ## 📁 Repository Directory Structure
 
-- **`Interpreter/`**: Core runtime interpreter, AST evaluator, REPL shell, Bytecode Virtual Machine, native module shims, and **`ai_engine.py` (RavenAI Intelligent Assistant)**.
+- **`Interpreter/`**: Core runtime interpreter, AST evaluator, REPL shell, Bytecode Virtual Machine, native module shims, and **`ai_engine.py` & `raven_model.py` (RavenAI 4.0 Neural Transformer Assistant)**.
 - **`Compiler/`**: High-performance C99 native compilation pipeline driver (`CorvusC_c.py`).
 - **`Compiler_Core/`**: Intermediate Representation (IR), AST lowering, and C99 code generator.
 - **`Compiler_Windows/`**, **`Compiler_Linux/`**, **`Compiler_MacOS/`**: Target assembly code generators emitting 64-bit NASM code.
 - **`StdLib/`**: 30+ standard library modules written natively in Corvus syntax (`math.crv`, `string.crv`, `graphics.crv`, `sqlite.crv`, `torch.crv`, `numpy.crv`).
 - **`test/`**: **Categorized Negative Test Suite** (`variables/`, `conditions/`, `loops/`, `functions/`, `oop/`, `expressions/`) and automated grammar-aware **`fuzzer.py`**.
 - **`Examples-and-Tests/`**: Automated functional test suites and playable desktop game demos (Snake, Pong).
-- **`Distributions/`**: Zero-dependency standalone binary releases and portable SDK bundles (`Version_5.1/`, `Version_5.0/`, `Version_4.7/`, `Version_4.6/`, `Version_4.5/`, `Version_4.4/`).
-- **`versions/`**: Historical release snapshots from `Version_1.1` to `Version_5.1`.
-- **`Documentation/`**: Master Documentation, tutorials (`01_...` through `14_v5.1_...`), Installation Guide, and Hosting documentation.
+- **`Distributions/`**: Zero-dependency standalone binary releases and portable SDK bundles (`Version_5.2/`, `Version_5.1/`, `Version_5.0/`, `Version_4.7/`, `Version_4.6/`, `Version_4.5/`, `Version_4.4/`).
+- **`versions/`**: Historical release snapshots from `Version_1.1` to `Version_5.2`.
+- **`Documentation/`**: Master Documentation, tutorials (`01_...` through `15_v5.2_...`), Installation Guide, and Hosting documentation.
 - **`Editor-Extension/`**: VS Code extension package (`.vsix`) and Language Server Protocol daemon (`corvus lsp`).
 
 ---

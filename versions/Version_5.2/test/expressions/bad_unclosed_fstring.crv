@@ -1,0 +1,2 @@
+// Unclosed interpolation bracket in f-string
+set greeting = f"Hello, {name

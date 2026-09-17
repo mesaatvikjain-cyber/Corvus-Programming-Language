@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# CorvusC Portable Unix/Linux/macOS Compiler Launcher
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+PORTABLE_DIR="$( cd "$SCRIPT_DIR/.." &> /dev/null && pwd )"
+EMBED_PYTHON="$PORTABLE_DIR/runtime/bin/python3"
+
+# 1. Check if bundled runtime exists
+if [ -x "$EMBED_PYTHON" ]; then
+    exec "$EMBED_PYTHON" "$PORTABLE_DIR/Compiler/CorvusC_c.py" "$@"
+fi
+
+# 2. Check system python3
+if command -v python3 &> /dev/null; then
+    exec python3 "$PORTABLE_DIR/Compiler/CorvusC_c.py" "$@"
+elif command -v python &> /dev/null; then
+    exec python "$PORTABLE_DIR/Compiler/CorvusC_c.py" "$@"
+fi
+
+echo "[ERROR] No Python runtime found on system or in portable runtime/ directory!"
+echo "Please install python3 (e.g. 'sudo apt install python3' or 'brew install python3')"
+exit 1

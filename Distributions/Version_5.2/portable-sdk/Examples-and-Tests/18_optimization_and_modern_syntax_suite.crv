@@ -1,0 +1,51 @@
+?{ Test Suite: Corvus Optimization & Modern Syntax (v4.3) }
+log("==================================================")
+log("  Corvus Optimization & Modern Syntax Suite v4.3  ")
+log("==================================================")
+
+# 1. Constant Folding & Algebraic Simplification
+set int; folded_math = 100 + 50 * 2 - (10 / 2)
+log("Folded Arithmetic Result:", folded_math)
+
+set int; zero_mult = folded_math * 0
+set int; one_mult = (folded_math * 1) + 0
+log("Algebraic Zero:", zero_mult, "| Algebraic One:", one_mult)
+
+# 2. Modern String Interpolation (F-Strings)
+set str; lang = "Corvus"
+set int; release_ver = 4
+set str; greeting = f"Language: {lang} | Major Release: v{release_ver}.3 | Scaled: {release_ver * 10}"
+log("F-String Interpolation:", greeting)
+
+set str; escaped_braces = f"Escaped: {{literal_code}} and var: {lang}"
+log("F-String Escaped Braces:", escaped_braces)
+
+# 3. Modern Inline Ternary Conditional Expressions (? :)
+set int; test_score = 95
+set str; grade = (test_score >= 90) ? "A+" : "B"
+log("Ternary Grade Evaluation:", grade)
+
+set int; nested_val = 15
+set str; category = (nested_val < 10) ? "Small" : (nested_val < 20) ? "Medium" : "Large"
+log("Nested Ternary Evaluation:", category)
+
+# 4. Dead Branch Pruning Validation
+set str; branch_check = "Initial"
+if (fal) [
+    branch_check = "Failed - Should be pruned"
+] else [
+    branch_check = "Passed - Active Branch"
+]
+log("Dead Branch Elimination:", branch_check)
+
+# 5. Functions & Lambdas with Modern Features
+mk func eval_status(val) [
+    givout (val > 50) ? f"High Score: {val}" : f"Low Score: {val}"
+]
+
+log("Function Ternary Call:", eval_status(75))
+log("Function Ternary Call:", eval_status(25))
+
+log("==================================================")
+log("[SUCCESS] All Optimization & Modern Features Pass!")
+log("==================================================")

@@ -1,0 +1,8 @@
+// Instantiating class with wrong argument count
+class Point [
+    func init(x, y) [
+        set this.x = x
+        set this.y = y
+    ]
+]
+set pt = new Point(10)

@@ -1,0 +1,34 @@
+// asteroids.crv
+// Corvus GameKit: Asteroids 2D Space Physics Demo
+get gamekit
+
+log("=== Launching Asteroids (Corvus GameKit) ===")
+
+set world = gamekit.PhysicsWorld(0, 0) // Zero gravity
+
+// Spaceship
+set ship = world.create_body(300, 200, 12, false)
+ship.friction = 0.995 // Low space friction
+ship.set_velocity(40, -30) // Initial thrust
+log(f"Spaceship drifting in orbit: Vx={ship.vx}, Vy={ship.vy}")
+
+// Asteroid rocks drifting towards center
+set rock1 = world.create_body(150, 100, 25, false)
+rock1.set_velocity(20, 15)
+set rock2 = world.create_body(450, 300, 30, false)
+rock2.set_velocity(-15, -20)
+
+// Step physics & screen wrap-around
+set frame = 0
+while (frame < 15) [
+    world.step(0.016)
+    world.resolve_bounds(600, 400)
+
+    if (ship.collides_with(rock1)) [
+        log(f"Frame {frame}: [ALERT] Ship bounced off Asteroid 1!")
+    ]
+
+    frame = frame + 1
+]
+
+log(f"Asteroids simulation verified. Ship final pos: ({ship.x:.1f}, {ship.y:.1f})")

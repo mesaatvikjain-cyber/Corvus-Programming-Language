@@ -22,9 +22,10 @@ Corvus/
 │   ├── Version_4.6/      # Distribution bundle for v4.6 (Security Hardened & VM)
 │   ├── Version_4.7/      # Distribution bundle for v4.7 (RavenAI & Hardened VM)
 │   ├── Version_5.0/      # Distribution bundle for v5.0 (Enterprise Ecosystem)
-│   └── Version_5.1/      # Distribution bundle for v5.1 (Omni-Platform & Real-Time Ecosystem)
+│   ├── Version_5.1/      # Distribution bundle for v5.1 (Omni-Platform & Real-Time Ecosystem)
+│   └── Version_5.2/      # Distribution bundle for v5.2 (Deep Learning Neural AI Ecosystem)
 ├── Documentation/        # 📖 Master Documentation, Tutorials, and Web Docs source
-│   ├── tutorials/        # Markdown tutorials for v1.1 through v5.1
+│   ├── tutorials/        # Markdown tutorials for v1.1 through v5.2
 │   ├── webpage_corvus/   # Interactive Master Documentation Website source
 │   ├── INSTALLATION_GUIDE.md # Cross-platform installation instructions
 │   └── HOSTING.md        # Hosting guide for GitHub Pages, Vercel, Netlify
@@ -32,7 +33,7 @@ Corvus/
 ├── Examples-and-Tests/   # 🧪 Test suites, playable retro games, and example programs
 ├── Editor-Extension/     # 💻 Visual Studio Code syntax & language diagnostics extension
 ├── bin/                  # 🚀 Command-line wrapper scripts (corvus, corvusc)
-├── versions/             # 📜 Standalone release snapshots (v1.1 through v5.1)
+├── versions/             # 📜 Standalone release snapshots (v1.1 through v5.2)
 │   ├── Version_1.1/      # Reference AST visitor interpreter & OOP
 │   ├── Version_2.0/      # Multi-platform NASM assembly compiler
 │   ├── Version_3.0/      # Self-hosted compiler & "Murder of Crows" concurrency
@@ -46,7 +47,8 @@ Corvus/
 │   ├── Version_4.6/      # Enterprise Security Hardening & Robustness Engine
 │   ├── Version_4.7/      # "RavenAI" Built-in Assistant, Transpiler & Hardened VM
 │   ├── Version_5.0/      # Enterprise Ecosystem: RavenAI 2.0, CPM, Web, Tour, LSP, Wasm
-│   └── Version_5.1/      # Omni-Platform: JIT Engine, WebSockets, Channels, GameKit, ORM, DataFrames
+│   ├── Version_5.1/      # Omni-Platform: JIT Engine, WebSockets, Channels, GameKit, ORM, DataFrames
+│   └── Version_5.2/      # Neural AI: RavenLM Transformer, Autoregressive Completion, In-Tree Training
 ├── install_windows.ps1   # 🪟 Interactive master Windows installer (all versions)
 ├── install_linux.sh      # 🐧 Interactive master Linux installer (all versions)
 ├── install_macos.sh      # 🍏 Interactive master macOS installer (all versions)
@@ -77,12 +79,17 @@ The primary development and execution driver for Corvus:
 * `parsercorvus.py`: Recursive-descent AST generator with smart type inference, expression conditionals, and optional semicolons.
 * `evaluatorcorvus.py`: AST tree-walk runtime environment with lexical scoping and class dispatch.
 * `jit_engine.py`: Dynamic JIT hotspot loop detector and bytecode optimizer.
+* `raven_model.py`: Causal Autoregressive Decoder Transformer (`RavenLM`), Multi-Head Attention, and Dual PyTorch/NumPy runtime.
+* `train_raven.py`: Automated codebase corpus harvester, tokenizer, AdamW training loop, and weight exporter.
+* `raven_weights.pt`: Pre-trained PyTorch neural model checkpoint (166,464 weights).
+* `raven_weights.json`: Portable JSON neural weights for zero-dependency standalone execution.
+* `raven_vocab.json`: Learned character and syntax token vocabulary.
 * `bytecode.py`: Opcode definitions, bytecode chunk structure, binary serialization (`.crvc`), and disassembler.
 * `compiler_vm.py`: Compiles high-level Corvus AST nodes directly into linear bytecode chunks.
 * `vm.py`: Stack-based virtual machine with activation call frames and native matrix `@` multiplication.
 * `ast_optimizer.py`: High-level AST optimization pass (constant folding, algebraic simplification, dead branch pruning).
 * `errors.py`: Rust-style diagnostic error system with `--explain <CODE>` and Levenshtein typo correction heuristics.
-* `ai_engine.py`: RavenAI 3.0 developer assistant (`gen`, `refactor`, `testgen`, `doc`, `review`, `export`, `ask`, `explain`, `fix`, `translate`).
+* `ai_engine.py`: RavenAI 4.0 Neural Assistant (`complete`, `model`, `train`, `gen`, `refactor`, `testgen`, `doc`, `review`, `export`, `ask`, `explain`, `fix`, `translate`).
 * `package_manager.py`: CPM 2.0 package manager engine resolving `corvus.json` and `corvus.lock`.
 * `lsp_server.py`: Microsoft JSON-RPC 2.0 Language Server Protocol daemon (`corvus lsp`).
 * `tour.py`: Interactive 8-lesson terminal tutorial engine (`corvus tour`).
@@ -110,17 +117,17 @@ Standard libraries accessible via `get <module>`:
 
 ### 4. `Distributions/`
 Pre-packaged standalone bundles for end users who do not have Python installed:
-* **`Version_5.1/`**, **`Version_5.0/`**, **`Version_4.7/`**, **`Version_4.6/`** & **`Version_4.5/`**:
+* **`Version_5.2/`**, **`Version_5.1/`**, **`Version_5.0/`**, **`Version_4.7/`**, **`Version_4.6/`** & **`Version_4.5/`**:
   * `standalone/`: Contains single-file standalone binaries `corvus.exe` and `corvusc.exe`.
-  * `portable-sdk/`: Full portable Corvus development kit with `bin/corvus.bat` and `bin/corvusc.bat`.
+  * `portable-sdk/`: Full portable Corvus development kit with `bin/corvus.bat`, `bin/corvusc.bat`, and pre-trained neural model weights.
   * `install_standalone_windows.ps1`: One-click PATH installer.
 
 ### 5. `Documentation/` & `docs/`
-* `Documentation/tutorials/`: 14 comprehensive version tutorials spanning v1.1 up to v5.1.
+* `Documentation/tutorials/`: 15 comprehensive version tutorials spanning v1.1 up to v5.2.
 * `Documentation/webpage_corvus/`: Canonical HTML/CSS/JS source of the master interactive documentation website.
 * `docs/`: Deployment target for GitHub Pages hosting with In-Browser Wasm Playground.
 
-### 6. `versions/` (`Version_1.1/` through `Version_5.1/`)
+### 6. `versions/` (`Version_1.1/` through `Version_5.2/`)
 Dedicated directory grouping all 13 historical release snapshots of Corvus. Each version snapshot is fully isolated with its own dedicated interpreter, compiler, test suite, and platform installers for reproducibility, educational reference, and regression testing.
 
 ---

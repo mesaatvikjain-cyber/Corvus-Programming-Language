@@ -6,29 +6,30 @@ Write-Host "==========================================================" -Foregro
 $pythonCmd = Get-Command python -ErrorAction SilentlyContinue
 
 Write-Host "`nSelect Corvus Installation Package:" -ForegroundColor Yellow
-Write-Host "  [0] Standalone Native Binaries v5.1 (Zero Python Required) [RECOMMENDED]" -ForegroundColor Green
-Write-Host "  [1] Version 5.1 (Omni-Platform Ecosystem: JIT, WebSockets, Channels, GameKit, ORM, DataFrames) [DEFAULT]"
-Write-Host "  [2] Version 5.0 (Enterprise Ecosystem: RavenAI 2.0, CPM, Web, Tour, LSP, Wasm)"
-Write-Host "  [3] Version 4.7 (RavenAI Assistant, Transpiler & Hardened VM)"
-Write-Host "  [4] Version 4.6 (Security Hardened, Bytecode VM & .crvc Compiler)"
-Write-Host "  [5] Version 4.5 (Corvus Bytecode VM & .crvc Compiler)"
-Write-Host "  [6] Version 4.4 (Universal Dual Syntax & Smart Type Inference)"
-Write-Host "  [7] Version 4.3 (AI/ML Stack, 30+ StdLib Modules & Rust Diagnostics)"
-Write-Host "  [8] Version 4.2 (Desktop 2D Graphics & Murder of Crows Concurrency)"
-Write-Host "  [9] Version 4.1 (Super Optimizer Engine & Assembly Peephole)"
-Write-Host " [10] Version 4.0 (Native StdLib Expansion & REPL)"
-Write-Host " [11] Version 3.1 (Enterprise Error Resilience)"
-Write-Host " [12] Version 3.0 (Self-Hosted Compiler & Concurrency)"
-Write-Host " [13] Version 2.0 (Multi-Platform Native Assembly)"
-Write-Host " [14] Version 1.1 (AST Visitor Interpreter)"
+Write-Host "  [0] Standalone Native Binaries v5.2 (Zero Python Required) [RECOMMENDED]" -ForegroundColor Green
+Write-Host "  [1] Version 5.2 (Neural AI Ecosystem: RavenLM Transformer, Code Completion & Model Fine-Tuning) [DEFAULT]"
+Write-Host "  [2] Version 5.1 (Omni-Platform: JIT Engine, WebSockets, Channels, GameKit, ORM, DataFrames)"
+Write-Host "  [3] Version 5.0 (Enterprise Ecosystem: RavenAI 2.0, CPM, Web, Tour, LSP, Wasm)"
+Write-Host "  [4] Version 4.7 (RavenAI Assistant, Transpiler & Hardened VM)"
+Write-Host "  [5] Version 4.6 (Security Hardened, Bytecode VM & .crvc Compiler)"
+Write-Host "  [6] Version 4.5 (Corvus Bytecode VM & .crvc Compiler)"
+Write-Host "  [7] Version 4.4 (Universal Dual Syntax & Smart Type Inference)"
+Write-Host "  [8] Version 4.3 (AI/ML Stack, 30+ StdLib Modules & Rust Diagnostics)"
+Write-Host "  [9] Version 4.2 (Desktop 2D Graphics & Murder of Crows Concurrency)"
+Write-Host " [10] Version 4.1 (Super Optimizer Engine & Assembly Peephole)"
+Write-Host " [11] Version 4.0 (Native StdLib Expansion & REPL)"
+Write-Host " [12] Version 3.1 (Enterprise Error Resilience)"
+Write-Host " [13] Version 3.0 (Self-Hosted Compiler & Concurrency)"
+Write-Host " [14] Version 2.0 (Multi-Platform Native Assembly)"
+Write-Host " [15] Version 1.1 (AST Visitor Interpreter)"
 
-$choice = Read-Host "`nEnter selection (0-14) [Default: 1]"
+$choice = Read-Host "`nEnter selection (0-15) [Default: 1]"
 if ([string]::IsNullOrWhiteSpace($choice)) { $choice = "1" }
 
 if ($choice -eq "0") {
-    $installer = Join-Path $PSScriptRoot "Distributions\Version_5.1\install_standalone_windows.ps1"
+    $installer = Join-Path $PSScriptRoot "Distributions\Version_5.2\install_standalone_windows.ps1"
     if (-not (Test-Path $installer)) {
-        $installer = Join-Path $PSScriptRoot "Distributions\Version_5.0\install_standalone_windows.ps1"
+        $installer = Join-Path $PSScriptRoot "Distributions\Version_5.1\install_standalone_windows.ps1"
     }
     if (Test-Path $installer) {
         Write-Host "`n[EXECUTING] Launching Standalone Native Binaries Installer..." -ForegroundColor Green
@@ -44,21 +45,22 @@ if (-not $pythonCmd) {
 }
 
 $verFolder = switch ($choice) {
-    "1" { "Version_5.1" }
-    "2" { "Version_5.0" }
-    "3" { "Version_4.7" }
-    "4" { "Version_4.6" }
-    "5" { "Version_4.5" }
-    "6" { "Version_4.4" }
-    "7" { "Version_4.3" }
-    "8" { "Version_4.2" }
-    "9" { "Version_4.1" }
-    "10" { "Version_4.0" }
-    "11" { "Version_3.1" }
-    "12" { "Version_3.0" }
-    "13" { "Version_2.0" }
-    "14" { "Version_1.1" }
-    default { "Version_5.1" }
+    "1" { "Version_5.2" }
+    "2" { "Version_5.1" }
+    "3" { "Version_5.0" }
+    "4" { "Version_4.7" }
+    "5" { "Version_4.6" }
+    "6" { "Version_4.5" }
+    "7" { "Version_4.4" }
+    "8" { "Version_4.3" }
+    "9" { "Version_4.2" }
+    "10" { "Version_4.1" }
+    "11" { "Version_4.0" }
+    "12" { "Version_3.1" }
+    "13" { "Version_3.0" }
+    "14" { "Version_2.0" }
+    "15" { "Version_1.1" }
+    default { "Version_5.2" }
 }
 
 $targetInstaller = Join-Path $PSScriptRoot "versions\$verFolder\install_windows.ps1"

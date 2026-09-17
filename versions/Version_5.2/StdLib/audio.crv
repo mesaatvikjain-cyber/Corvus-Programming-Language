@@ -1,0 +1,10 @@
+// Corvus Sound Synth & System Audio Module
+get audio
+
+mk func beep(freq, duration_ms) [
+    givout audio.beep(freq, duration_ms)
+]
+
+mk func play_tune(notes) [
+    givout audio.play_tune(notes)
+]
